@@ -28,7 +28,7 @@ const matrixNonOrientired = [
 
 const drawGraphs = () => {
   const canvId = "canv";
-  
+
   const graph1 = Graph(matrixOrientired, { orientired: true });
   const graph2 = Graph(matrixNonOrientired, { orientired: false });
 
@@ -39,9 +39,7 @@ const drawGraphs = () => {
 
   graph1.context("canv")
         .generateCoords()
-        .drawNodes()
-        .drawNumbers()
-        .drawArrows();
+        .draw();
 
 }
 
