@@ -15,23 +15,31 @@ const nodes_radius = 20;
 
 const nodes = 10 + n3;
 
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
-}
+const matrixNa = [
+  [ 0, 0, 1, 0, 0, 1, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 1, 1, 0, 0, 0, 0, 1, 0, 0, 0 ],
+  [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0 ],
+  [ 0, 1, 0, 0, 0, 0, 1, 1, 1, 0 ],
+  [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ],
+];
 
-const getMatrix = (nodes, n1, n2, n3, n4) => {
-	const n1_str = n1.toString();
-	const n2_str = n2.toString();
-	const n3_str = n3.toString();
-	const n4_str = n4.toString();
-	const n = n1_str + n2_str + n3_str + n4_str;
-  Math.seedrandom(n);
-	const T = getRandomInt(nodes, nodes) + getRandomInt(nodes, nodes);
-	const matrix = Math.floor((1.0 - n3*0.02 - n4*0.005 - 0.25)*T);
-  return matrix;
-}
+const matrixNe = [
+  [ 0, 0, 1, 0, 0, 1, 0, 0, 0, 0 ],
+  [ 0, 0, 1, 1, 0, 0, 0, 1, 1, 0 ],
+  [ 1, 1, 0, 0, 0, 0, 1, 0, 0, 1 ],
+  [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0 ],
+  [ 1, 0, 0, 0, 1, 0, 1, 0, 0, 0 ],
+  [ 0, 0, 1, 0, 1, 1, 1, 1, 0, 0 ],
+  [ 0, 1, 0, 0, 1, 0, 1, 1, 1, 0 ],
+  [ 0, 1, 0, 0, 0, 0, 0, 1, 0, 0 ],
+  [ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ]
+];
 
 const showPlot = (x, y) => {
   const canvas = document.getElementById("canv");
@@ -40,80 +48,263 @@ const showPlot = (x, y) => {
 }
 
 const getContext = () => {
-    const canvas = document.getElementById("canv");
-    const ctx = canvas.getContext('2d');
-    return ctx;
+ const canvas = document.getElementById("canv");
+ const ctx = canvas.getContext('2d');
+ return ctx;
 }
 
 const beginDrawing = ctx => {
-    ctx.beginPath();
+ ctx.beginPath();
 }
 
 const endDrawing = (ctx, option) => {
-    const options = {
-      'stroke': () => ctx.stroke(),
-    };
-    options[option]();
+ const options = {
+   'stroke': () => ctx.stroke(),
+   'fill': () => ctx.fill()
+ };
+ options[option]();
 }
 
-const drawNode = (ctx, x, y, radius) => {
-    beginDrawing(ctx);
-    ctx.arc(x, y, radius, 0, 2*Math.PI);
-    endDrawing(ctx, 'stroke');
+const drawNode = (ctx, x, y) => {
+ beginDrawing(ctx);
+ ctx.arc(x, y, nodes_radius, 0, 2*Math.PI);
+ endDrawing(ctx, 'stroke');
 }
 
-const drawNodes = (ctx, radius, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset) => {
+const drawNumber = (ctx, x, y, n) => {
+  ctx.font = '12px serif';
+  ctx.fillText(n.toString(), x, y);
+}
 
-  drawNode(ctx, (plot_x/2), plot_y_offfset, radius, 0, 2*Math.PI);
+const coords = [];
 
-  drawNode(ctx, (plot_x/2)-nodes_spacing, plot_y_offfset*3, radius, 0, 2*Math.PI);
-  drawNode(ctx, (plot_x/2)+nodes_spacing, plot_y_offfset*3, radius, 0, 2*Math.PI);
+const generateCoords = (radius, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset) => {
+  coords.push({
+    x: (plot_x/2),
+    y: plot_y_offfset
+  });
+  coords.push({
+    x: (plot_x/2)-nodes_spacing,
+    y: plot_y_offfset*3
+  });
+  coords.push({
+    x: (plot_x/2)+nodes_spacing,
+    y: plot_y_offfset*3
+  });
+  coords.push({
+    x: (plot_x/2)-plot_y_offfset*2,
+    y: plot_y_offfset*5
+  });
+  coords.push({
+    x: (plot_x/2),
+    y: plot_y_offfset*5
+  });
+  coords.push({
+    x: (plot_x/2)+plot_y_offfset*2,
+    y: plot_y_offfset*5
+  });
+  coords.push({
+    x: (plot_x/2)-plot_y_offfset*3,
+    y: plot_y_offfset*7
+  });
+  coords.push({
+    x: (plot_x/2)-nodes_spacing,
+    y: plot_y_offfset*7
+  });
+  coords.push({
+    x: (plot_x/2)+nodes_spacing,
+    y: plot_y_offfset*7
+  });
+  coords.push({
+    x: (plot_x/2)+plot_y_offfset*3,
+    y: plot_y_offfset*7
+  });
+}
 
-  drawNode(ctx, (plot_x/2), plot_y_offfset*5, radius, 0, 2*Math.PI);
-  drawNode(ctx, (plot_x/2)+plot_y_offfset*2, plot_y_offfset*5, radius, 0, 2*Math.PI);
-  drawNode(ctx, (plot_x/2)-plot_y_offfset*2, plot_y_offfset*5, radius, 0, 2*Math.PI);
+const drawArrow = (ctx, fromx, fromy, tox, toy) => {
+  const headlen = 10; // length of head in pixels
+  const dx = tox - fromx;
+  const dy = toy - fromy;
+  const angle = Math.atan2(dy, dx);
+  ctx.beginPath();
+  ctx.moveTo(fromx, fromy);
+  ctx.lineTo(tox, toy);
+  ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+  ctx.moveTo(tox, toy);
+  ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+  ctx.stroke();
+}
+const drawLine = (ctx, from, to) => {
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.stroke();
+}
 
-  drawNode(ctx, (plot_x/2)-plot_y_offfset*3, plot_y_offfset*7, radius, 0, 2*Math.PI);
-  drawNode(ctx, (plot_x/2)-nodes_spacing, plot_y_offfset*7, radius, 0, 2*Math.PI);
-  drawNode(ctx, (plot_x/2)+nodes_spacing, plot_y_offfset*7, radius, 0, 2*Math.PI);
-  drawNode(ctx, (plot_x/2)+plot_y_offfset*3, plot_y_offfset*7, radius, 0, 2*Math.PI);
+const drawNodes = (ctx) => {
+  for(const {x, y} of coords){
+    drawNode(ctx, x, y);
+  }
 }
 
 
 const drawNumbers = (ctx, nodes_diameter, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset) => {
-    xnumb((plot_x/2)+plot_x_offfset+nodes_diameter/2.5, plot_y-nodes_diameter/1.5, 1);
-
-    xnumb((plot_x/2)-nodes_spacing+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*2-nodes_diameter/1.5, 2);
-    xnumb((plot_x/2)+nodes_spacing+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*2-nodes_diameter/1.5, 3);
-
-    xnumb((plot_x/2)+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*4-nodes_diameter/1.5, 4);
-    xnumb((plot_x/2)+plot_y_offfset*2+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*4-nodes_diameter/1.5, 5);
-    xnumb((plot_x/2)-plot_y_offfset*2+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*4-nodes_diameter/1.5, 6);
-
-    xnumb((plot_x/2)-plot_y_offfset*3+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*6-nodes_diameter/1.5, 7);
-    xnumb((plot_x/2)-nodes_spacing+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*6-nodes_diameter/1.5, 8);
-    xnumb((plot_x/2)+nodes_spacing+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*6-nodes_diameter/1.5, 9);
-    xnumb((plot_x/2)+plot_y_offfset*3+plot_x_offfset+nodes_diameter/2.5, plot_y-plot_y_offfset*6-nodes_diameter/1.5, 10);
+  const font_spacing = 4;
+  for(const index in coords){
+    drawNumber(ctx, coords[index].x - font_spacing, coords[index].y + font_spacing, Number(index)+1);
+  }
 }
 
-const drawArrows = (ctx, nodes_diameter, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset) => {
-  //  xarrows([(plot_x/2)+nodes_spacing+plot_x_offfset;(plot_x/2)+plot_x_offfset], [(plot_x/2)+plot_x_offfset;plot_y-plot_y_offfset*1.5], 50, 1);
+const removeCollisions = () => {
+
+}
+
+const drawArrows = (ctx) => {
+  for(const m in matrixNa){
+    for(const n in matrixNa[m]){
+      if(matrixNa[m][n]){
+        let fromX = coords[m].x,
+            fromY = coords[m].y,
+            toX = coords[n].x,
+            toY = coords[n].y;
+
+            if(fromX < toX && fromY === toY){
+              fromX += nodes_radius;
+              toX -= nodes_radius;
+            }
+            if(fromX > toX && fromY === toY){
+              fromX -= nodes_radius;
+              toX += nodes_radius;
+            }
+            if(fromX === toX && fromY < toY) {
+              fromY += nodes_radius;
+              toY -= nodes_radius;
+            }
+            if(fromX === toX && fromY > toY) {
+              fromY -= nodes_radius;
+              toY += nodes_radius;
+            }
+
+            if(fromX > toX && fromY < toY) {
+              fromY += nodes_radius;
+              toY -= nodes_radius;
+            }
+            if(fromX < toX && fromY > toY) {
+              fromY -= nodes_radius;
+              toY += nodes_radius;
+            }
+            if(fromX > toX && fromY > toY) {
+              fromY -= nodes_radius;
+              toY += nodes_radius;
+            }
+            if(fromX < toX && fromY < toY) {
+              fromY += nodes_radius;
+              toY -= nodes_radius;
+            }
+
+        if(matrixNa[m][n] === matrixNa[n][m] && matrixNa[n][m] && matrixNa[m][n] && m > n){
+          const lineFrom = {
+            x: fromX,
+            y: fromY
+          };
+          const lineTo = {
+            x: toX + nodes_radius*1,
+            y: toY + nodes_radius*1.5
+          };
+          drawLine(ctx, lineFrom, lineTo);
+          lineFrom.x = lineTo.x;
+          lineFrom.y = lineTo.y;
+          lineTo.x = toX;
+          lineTo.y = toY;
+          drawLine(ctx, lineFrom, lineTo);
+          fromX = lineFrom.x;
+          fromY = lineFrom.y;
+          toX = lineTo.x;
+          toY = lineTo.y;
+
+
+        }
+        if(matrixNa[m][n] === matrixNa[n][m] && matrixNa[n][m] && matrixNa[m][n], n === m){
+          const lineFrom = {
+            x: fromX + nodes_radius,
+            y: fromY
+          };
+          const lineTo = {
+            x: toX + nodes_radius*2,
+            y: toY + nodes_radius
+          };
+
+          drawLine(ctx, lineFrom, lineTo);
+          lineFrom.x = lineTo.x;
+          lineFrom.y = lineTo.y;
+          lineTo.x -= nodes_radius;
+          lineTo.y += nodes_radius;
+          drawLine(ctx, lineFrom, lineTo);
+          lineFrom.x = lineTo.x;
+          lineFrom.y = lineTo.y;
+          lineTo.x -= nodes_radius;
+          lineTo.y -= nodes_radius;
+          drawLine(ctx, lineFrom, lineTo);
+          fromX = lineFrom.x;
+          fromY = lineFrom.y;
+          toX = lineTo.x;
+          toY = lineTo.y;
+        }
+
+
+
+        // проходит ли стрелка через вершину
+        // находим вектор линии
+        const vector = {
+          x: toX - fromX,
+          y: toY - fromY
+        };
+        // Составляем уравнение прямой линии
+        const formul = (x, y) => !((((x - fromX)*vector.y) - ((y - fromY)*vector.x))/(vector.y*vector.x));
+        // и проверяем все вершины
+        for(const node in coords){
+          const {x, y} = coords[node];
+          // если центр вершины между началом и концом линии
+          if((toX > x && x > fromX && toY > y && y > fromY) ||
+             (toX < x && x < fromX && toY > y && y > fromY) ||
+             (toX < x && x < fromX && toY < y && y < fromY) ||
+             (toX > x && x > fromX && toY < y && y < fromY)){
+            // если центр лежит на линии
+            if(formul(x, y)){
+              //console.log(m, n, x, y, fromX, fromY, vector, Number(node)+1);
+              const lineTo = {
+                x: x - nodes_radius,
+                y: y + nodes_radius
+              };
+              const lineFrom = {
+                x: fromX,
+                y: fromY
+              }
+              drawLine(ctx, lineFrom, lineTo);
+              fromX = lineTo.x;
+              fromY = lineTo.y;
+            }
+          }
+        }
+
+        drawArrow(ctx, fromX, fromY, toX, toY);
+      }
+    }
+  }
 }
 
 const graphs = () => {
   showPlot(plot_x, plot_y);
   const ctx = getContext();
 
-  beginDrawing(ctx);
-  drawNodes(ctx, nodes_radius, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset);
-  endDrawing(ctx, 'stroke');
-/*
-  beginDrawing(ctx);
-  drawNumbers(ctx, nodes_diameter, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset);
-  endDrawing(ctx, 'stroke');
+  generateCoords(nodes_radius, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset);
 
-  drawArrows(ctx, nodes_diameter, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset);
-*/
+  drawNodes(ctx, nodes_radius);
+
+  drawNumbers(ctx, nodes_radius, nodes_spacing, plot_x, plot_y, plot_x_offfset, plot_y_offfset);
+
+  drawArrows(ctx);
+
 }
 
 
