@@ -84,11 +84,11 @@ const Graph = (matrix, ctx) => {
 
   graph.draw = function () {
 
-    const beginDrawing = () => {
+    const begin = () => {
       this.config.ctx.beginPath();
     }
 
-    const endDrawing = (option) => {
+    const end = (option) => {
       switch (option) {
         case 'stroke':
         this.config.ctx.stroke();
@@ -99,18 +99,18 @@ const Graph = (matrix, ctx) => {
       }
     }
 
-    const drawNode = (x, y) => {
-      beginDrawing();
+    const node = (x, y) => {
+      begin();
       this.config.ctx.arc(x, y, this.config.nodes_radius, 0, 2*Math.PI);
-      endDrawing('stroke');
+      end('stroke');
     }
 
-    const drawNumber = (x, y, n) => {
+    const number = (x, y, n) => {
       this.config.ctx.font = '12px serif';
       this.config.ctx.fillText(n.toString(), x, y);
     }
 
-    const drawArrow = (from, to) => {
+    const arrow = (from, to) => {
       const fromx = from.x,
             fromy = from.y,
             tox = to.x,
@@ -128,30 +128,30 @@ const Graph = (matrix, ctx) => {
       this.config.ctx.stroke();
     }
 
-    const drawLine = (from, to) => {
+    const line = (from, to) => {
       this.config.ctx.beginPath();
       this.config.ctx.moveTo(from.x, from.y);
       this.config.ctx.lineTo(to.x, to.y);
       this.config.ctx.stroke();
     }
 
-    const drawNodes = () => {
+    const nodes = () => {
       for(const {x, y} of this.config.coords){
-        drawNode(x, y);
+        node(x, y);
       }
     }
 
-    const drawNumbers = () => {
+    const numbers = () => {
       const font_spacing = 4;
       for(const index in this.config.coords){
-        drawNumber(this.config.coords[index].x - font_spacing, this.config.coords[index].y + font_spacing, Number(index)+1);
+        number(this.config.coords[index].x - font_spacing, this.config.coords[index].y + font_spacing, Number(index)+1);
       }
     }
 
     const removeCollisions = () => {
     }
 
-    const drawRibs = () => {
+    const ribs = () => {
       for(const m in this.matrix){
         for(const n in this.matrix[m]){
           if(this.matrix[m][n]){
@@ -203,12 +203,12 @@ const Graph = (matrix, ctx) => {
                 x: toX + this.config.nodes_radius*1,
                 y: toY + this.config.nodes_radius*1.5
               };
-              drawLine(lineFrom, lineTo);
+              line(lineFrom, lineTo);
               lineFrom.x = lineTo.x;
               lineFrom.y = lineTo.y;
               lineTo.x = toX;
               lineTo.y = toY;
-              drawLine(lineFrom, lineTo);
+              line(lineFrom, lineTo);
               fromX = lineFrom.x;
               fromY = lineFrom.y;
               toX = lineTo.x;
@@ -226,17 +226,17 @@ const Graph = (matrix, ctx) => {
                 y: toY + this.config.nodes_radius
               };
 
-              drawLine(lineFrom, lineTo);
+              line(lineFrom, lineTo);
               lineFrom.x = lineTo.x;
               lineFrom.y = lineTo.y;
               lineTo.x -= this.config.nodes_radius;
               lineTo.y += this.config.nodes_radius;
-              drawLine(lineFrom, lineTo);
+              line(lineFrom, lineTo);
               lineFrom.x = lineTo.x;
               lineFrom.y = lineTo.y;
               lineTo.x -= this.config.nodes_radius;
               lineTo.y -= this.config.nodes_radius;
-              drawLine(lineFrom, lineTo);
+              line(lineFrom, lineTo);
               fromX = lineFrom.x;
               fromY = lineFrom.y;
               toX = lineTo.x;
@@ -270,7 +270,7 @@ const Graph = (matrix, ctx) => {
                     x: fromX,
                     y: fromY
                   }
-                  drawLine(lineFrom, lineTo);
+                  line(lineFrom, lineTo);
                   fromX = lineTo.x;
                   fromY = lineTo.y;
                 }
@@ -285,17 +285,17 @@ const Graph = (matrix, ctx) => {
               y: fromY
             }
             if(this.config.orientired){
-              drawArrow(lineFrom, lineTo);
+              arrow(lineFrom, lineTo);
             } else {
-              drawLine(lineFrom, lineTo);
+              line(lineFrom, lineTo);
             }
           }
         }
       }
     }
-    drawNodes();
-    drawNumbers();
-    drawRibs();
+    nodes();
+    numbers();
+    ribs();
     return this;
   }
 
