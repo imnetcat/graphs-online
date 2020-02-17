@@ -28,17 +28,15 @@ const matrixNonOrientired = [
 
 const drawGraphs = () => {
   const canvId = "canv";
+  const canvas = Canvas(canvId);
+  const context = canvas.context('2d');
 
-  const graph1 = Graph(matrixOrientired, { orientired: true });
-  const graph2 = Graph(matrixNonOrientired, { orientired: false });
+  const graph1 = Graph(matrixOrientired, context);
 
-  const canvasSize = graph1.getPlotSize();
-  const canvas = document.getElementById(canvId);
-  canvas.setAttribute("width", `${canvasSize.x}px`);
-  canvas.setAttribute("height", `${canvasSize.y}px`);
-
-  graph1.context("canv")
-        .generateCoords()
+  graph1.generateCoords();
+  canvas.setSize(graph1.getSize());
+  graph1.orientired(true)
+        .context(context)
         .draw();
 
 }
