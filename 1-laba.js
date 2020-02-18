@@ -31,11 +31,11 @@ const drawGraphs = () => {
   const canvas = Canvas(canvId);
   const context = canvas.context('2d');
 
-  const graph1 = Graph(matrixOrientired, context);
+  const graph1 = Graph(matrixNonOrientired, context);
 
   graph1.generateCoords();
   canvas.setSize(graph1.getSize());
-  graph1.orientired(true)
+  graph1.orientired(false)
         .context(context)
         .draw();
 
