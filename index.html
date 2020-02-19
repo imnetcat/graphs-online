@@ -5,16 +5,38 @@
         <script src="./canvas.js"></script>
         <script src="./graph.js"></script>
         <script src="./interface.js"></script>
-        <script src="./1-laba.js"></script>
         <link rel="stylesheet" href="index.css" type="text/css">
     </head>
     <body>
       <div>
         <header><h1>Graph online viewer</h1></header>
         <div class="menu">
-          <button id="menu-btn" onclick="showMenu()"><div></div><div></div><div></div></button>
+          <button class="menu-btn" onclick="showMenu()"><div></div><div></div><div></div></button>
+          <button class="menu-btn" onclick="refreshCanvas()"><img src="refresh.png"></button>
         </div>
-        <div id="menu-panel"></div>
+        <form name ="menu" id="menu-panel">
+          <div class="menu-row"><textarea name="matrix" id="matrix-input">
+0 0 1 0 0 1 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+1 1 0 0 0 0 1 0 0 0
+0 1 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 1 1 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 1 1 0 0
+0 1 0 0 0 0 1 1 1 0
+0 1 0 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0 0</textarea>
+            <table>
+              <tr>
+                <td>
+                  <input type="checkbox" checked="checked" name="orientired" id="orientired">
+                  <p>Is orientired</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="menu-row"></div>
+        </form>
         <div id="scrollable">
           <canvas id="canv"></canvas>
         </div>

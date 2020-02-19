@@ -41,7 +41,7 @@ footer {
   display: flex;
 }
 
-#menu-btn {
+.menu-btn {
   width: 50px;
     height: 50px;
     margin-top: 25px;
@@ -53,7 +53,7 @@ footer {
     align-items: center;
 }
 
-#menu-btn div {
+.menu-btn div {
   width: 2px;
     background: #db6905;
     height: 24px;
@@ -67,4 +67,29 @@ footer {
   position: absolute;
   z-index: 20;
   display: none;
+  padding: 15px;
+}
+
+#matrix-input {
+  width: 250px;
+  height: 250px;
+}
+
+.menu-row {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+}
+.menu-row:nth-child(2) {
+  margin-top: 30%;
+}
+
+table {
+  display: inline;
+  height: 100%;
+  position: absolute;
+}
+
+td {
+  display: flex;
 }

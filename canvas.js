@@ -15,6 +15,10 @@ const Canvas = (canvasId) => {
     return this.domElem.getContext(ctx);
   }
 
+  canvas.clear = function (ctx){
+    this.domElem.getContext(ctx).clearRect(0, 0, canvas.width, canvas.height);
+    return this;
+  }
 
   return canvas;
 }
