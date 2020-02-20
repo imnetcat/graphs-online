@@ -84,6 +84,8 @@ const Graph = (matrix, ctx) => {
 
   graph.draw = function () {
 
+    const ribsVectors = [];
+
     const begin = () => {
       this.config.ctx.beginPath();
     }
@@ -111,24 +113,112 @@ const Graph = (matrix, ctx) => {
     }
 
     const arrow = (from, to) => {
-      const fromx = from.x,
-            fromy = from.y,
-            tox = to.x,
-            toy = to.y;
+      const fx = from.x,
+            fy = from.y,
+            tx = to.x,
+            ty = to.y;
       const headlen = 10; // length of head in pixels
-      const dx = tox - fromx;
-      const dy = toy - fromy;
+      const dx = tx - fx;
+      const dy = ty - fy;
       const angle = Math.atan2(dy, dx);
       this.config.ctx.beginPath();
-      this.config.ctx.moveTo(fromx, fromy);
-      this.config.ctx.lineTo(tox, toy);
-      this.config.ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
-      this.config.ctx.moveTo(tox, toy);
-      this.config.ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+      this.config.ctx.moveTo(tx, ty);
+      this.config.ctx.lineTo(tx - headlen * Math.cos(angle - Math.PI / 6), ty - headlen * Math.sin(angle - Math.PI / 6));
+      this.config.ctx.moveTo(tx, ty);
+      this.config.ctx.lineTo(tx - headlen * Math.cos(angle + Math.PI / 6), ty - headlen * Math.sin(angle + Math.PI / 6));
       this.config.ctx.stroke();
     }
+    const checkCollision = (from, to) => {
+      // находим вектор линии
+      const vector = {
+        x: to.x - from.x,
+        y: to.y - from.y
+      };
+      // Составляем уравнение прямой линии
+      const formul = (x, y) => !((((x - from.x)*vector.y) - ((y - from.y)*vector.x))/(vector.y*vector.x));
+      // и проверяем все вершины
+      for(const node in this.config.coords){
+        const {x, y} = this.config.coords[node];
+        // если центр вершины между началом и концом линии
+        if((to.x > x && x > from.x && to.y > y && y > from.y) ||
+        (to.x < x && x < from.x && to.y > y && y > from.y) ||
+        (to.x < x && x < from.x && to.y < y && y < from.y) ||
+        (to.x > x && x > from.x && to.y < y && y < from.y)){
+          // если центр лежит на линии
+          if(formul(x, y)){
+            // исправляем коллизию
+            //repearCollision(from, to);
+            let newTy = 0;
+            let newTx = 0;
+            // Horizontal lines
+            // o < o
+            if(from.x < to.x && from.y === to.y){
+              newTx = -(to.x-from.x)/2;
+              newTy = -((to.y-from.y)/2);
+            }
+            // o > o
+            if(from.x > to.x && from.y === to.y){
+              newTx = -(to.x-from.x)/2;
+              newTy = -((to.y-from.y)/2);
+            }
+            // Vertical lines
+            // o
+            // ^
+            // o
+            if(from.x === to.x && from.y < to.y) {
+              newTx = -(to.x-from.x)/2;
+              newTy = -((to.y-from.y)/2);
+            }
+            // o
+            // V
+            // o
+            if(from.x === to.x && from.y > to.y) {
+              newTx = -(to.x-from.x)/2;
+              newTy = -((to.y-from.y)/2);
+            }
 
+            // Diagonal lines
+            //     o
+            //   V
+            // o
+            if(from.x > to.x && from.y < to.y) {
+              newTx = -(to.x-from.x)/4;
+              newTy = -((to.y-from.y)/1.5);
+            }
+            //     o
+            //   ^
+            // o
+            if(from.x < to.x && from.y > to.y) {
+              newTx = -(to.x-from.x)/4;
+              newTy = -((to.y-from.y)/1.5);
+            }
+            // o
+            //  ^
+            //    o
+            if(from.x > to.x && from.y > to.y) {
+              newTx = -(to.x-from.x)/4;
+              newTy = -((to.y-from.y)/1.5);
+            }
+            // o
+            //  V
+            //    o
+            if(from.x < to.x && from.y < to.y) {
+              newTx = -(to.x-from.x)/4;
+              newTy = -((to.y-from.y)/1.5);
+            }
+            to.x += newTx;
+            to.y += newTy;
+            line(from, to);
+            from.x = to.x;
+            from.y = to.y;
+            to.x -= newTx;
+            to.y -= newTy;
+          }
+        }
+      }
+    }
     const line = (from, to) => {
+      checkCollision(from, to);
       this.config.ctx.beginPath();
       this.config.ctx.moveTo(from.x, from.y);
       this.config.ctx.lineTo(to.x, to.y);
@@ -148,146 +238,146 @@ const Graph = (matrix, ctx) => {
       }
     }
 
-    const removeCollisions = () => {
-    }
-
     const ribs = () => {
+      //    ^
+      // <  o  >
+      //    V
+      const indents = (from, to) => {
+        // Horizontal lines
+        // o < o
+        if(from.x < to.x && from.y === to.y){
+          from.x += this.config.nodes_radius;
+          to.x -= this.config.nodes_radius;
+        }
+        // o > o
+        if(from.x > to.x && from.y === to.y){
+          from.x -= this.config.nodes_radius;
+          to.x += this.config.nodes_radius;
+        }
+        // Vertical lines
+        // o
+        // ^
+        // o
+        if(from.x === to.x && from.y < to.y) {
+          from.y += this.config.nodes_radius;
+          to.y -= this.config.nodes_radius;
+        }
+        // o
+        // V
+        // o
+        if(from.x === to.x && from.y > to.y) {
+          from.y -= this.config.nodes_radius;
+          to.y += this.config.nodes_radius;
+        }
+
+        // Diagonal lines
+        //     o
+        //   V
+        // o
+        if(from.x > to.x && from.y < to.y) {
+          from.y += this.config.nodes_radius;
+          to.y -= this.config.nodes_radius;
+        }
+        //     o
+        //   ^
+        // o
+        if(from.x < to.x && from.y > to.y) {
+          from.y -= this.config.nodes_radius;
+          to.y += this.config.nodes_radius;
+        }
+        // o
+        //  ^
+        //    o
+        if(from.x > to.x && from.y > to.y) {
+          from.y -= this.config.nodes_radius;
+          to.y += this.config.nodes_radius;
+        }
+        // o
+        //  V
+        //    o
+        if(from.x < to.x && from.y < to.y) {
+          from.y += this.config.nodes_radius;
+          to.y -= this.config.nodes_radius;
+        }
+
+        //  o > V
+        //  ^   V
+        //  ^ < <
+        if(from.x === to.x && from.y === to.y) {
+          from.x += this.config.nodes_radius;
+          to.x += this.config.nodes_radius*2;
+          to.y += this.config.nodes_radius;
+        }
+      };
+
       for(const m in this.matrix){
         for(const n in this.matrix[m]){
           if(this.matrix[m][n]){
-            let fromX = this.config.coords[m].x,
-            fromY = this.config.coords[m].y,
-            toX = this.config.coords[n].x,
-            toY = this.config.coords[n].y;
+            const fx = this.config.coords[m].x,
+                fy = this.config.coords[m].y,
+                tx = this.config.coords[n].x,
+                ty = this.config.coords[n].y;
+            const from = {
+              x: fx,
+              y: fy
+            };
+            const to = {
+              x: tx,
+              y: ty
+            };
 
-            if(fromX < toX && fromY === toY){
-              fromX += this.config.nodes_radius;
-              toX -= this.config.nodes_radius;
-            }
-            if(fromX > toX && fromY === toY){
-              fromX -= this.config.nodes_radius;
-              toX += this.config.nodes_radius;
-            }
-            if(fromX === toX && fromY < toY) {
-              fromY += this.config.nodes_radius;
-              toY -= this.config.nodes_radius;
-            }
-            if(fromX === toX && fromY > toY) {
-              fromY -= this.config.nodes_radius;
-              toY += this.config.nodes_radius;
+            // отступы конца и начала рёбер от вершин графа
+            indents(from, to);
+
+            //
+            if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
+              console.log(m, n);
+              let newTx = 0;
+              let newTy = 0;
+
+              if(from.x !== to.x && from.y === to.y) {      // Horizontal lines
+                newTx = -(to.x-from.x)/2;
+                newTy = (newTx/Math.abs(newTx))*(this.config.nodes_radius/2);
+              } else if(from.x === to.x && from.y !== to.y) { // Vertical lines
+                newTx = (newTy/Math.abs(newTy))*(this.config.nodes_radius/2);
+                newTY = -(to.y-from.y)/2;
+              } else {                                        // Diagonal lines
+                newTx = -(to.x-from.x)/4;
+                newTy = -((to.y-from.y)/1.5);
+              }
+              console.log(from, to, newTx, newTy);
+              to.x += newTx;
+              to.y += newTy;
+              console.log(from, to);
+              line(from, to);
+              from.x = to.x;
+              from.y = to.y;
+              to.x -= newTx;
+              to.y -= newTy;
+              console.log(from, to);
             }
 
-            if(fromX > toX && fromY < toY) {
-              fromY += this.config.nodes_radius;
-              toY -= this.config.nodes_radius;
-            }
-            if(fromX < toX && fromY > toY) {
-              fromY -= this.config.nodes_radius;
-              toY += this.config.nodes_radius;
-            }
-            if(fromX > toX && fromY > toY) {
-              fromY -= this.config.nodes_radius;
-              toY += this.config.nodes_radius;
-            }
-            if(fromX < toX && fromY < toY) {
-              fromY += this.config.nodes_radius;
-              toY -= this.config.nodes_radius;
-            }
-
-            if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && m > n){
-              const lineFrom = {
-                x: fromX,
-                y: fromY
-              };
-              const lineTo = {
-                x: toX + this.config.nodes_radius*1,
-                y: toY + this.config.nodes_radius*1.5
-              };
-              line(lineFrom, lineTo);
-              lineFrom.x = lineTo.x;
-              lineFrom.y = lineTo.y;
-              lineTo.x = toX;
-              lineTo.y = toY;
-              line(lineFrom, lineTo);
-              fromX = lineFrom.x;
-              fromY = lineFrom.y;
-              toX = lineTo.x;
-              toY = lineTo.y;
-
-
-            }
-            if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n], n === m){
-              const lineFrom = {
-                x: fromX + this.config.nodes_radius,
-                y: fromY
-              };
-              const lineTo = {
-                x: toX + this.config.nodes_radius*2,
-                y: toY + this.config.nodes_radius
-              };
-
-              line(lineFrom, lineTo);
-              lineFrom.x = lineTo.x;
-              lineFrom.y = lineTo.y;
-              lineTo.x -= this.config.nodes_radius;
-              lineTo.y += this.config.nodes_radius;
-              line(lineFrom, lineTo);
-              lineFrom.x = lineTo.x;
-              lineFrom.y = lineTo.y;
-              lineTo.x -= this.config.nodes_radius;
-              lineTo.y -= this.config.nodes_radius;
-              line(lineFrom, lineTo);
-              fromX = lineFrom.x;
-              fromY = lineFrom.y;
-              toX = lineTo.x;
-              toY = lineTo.y;
+            //
+            if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n === m){
+              line(from, to);
+              from.x = to.x;
+              from.y = to.y;
+              to.x -= this.config.nodes_radius;
+              to.y += this.config.nodes_radius;
+              line(from, to);
+              from.x = to.x;
+              from.y = to.y;
+              to.x -= this.config.nodes_radius;
+              to.y -= this.config.nodes_radius;
             }
 
             // проходит ли стрелка через вершину
-            // находим вектор линии
-            const vector = {
-              x: toX - fromX,
-              y: toY - fromY
-            };
-            // Составляем уравнение прямой линии
-            const formul = (x, y) => !((((x - fromX)*vector.y) - ((y - fromY)*vector.x))/(vector.y*vector.x));
-            // и проверяем все вершины
-            for(const node in this.config.coords){
-              const {x, y} = this.config.coords[node];
-              // если центр вершины между началом и концом линии
-              if((toX > x && x > fromX && toY > y && y > fromY) ||
-              (toX < x && x < fromX && toY > y && y > fromY) ||
-              (toX < x && x < fromX && toY < y && y < fromY) ||
-              (toX > x && x > fromX && toY < y && y < fromY)){
-                // если центр лежит на линии
-                if(formul(x, y)){
-                  //console.log(m, n, x, y, fromX, fromY, vector, Number(node)+1);
-                  const lineTo = {
-                    x: x - this.config.nodes_radius,
-                    y: y + this.config.nodes_radius
-                  };
-                  const lineFrom = {
-                    x: fromX,
-                    y: fromY
-                  }
-                  line(lineFrom, lineTo);
-                  fromX = lineTo.x;
-                  fromY = lineTo.y;
-                }
-              }
-            }
-            const lineTo = {
-              x: toX,
-              y: toY
-            };
-            const lineFrom = {
-              x: fromX,
-              y: fromY
-            }
+
             if(this.config.orientired){
-              arrow(lineFrom, lineTo);
+              line(from, to);
+              arrow(from, to);
             } else {
-              line(lineFrom, lineTo);
+              line(from, to);
             }
           }
         }
