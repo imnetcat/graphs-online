@@ -410,16 +410,16 @@ const Graph = (matrix, ctx) => {
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n === m){
               to.x += this.config.nodes_radius*2;
-              to.y += this.config.nodes_radius;
+              to.y += this.config.nodes_radius/2;
               line(from, to);
               from.x = to.x;
               from.y = to.y;
-              to.x -= this.config.nodes_radius;
-              to.y += this.config.nodes_radius;
+              to.x -= this.config.nodes_radius*1.5;
+              to.y += this.config.nodes_radius*1.5;
               line(from, to);
               from.x = to.x;
               from.y = to.y;
-              to.x -= this.config.nodes_radius;
+              to.x -= this.config.nodes_radius/2;
               to.y -= this.config.nodes_radius*2;
             }
 
