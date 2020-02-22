@@ -170,7 +170,7 @@ const Graph = (matrix, ctx) => {
       this.config.ctx.lineTo(tx - headlen * Math.cos(angle + Math.PI / 6), ty - headlen * Math.sin(angle + Math.PI / 6));
       this.config.ctx.stroke();
     }
-    const checkCollision = (linesArray, from, to, fromNode, toNode) => {
+    const checkCollision = (linesArray, from, to, fromNode, toNode, flags) => {
       // находим вектор линии
       const vector = {
         x: to.x - from.x,
@@ -195,113 +195,270 @@ const Graph = (matrix, ctx) => {
         }
         return (a*x0+b*y0+c)/t;
       }
-      // и проверяем все вершины
-      for(const node in this.config.coords){
-        const {x, y} = this.config.coords[node];
+      if(false){
+      } else {
+        let collisionFound = false;
+        // и проверяем все вершины
+        for(const node in this.config.coords){
+          const {x, y} = this.config.coords[node];
 
-        // пропускаем точки начала и конца линии
-        if((x === fromNode.x &&
-            y === fromNode.y) ||
-            (x === toNode.x &&
-            y === toNode.y)){
-            console.log({x, y}, fromNode, toNode);
-          continue;
-        }
-        // если центр вершины между началом и концом линии
-        if((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
-          (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
-          (to.x <= x && x <= from.x && to.y <= y && y <= from.y) ||
-          (to.x >= x && x >= from.x && to.y <= y && y <= from.y)){
-          // если линия пересекает вершины графа
-          const pointCoords = {x, y};
-          const lineCoords = {from, to}
-          const distance = distanceFromPointToLine(pointCoords, lineCoords);
-          //console.log(distance, node);
-          if(Math.abs(distance) < this.config.nodes_radius){
-            // исправляем коллизию
-            let newTy = 0;
-            let newTx = 0;
-            // Horizontal lines
-            // o < o
-            if(from.x < to.x && from.y === to.y){
-              newTx = to.x-(to.x-from.x)/2;
-              newTy = from.y-this.config.nodes_radius*2;
-
-            }
-            // o > o
-            if(from.x > to.x && from.y === to.y){
-              newTx = to.x-(to.x-from.x)/2;
-              newTy = from.y-this.config.nodes_radius*2;
-            }
-            // Vertical lines
-            // o
-            // ^
-            // o
-            if(from.x === to.x && from.y < to.y) {
-              newTx = from.x/2;
-              newTy = to.y-((to.y-from.y)/2);
-            }
-            // o
-            // V
-            // o
-            if(from.x === to.x && from.y > to.y) {
-              newTx = from.x/2;
-              newTy = to.y-((to.y-from.y)/2);
-            }
-
-            // Diagonal lines
-            //     o
-            //   V
-            // o
-            if(from.x > to.x && from.y < to.y) {
-              newTx = to.x-(to.x-from.x)/4;
-              newTy = to.y-((to.y-from.y)/1.5);
-            }
-            //     o
-            //   ^
-            // o
-            if(from.x < to.x && from.y > to.y) {
-              newTx = to.x-(to.x-from.x)/4;
-              newTy = to.y-((to.y-from.y)/1.5);
-            }
-            // o
-            //  ^
-            //    o
-            if(from.x > to.x && from.y > to.y) {
-              newTx = to.x-(to.x-from.x)/4;
-              newTy = to.y-((to.y-from.y)/1.5);
-            }
-            // o
-            //  V
-            //    o
-            if(from.x < to.x && from.y < to.y) {
-              newTx = to.x-(to.x-from.x)/4;
-              newTy = to.y-((to.y-from.y)/1.5);
-            }
-            //console.log(from, to, newTx, newTy);
-            linesArray.push({
-              from,
-              to: {
-                x: newTx,
-                y: newTy
+          // пропускаем точки начала и конца линии
+          if((x === fromNode.x &&
+              y === fromNode.y) ||
+              (x === toNode.x &&
+              y === toNode.y)){
+            continue;
+          }
+          // если центр вершины между началом и концом линии
+          if((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
+            (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
+            (to.x <= x && x <= from.x && to.y <= y && y <= from.y) ||
+            (to.x >= x && x >= from.x && to.y <= y && y <= from.y)){
+            // если линия пересекает вершины графа
+            const pointCoords = {x, y};
+            const lineCoords = {from, to}
+            const distance = distanceFromPointToLine(pointCoords, lineCoords);
+            if(Math.abs(distance) < this.config.nodes_radius){
+              collisionFound = true;
+              // исправляем коллизию
+              let newTy = 0;
+              let newTx = 0;
+              // Horizontal lines
+              // o < o
+              if(from.x < to.x && from.y === to.y){
+                newTx = x;
+                newTy = y - this.config.nodes_radius*2;
               }
-            });
-            from = {
-              x: newTx,
-              y: newTy
-            };
-            //return linesArray;
-            return checkCollision(linesArray, from, to, fromNode, toNode);
+              // o > o
+              if(from.x > to.x && from.y === to.y){
+                newTx = x;
+                newTy = y + this.config.nodes_radius*2;
+              }
+              // Vertical lines
+              // o
+              // ^
+              // o
+              if(from.x === to.x && from.y < to.y) {
+                newTx = x + this.config.nodes_radius*2;
+                newTy = y;
+              }
+              // o
+              // V
+              // o
+              if(from.x === to.x && from.y > to.y) {
+                newTx = x - this.config.nodes_radius*2;
+                newTy = y;
+              }
+
+              // Diagonal lines
+              //     o
+              //   V
+              // o
+              if(from.x > to.x && from.y < to.y) {
+                if(distance){
+                  newTx = x - (distance/Math.abs(distance))*(this.config.nodes_radius);
+                  newTy = y - (distance/Math.abs(distance))*(this.config.nodes_radius);
+                } else {
+                  newTx = x - this.config.nodes_radius;
+                  newTy = y - this.config.nodes_radius;
+                }
+              }
+              //     o
+              //   ^
+              // o
+              if(from.x < to.x && from.y > to.y) {
+                if(distance){
+                  newTx = x - (distance/Math.abs(distance))*(this.config.nodes_radius);
+                  newTy = y - (distance/Math.abs(distance))*(this.config.nodes_radius);
+                } else {
+                  newTx = x + this.config.nodes_radius;
+                  newTy = y + this.config.nodes_radius;
+                }
+              }
+              // o
+              //  ^
+              //    o
+              if(from.x > to.x && from.y > to.y) {
+                if(distance){
+                  newTx = x - (distance/Math.abs(distance))*(this.config.nodes_radius);
+                  newTy = y + (distance/Math.abs(distance))*(this.config.nodes_radius);
+                } else {
+                  newTx = x - this.config.nodes_radius;
+                  newTy = y + this.config.nodes_radius;
+                }
+              }
+              // o
+              //  V
+              //    o
+              if(from.x < to.x && from.y < to.y) {
+                if(distance){
+                  newTx = x - (distance/Math.abs(distance))*(this.config.nodes_radius);
+                  newTy = y + (distance/Math.abs(distance))*(this.config.nodes_radius);
+                } else {
+                  newTx = x + this.config.nodes_radius;
+                  newTy = y - this.config.nodes_radius;
+                }
+              }
+
+              const newLine1 = {
+                from,
+                to: {
+                  x: newTx,
+                  y: newTy
+                }
+              }
+              const newLine2 = {
+                from: {
+                  x: newTx,
+                  y: newTy
+                },
+                to
+              }
+
+              flags.firstCollision = false;
+              checkCollision(linesArray, newLine1.from, newLine1.to, fromNode, toNode, flags);
+
+              checkCollision(linesArray, newLine2.from, newLine2.to, fromNode, toNode, flags);
+
+              return false;
+            }
+          }
+        }
+        if(!collisionFound){
+          if(flags.firstCollision){
+            if(from.x === to.x && from.y === to.y) {
+              let newTx = 0;
+              let newTy = 0;
+              // rib to the same element
+              // o > V
+              // ^   V
+              // ^ < <
+              const firstLine = {
+                from,
+                to: {
+                  x: from.x + this.config.nodes_radius*2,
+                  y: from.y
+                }
+              }
+              const secondLine = {
+                from: firstLine.to,
+                to: {
+                  x: firstLine.to.x,
+                  y: firstLine.to.y + this.config.nodes_radius*2
+                }
+              }
+              const thirdLine = {
+                from: secondLine.to,
+                to: {
+                  x: secondLine.to.x - this.config.nodes_radius*2,
+                  y: secondLine.to.y
+                }
+              }
+              const fourthLine = {
+                from: thirdLine.to,
+                to
+              }
+              linesArray.push(firstLine);
+              linesArray.push(secondLine);
+              linesArray.push(thirdLine);
+              linesArray.push(fourthLine);
+
+            } else {
+              let newTx = 0;
+              let newTy = 0;
+              // Horizontal lines
+              // o < o
+              if(from.x < to.x && from.y === to.y){
+                newTx = from.x + (to.x - from.x)/2;
+                newTy = to.y + this.config.nodes_radius;
+              }
+              // o > o
+              if(from.x > to.x && from.y === to.y){
+                newTx = to.x + (from.x - to.x)/2;
+                newTy = to.y - this.config.nodes_radius;
+              }
+              // Vertical lines
+              // o
+              // V
+              // o
+              if(from.x === to.x && from.y < to.y) {
+                newTx = to.x - this.config.nodes_radius;
+                newTy = from.y + (to.y - from.y)/2 - this.config.nodes_radius;
+              }
+              // o
+              // ^
+              // o
+              if(from.x === to.x && from.y > to.y) {
+                newTx = to.x + this.config.nodes_radius;
+                newTy = to.y + (from.y - to.y)/2 + this.config.nodes_radius;
+              }
+              // Diagonal lines
+              //     o
+              //   V
+              // o
+              if(from.x > to.x && from.y < to.y) {
+                newTx = to.x + this.config.nodes_radius/2;
+                newTy = to.y - this.config.nodes_radius*2;
+              }
+              //     o
+              //   ^
+              // o
+              if(from.x < to.x && from.y > to.y) {
+                newTx = to.x - this.config.nodes_radius/2;
+                newTy = to.y + this.config.nodes_radius*2;
+              }
+              // o
+              //  ^
+              //    o
+              if(from.x > to.x && from.y > to.y) {
+                newTx = to.x + this.config.nodes_radius/2;
+                newTy = to.y + this.config.nodes_radius*2;
+              }
+              // o
+              //  V
+              //    o
+              if(from.x < to.x && from.y < to.y) {
+                newTx = to.x - this.config.nodes_radius/2;
+                newTy = to.y - this.config.nodes_radius*2;
+              }
+
+              const firstLine = {
+                from,
+                to: {
+                  x: newTx,
+                  y: newTy
+                }
+              }
+              const secondLine = {
+                from: {
+                  x: newTx,
+                  y: newTy
+                },
+                to
+              }
+              linesArray.push(firstLine);
+              linesArray.push(secondLine);
+            }
+          } else {
+            linesArray.push({from, to});
           }
         }
       }
-      linesArray.push({from, to});
-      return linesArray;
+      return true;
     }
     const line = (from, to, flags) => {
       let linesArray = [];
-      linesArray = checkCollision(linesArray, from, to, from, to);
+      checkCollision(linesArray, from, to, from, to, flags);
+      console.log(linesArray);
       for(const l of linesArray){
+        begin();
+        this.config.ctx.fillStyle = "black";
+        this.config.ctx.arc(l.from.x, l.from.y, 2, 0, 2*Math.PI);
+        end('fill');
+        begin();
+        this.config.ctx.fillStyle = "black";
+        this.config.ctx.arc(l.to.x, l.to.y, 2, 0, 2*Math.PI);
+        end('fill');
         this.config.ctx.beginPath();
         this.config.ctx.moveTo(l.from.x, l.from.y);
         this.config.ctx.lineTo(l.to.x, l.to.y);
@@ -346,81 +503,20 @@ const Graph = (matrix, ctx) => {
             };
 
             const flags = {
-              arrow: this.config.orientired
+              firstCollision: true,
+              arrow: this.config.orientired,
+              superimposed: false,
+              toTheSameNode: false
             }
+
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
-              let newTx = 0;
-              let newTy = 0;
-              if(from.x !== to.x && from.y === to.y) {      // Horizontal lines
-                if(to.x > from.x){
-                  newTx = to.x-(to.x-from.x)/2;
-                  newTy = from.y -(this.config.nodes_radius/4);
-                } else {
-                  newTx = from.x-(from.x-to.x)/2;
-                  newTy = from.y + (this.config.nodes_radius/4);
-                }
-              } else if(from.x === to.x && from.y !== to.y) { // Vertical lines
-                if(to.y > from.y){
-                  newTx = from.x -(this.config.nodes_radius/4);
-                  newTy = to.y-(to.y-from.y)/2;
-                } else {
-                  newTx = from.x + (this.config.nodes_radius/4);
-                  newTy = from.y-(from.y-to.y)/2;
-                }
-              } else {                                        // Diagonal line
-                //     o
-                //   V
-                // o
-                if(from.x > to.x && from.y < to.y) {
-                  newTx = from.x;
-                  newTy = to.y-(to.y-from.y)/2;
-                }
-                //     o
-                //   ^
-                // o
-                if(from.x < to.x && from.y > to.y) {
-                  newTx = from.x;
-                  newTy = from.y-(from.y-to.y)/2;
-                }
-                // o
-                //  ^
-                //    o
-                if(from.x > to.x && from.y > to.y) {
-                  newTx = from.x;
-                  newTy = from.y-(from.y-to.y)/2;
-                }
-                // o
-                //  V
-                //    o
-                if(from.x < to.x && from.y < to.y) {
-                  newTx = from.x;
-                  newTy = to.y-(to.y-from.y)/2;
-                }
-              }
-              const newTo = {
-                x: newTx,
-                y: newTy
-              };
-              line(from, newTo);
-              from.x = newTx;
-              from.y = newTy;
+              flags.superimposed = true;
             }
 
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n === m){
-              to.x += this.config.nodes_radius*2;
-              to.y += this.config.nodes_radius/2;
-              line(from, to);
-              from.x = to.x;
-              from.y = to.y;
-              to.x -= this.config.nodes_radius*1.5;
-              to.y += this.config.nodes_radius*1.5;
-              line(from, to);
-              from.x = to.x;
-              from.y = to.y;
-              to.x -= this.config.nodes_radius/2;
-              to.y -= this.config.nodes_radius*2;
+              flags.toTheSameNode = true;
             }
 
             line(from, to, flags);
