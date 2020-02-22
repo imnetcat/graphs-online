@@ -449,16 +449,7 @@ const Graph = (matrix, ctx) => {
     const line = (from, to, flags) => {
       let linesArray = [];
       checkCollision(linesArray, from, to, from, to, flags);
-      console.log(linesArray);
       for(const l of linesArray){
-        begin();
-        this.config.ctx.fillStyle = "black";
-        this.config.ctx.arc(l.from.x, l.from.y, 2, 0, 2*Math.PI);
-        end('fill');
-        begin();
-        this.config.ctx.fillStyle = "black";
-        this.config.ctx.arc(l.to.x, l.to.y, 2, 0, 2*Math.PI);
-        end('fill');
         this.config.ctx.beginPath();
         this.config.ctx.moveTo(l.from.x, l.from.y);
         this.config.ctx.lineTo(l.to.x, l.to.y);
