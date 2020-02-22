@@ -7,11 +7,11 @@ const Graph = (matrix, ctx) => {
     matrix,
     nodes: matrix.length,
     config: {
-      plot_x_offfset: 40,
-      plot_y_offfset: 40,
+      plot_x_offfset: 10,
+      plot_y_offfset: 100,
 
-      nodes_spacing: 40,
       nodes_radius: 20,
+      nodes_spacing: 40,
 
       orientired: true,
 
@@ -40,44 +40,44 @@ const Graph = (matrix, ctx) => {
 
   graph.generateCoords = function () {
     this.config.coords.push({
-      x: (this.plot_x/2),
+      x: this.config.plot_x_offfset+(this.plot_x/2),
       y: this.config.plot_y_offfset
     });
     this.config.coords.push({
-      x: (this.plot_x/2)-this.config.nodes_spacing,
-      y: this.config.plot_y_offfset*3
+      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*2
     });
     this.config.coords.push({
-      x: (this.plot_x/2)+this.config.nodes_spacing,
-      y: this.config.plot_y_offfset*3
+      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*2
     });
     this.config.coords.push({
-      x: (this.plot_x/2)-this.config.plot_y_offfset*2,
-      y: this.config.plot_y_offfset*5
+      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing*2,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*4
     });
     this.config.coords.push({
-      x: (this.plot_x/2),
-      y: this.config.plot_y_offfset*5
+      x: this.config.plot_x_offfset+(this.plot_x/2),
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*4
     });
     this.config.coords.push({
-      x: (this.plot_x/2)+this.config.plot_y_offfset*2,
-      y: this.config.plot_y_offfset*5
+      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing*2,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*4
     });
     this.config.coords.push({
-      x: (this.plot_x/2)-this.config.plot_y_offfset*3,
-      y: this.config.plot_y_offfset*7
+      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing*3,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
     });
     this.config.coords.push({
-      x: (this.plot_x/2)-this.config.nodes_spacing,
-      y: this.config.plot_y_offfset*7
+      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
     });
     this.config.coords.push({
-      x: (this.plot_x/2)+this.config.nodes_spacing,
-      y: this.config.plot_y_offfset*7
+      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
     });
     this.config.coords.push({
-      x: (this.plot_x/2)+this.config.plot_y_offfset*3,
-      y: this.config.plot_y_offfset*7
+      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing*3,
+      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
     });
     return this;
   }
@@ -95,7 +95,7 @@ const Graph = (matrix, ctx) => {
         case 'stroke':
         this.config.ctx.stroke();
         break;
-        case 'stroke':
+        case 'fill':
         this.config.ctx.fill();
         break;
       }
@@ -103,20 +103,63 @@ const Graph = (matrix, ctx) => {
 
     const node = (x, y) => {
       begin();
+      this.config.ctx.fillStyle = "white";
+      this.config.ctx.arc(x, y, this.config.nodes_radius, 0, 2*Math.PI);
+      end('fill');
+
+      // border
+      begin();
       this.config.ctx.arc(x, y, this.config.nodes_radius, 0, 2*Math.PI);
       end('stroke');
     }
 
     const number = (x, y, n) => {
       this.config.ctx.font = '12px serif';
+      this.config.ctx.fillStyle = "black";
       this.config.ctx.fillText(n.toString(), x, y);
+    }
+
+    // intersection of a segment with a circle
+    const lineCrossNode = (from, to, circle, radius) => {
+      const a =  Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2);
+      const b =  2* ( (to.x - from.x)*(from.x - circle.x) + (to.y - from.y)*(from.y - circle.y) ) ;
+      const c =  Math.pow(circle.x, 2) + Math.pow(circle.y, 2) + Math.pow(from.x, 2) + Math.pow(from.y, 2) - 2* ( circle.x*from.x + circle.y*from.y ) - Math.pow(radius, 2) ;
+
+      // descreminant
+      const d =  Math.pow(b, 2) - 4 * a * c;
+
+      if ( d < 0 ) {
+        // no intersection
+      	return undefined;
+      }
+
+      // found parameters  t1 & t2
+      const t1 = (-b - Math.sqrt(d))/(2*a);
+      const t2 = (-b + Math.sqrt(d))/(2*a);
+
+      let x, y;
+      // check segment of line
+      if(t1 >= 0 && t1 <= 1){
+        x = from.x * (1 - t1) + to.x * t1;
+        y = from.y * (1 - t1) + to.y * t1;
+      } else if(t2 >= 0 && t2 <= 1) {
+        x = from.x * (1 - t2) + to.x * t2;
+        y = from.y * (1 - t2) + to.y * t2;
+      } else {
+        return undefined;
+      }
+
+      return {x, y};
     }
 
     const arrow = (from, to) => {
       const fx = from.x,
-            fy = from.y,
-            tx = to.x,
-            ty = to.y;
+            fy = from.y;
+
+      const cross = lineCrossNode(from, to, to, this.config.nodes_radius);
+      console.log(from, to);
+      const tx = cross.x,
+            ty = cross.y;
       const headlen = 10; // length of head in pixels
       const dx = tx - fx;
       const dy = ty - fy;
@@ -162,10 +205,10 @@ const Graph = (matrix, ctx) => {
       for(const node in this.config.coords){
         const {x, y} = this.config.coords[node];
         // если центр вершины между началом и концом линии
-        if((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
-          (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
-          (to.x <= x && x <= from.x && to.y <= y && y <= from.y) ||
-          (to.x >= x && x >= from.x && to.y <= y && y <= from.y)){
+        if((to.x > x && x > from.x && to.y > y && y > from.y) ||
+          (to.x < x && x < from.x && to.y > y && y > from.y) ||
+          (to.x < x && x < from.x && to.y < y && y < from.y) ||
+          (to.x > x && x > from.x && to.y < y && y < from.y)){
           // если линия пересекает вершины графа
           const pointCoords = {x, y};
           const lineCoords = {from, to}
@@ -262,7 +305,11 @@ const Graph = (matrix, ctx) => {
         this.config.ctx.lineTo(l.to.x, l.to.y);
         this.config.ctx.stroke();
       }
+      if(this.config.orientired){
+        arrow(linesArray[linesArray.length-1].from, to);
+      }
     }
+
 
     const nodes = () => {
       for(const {x, y} of this.config.coords){
@@ -278,77 +325,6 @@ const Graph = (matrix, ctx) => {
     }
 
     const ribs = () => {
-      //    ^
-      // <  o  >
-      //    V
-      const indents = (from, to) => {
-        // Horizontal lines
-        // o < o
-        if(from.x < to.x && from.y === to.y){
-          from.x += this.config.nodes_radius;
-          to.x -= this.config.nodes_radius;
-        }
-        // o > o
-        if(from.x > to.x && from.y === to.y){
-          from.x -= this.config.nodes_radius;
-          to.x += this.config.nodes_radius;
-        }
-        // Vertical lines
-        // o
-        // ^
-        // o
-        if(from.x === to.x && from.y < to.y) {
-          from.y += this.config.nodes_radius;
-          to.y -= this.config.nodes_radius;
-        }
-        // o
-        // V
-        // o
-        if(from.x === to.x && from.y > to.y) {
-          from.y -= this.config.nodes_radius;
-          to.y += this.config.nodes_radius;
-        }
-
-        // Diagonal lines
-        //     o
-        //   V
-        // o
-        if(from.x > to.x && from.y < to.y) {
-          from.y += this.config.nodes_radius;
-          to.y -= this.config.nodes_radius;
-        }
-        //     o
-        //   ^
-        // o
-        if(from.x < to.x && from.y > to.y) {
-          from.y -= this.config.nodes_radius;
-          to.y += this.config.nodes_radius;
-        }
-        // o
-        //  ^
-        //    o
-        if(from.x > to.x && from.y > to.y) {
-          from.y -= this.config.nodes_radius;
-          to.y += this.config.nodes_radius;
-        }
-        // o
-        //  V
-        //    o
-        if(from.x < to.x && from.y < to.y) {
-          from.y += this.config.nodes_radius;
-          to.y -= this.config.nodes_radius;
-        }
-
-        //  o > V
-        //  ^   V
-        //  ^ < <
-        if(from.x === to.x && from.y === to.y) {
-          from.x += this.config.nodes_radius;
-          to.x += this.config.nodes_radius*2;
-          to.y += this.config.nodes_radius;
-        }
-      };
-
       for(const m in this.matrix){
         for(const n in this.matrix[m]){
           if(this.matrix[m][n]){
@@ -364,9 +340,6 @@ const Graph = (matrix, ctx) => {
               x: tx,
               y: ty
             };
-
-            // отступы конца и начала рёбер от вершин графа
-            indents(from, to);
 
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
@@ -444,17 +417,13 @@ const Graph = (matrix, ctx) => {
             }
 
             line(from, to);
-
-            if(this.config.orientired){
-              arrow(from, to);
-            }
           }
         }
       }
     }
+    ribs();
     nodes();
     numbers();
-    ribs();
     return this;
   }
 
