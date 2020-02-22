@@ -298,7 +298,7 @@ const Graph = (matrix, ctx) => {
       linesArray.push({from, to});
       return linesArray;
     }
-    const line = (from, to) => {
+    const line = (from, to, flags) => {
       let linesArray = [];
       linesArray = checkCollision(linesArray, from, to, from, to);
       for(const l of linesArray){
@@ -307,8 +307,10 @@ const Graph = (matrix, ctx) => {
         this.config.ctx.lineTo(l.to.x, l.to.y);
         this.config.ctx.stroke();
       }
-      if(this.config.orientired){
-        arrow(linesArray[linesArray.length-1].from, to);
+      if(flags){
+        if(flags.arrow){
+          arrow(linesArray[linesArray.length-1].from, to);
+        }
       }
     }
 
@@ -343,6 +345,9 @@ const Graph = (matrix, ctx) => {
               y: ty
             };
 
+            const flags = {
+              arrow: this.config.orientired
+            }
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
               let newTx = 0;
@@ -404,6 +409,8 @@ const Graph = (matrix, ctx) => {
 
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n === m){
+              to.x += this.config.nodes_radius*2;
+              to.y += this.config.nodes_radius;
               line(from, to);
               from.x = to.x;
               from.y = to.y;
@@ -413,10 +420,10 @@ const Graph = (matrix, ctx) => {
               from.x = to.x;
               from.y = to.y;
               to.x -= this.config.nodes_radius;
-              to.y -= this.config.nodes_radius;
+              to.y -= this.config.nodes_radius*2;
             }
 
-            line(from, to);
+            line(from, to, flags);
           }
         }
       }
