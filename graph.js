@@ -355,17 +355,17 @@ const Graph = (matrix, ctx) => {
               if(from.x !== to.x && from.y === to.y) {      // Horizontal lines
                 if(to.x > from.x){
                   newTx = to.x-(to.x-from.x)/2;
-                  newTy = from.y -(this.config.nodes_radius*2);
+                  newTy = from.y -(this.config.nodes_radius);
                 } else {
                   newTx = from.x-(from.x-to.x)/2;
-                  newTy = from.y + (this.config.nodes_radius*2);
+                  newTy = from.y + (this.config.nodes_radius);
                 }
               } else if(from.x === to.x && from.y !== to.y) { // Vertical lines
                 if(to.y > from.y){
-                  newTx = from.x -(this.config.nodes_radius*2);
+                  newTx = from.x -(this.config.nodes_radius);
                   newTy = to.y-(to.y-from.y)/2;
                 } else {
-                  newTx = from.x + (this.config.nodes_radius*2);
+                  newTx = from.x + (this.config.nodes_radius);
                   newTy = from.y-(from.y-to.y)/2;
                 }
               } else {                                        // Diagonal line
