@@ -157,7 +157,6 @@ const Graph = (matrix, ctx) => {
             fy = from.y;
 
       const cross = lineCrossNode(from, to, to, this.config.nodes_radius);
-      console.log(from, to);
       const tx = cross.x,
             ty = cross.y;
       const headlen = 10; // length of head in pixels
@@ -171,12 +170,7 @@ const Graph = (matrix, ctx) => {
       this.config.ctx.lineTo(tx - headlen * Math.cos(angle + Math.PI / 6), ty - headlen * Math.sin(angle + Math.PI / 6));
       this.config.ctx.stroke();
     }
-    const checkCollision = (linesArray, from, to, flags) => {
-      if(flags){
-        if(flags.superimposed){
-
-        }
-      }
+    const checkCollision = (linesArray, from, to, fromNode, toNode) => {
       // находим вектор линии
       const vector = {
         x: to.x - from.x,
@@ -204,11 +198,20 @@ const Graph = (matrix, ctx) => {
       // и проверяем все вершины
       for(const node in this.config.coords){
         const {x, y} = this.config.coords[node];
+
+        // пропускаем точки начала и конца линии
+        if((x === fromNode.x &&
+            y === fromNode.y) ||
+            (x === toNode.x &&
+            y === toNode.y)){
+            console.log({x, y}, fromNode, toNode);
+          continue;
+        }
         // если центр вершины между началом и концом линии
-        if((to.x > x && x > from.x && to.y > y && y > from.y) ||
-          (to.x < x && x < from.x && to.y > y && y > from.y) ||
-          (to.x < x && x < from.x && to.y < y && y < from.y) ||
-          (to.x > x && x > from.x && to.y < y && y < from.y)){
+        if((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
+          (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
+          (to.x <= x && x <= from.x && to.y <= y && y <= from.y) ||
+          (to.x >= x && x >= from.x && to.y <= y && y <= from.y)){
           // если линия пересекает вершины графа
           const pointCoords = {x, y};
           const lineCoords = {from, to}
@@ -222,12 +225,13 @@ const Graph = (matrix, ctx) => {
             // o < o
             if(from.x < to.x && from.y === to.y){
               newTx = to.x-(to.x-from.x)/2;
-              newTy = (from.y)/2;
+              newTy = from.y-this.config.nodes_radius*2;
+
             }
             // o > o
             if(from.x > to.x && from.y === to.y){
               newTx = to.x-(to.x-from.x)/2;
-              newTy = (from.y)/2;
+              newTy = from.y-this.config.nodes_radius*2;
             }
             // Vertical lines
             // o
@@ -287,18 +291,16 @@ const Graph = (matrix, ctx) => {
               y: newTy
             };
             //return linesArray;
-            return checkCollision(linesArray, from, to);
+            return checkCollision(linesArray, from, to, fromNode, toNode);
           }
         }
       }
       linesArray.push({from, to});
       return linesArray;
     }
-    const line = (from, to, flags) => {
+    const line = (from, to) => {
       let linesArray = [];
-      console.log('from & to input: ', from, to);
-      linesArray = checkCollision(linesArray, from, to, flags);
-      console.log('from & to output: ', linesArray);
+      linesArray = checkCollision(linesArray, from, to, from, to);
       for(const l of linesArray){
         this.config.ctx.beginPath();
         this.config.ctx.moveTo(l.from.x, l.from.y);
@@ -345,18 +347,17 @@ const Graph = (matrix, ctx) => {
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
               let newTx = 0;
               let newTy = 0;
-
               if(from.x !== to.x && from.y === to.y) {      // Horizontal lines
                 if(to.x > from.x){
                   newTx = to.x-(to.x-from.x)/2;
-                  newTy = from.y - (this.config.nodes_radius*2);
+                  newTy = from.y -(this.config.nodes_radius*2);
                 } else {
                   newTx = from.x-(from.x-to.x)/2;
                   newTy = from.y + (this.config.nodes_radius*2);
                 }
               } else if(from.x === to.x && from.y !== to.y) { // Vertical lines
                 if(to.y > from.y){
-                  newTx = from.x - (this.config.nodes_radius*2);
+                  newTx = from.x -(this.config.nodes_radius*2);
                   newTy = to.y-(to.y-from.y)/2;
                 } else {
                   newTx = from.x + (this.config.nodes_radius*2);
@@ -396,7 +397,6 @@ const Graph = (matrix, ctx) => {
                 x: newTx,
                 y: newTy
               };
-              console.log(from, to, newTo);
               line(from, newTo);
               from.x = newTx;
               from.y = newTy;
