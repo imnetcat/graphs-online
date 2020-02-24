@@ -28,14 +28,36 @@
 0 0 1 0 0 0 0 0 0 0</textarea>
             <table>
               <tr>
+                <th>
+                  Display form
+                </th>
+                <th>
+                  Orientation
+                </th>
+              </tr>
+              <tr>
                 <td>
-                  <input type="checkbox" checked="checked" name="orientired" id="orientired">
-                  <p>Is orientired</p>
+                  <input type="radio" name="display-form" value="empty-triangle" id="empty-triangle" checked="checked">
+                  <label for="empty-triangle">Empty triangle</label>
                 </td>
+                <td>
+                  <input type="radio" name="orientiation" value="orientired" id="orientired" checked="checked">
+                  <label for="orientired">Orientired</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="radio" name="display-form" value="empty-square" id="empty-square">
+                  <label for="empty-square">Empty square</label>
+                </td>
+
+                  <td>
+                    <input type="radio" name="orientiation" value="non-orientired" id="non-orientired">
+                    <label for="non-orientired">Non orientired</label>
+                  </td>
               </tr>
             </table>
           </div>
-          <div class="menu-row"></div>
         </form>
         <div id="scrollable">
           <canvas id="canv"></canvas>

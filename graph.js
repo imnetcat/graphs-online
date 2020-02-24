@@ -3,15 +3,16 @@
 const Graph = (matrix, ctx) => {
   const graph = {
     plot_x: 1000,
-    plot_y: 500,
+    plot_y: 1000,
     matrix,
     nodes: matrix.length,
+    displayForm: 'default',
     config: {
       plot_x_offfset: 10,
       plot_y_offfset: 100,
 
       nodes_radius: 20,
-      nodes_spacing: 40,
+      nodes_spacing: 2,
 
       orientired: true,
 
@@ -38,47 +39,122 @@ const Graph = (matrix, ctx) => {
     return this;
   }
 
+  graph.displayForm = function(displayForm) {
+    this.displayForm = displayForm;
+    return this;
+  }
+
   graph.generateCoords = function () {
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2),
-      y: this.config.plot_y_offfset
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*2
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*2
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing*2,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*4
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2),
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*4
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing*2,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*4
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing*3,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
-    });
-    this.config.coords.push({
-      x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing*3,
-      y: this.config.plot_y_offfset+this.config.nodes_spacing*6
-    });
+    switch (this.displayForm) {
+      case 'default':
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2),
+          y: this.config.plot_y_offfset
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*2
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*2
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing*2,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*4
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2),
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*4
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing*2,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*4
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing*3,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*6
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)-this.config.nodes_spacing,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*6
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*6
+        });
+        this.config.coords.push({
+          x: this.config.plot_x_offfset+(this.plot_x/2)+this.config.nodes_spacing*3,
+          y: this.config.plot_y_offfset+this.config.nodes_spacing*6
+        });
+        break;
+      case 'empty-triangle':
+        const nodes = this.nodes;
+        const radius = this.config.nodes_radius;
+        const diameter = radius*2;
+        const spacing = this.config.nodes_spacing;
+
+        // отступы
+        const offset = {
+            x: this.config.plot_x_offfset+(this.plot_x/2),
+            y: this.config.plot_y_offfset
+        }
+
+        // количество вершин графа на каждой из сторон треугольника (минус один)
+        let n1, n2, n3;
+
+        // расчитываем сколько вершин на каждой из сторон треугольника
+        // и считаем отступы от центра для вершин на нижней стороне
+        if(nodes%3 === 0) {
+          n1 = Math.floor(nodes/3)+1;
+          n2 = Math.floor(nodes/3)-1;
+          n3 = Math.floor(nodes/3);
+        } else if(nodes%3 === 1) {
+          if(nodes%2 === 0){
+            n1 = Math.floor(nodes/3)+1;
+            n2 = n3 = Math.floor(nodes/3);
+          } else {
+            n1 = Math.floor(nodes/3)+1;
+            n2 = n3 = Math.floor(nodes/3);
+          }
+        } else if(nodes%3 === 2) {
+          if(nodes%2 === 0){
+            n1 = n2 = Math.floor(nodes/3)+1;
+            n3 = Math.floor(nodes/3);
+          } else {
+            n1 = n2 = Math.floor(nodes/3)+1;
+            n3 = Math.floor(nodes/3);
+          }
+        }
+
+        const l = 2*diameter*spacing*(n1-1);
+        const x = l/(n2+1);
+
+        // генерируем координаты для n1-1 вершин графа на первой стороне треугольника
+        for(let n = 0; n < n1; n++){
+          this.config.coords.push({
+            x: offset.x + diameter + diameter*spacing*n,
+            y: offset.y + diameter + diameter*spacing*n
+          });
+        }
+        // генерируем координаты для n2-1 вершин графа на второй стороне треугольника
+        for(let n = 0; n < n2; n++){
+          const nodeCoords = {};
+          nodeCoords.x = offset.x + diameter + diameter*spacing*(n1-1) - x*(n+1);
+          nodeCoords.y = offset.y + diameter + diameter*spacing*(n1-1);
+          this.config.coords.push(nodeCoords);
+        }
+
+        // генерируем координаты для n3-1 вершин графа на третей стороне треугольника
+        for(let n = 0; n < n3; n++){
+          this.config.coords.push({
+            x: offset.x + diameter - diameter*spacing*(n1-1) + diameter*spacing*n,
+            y: offset.y + diameter + diameter*spacing*(n1-1) - diameter*spacing*n
+          });
+        }
+        console.log(this.config.coords);
+        break;
+    }
     return this;
   }
 

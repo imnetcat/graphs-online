@@ -9,11 +9,12 @@ const drawGraphs = (matrix, options) => {
 
   const graph1 = Graph(matrix, context);
 
-  graph1.generateCoords();
-  canvas.setSize(graph1.getSize());
   graph1.orientired(options.orientired)
         .context(context)
-        .draw();
+        .displayForm(options.form)
+        .generateCoords();
+  canvas.setSize(graph1.getSize());
+  graph1.draw();
 }
 
 const showMenu = () => {
@@ -30,6 +31,23 @@ const showMenu = () => {
   }
 }
 
+const isMatrixCorrect = (matrix) => {
+  if(!matrix.length){
+    return false;
+  }
+  if(matrix.length !== matrix[0].length){
+    return false;
+  }
+  for(const i of matrix){
+    for(const j of i){
+      if(j === 1) continue;
+      if(j === 0) continue;
+      return false;
+    }
+  }
+  return true;
+}
+
 const refreshCanvas = () => {
   const form = new FormData(document.forms.menu);
   const matrixStr = document.getElementById('matrix-input').value.split('\n');
@@ -43,10 +61,16 @@ const refreshCanvas = () => {
     }
   }
 
-  const orientired = form.get('orientired');
+  if(!isMatrixCorrect(matrix)){
+    alert('You entered the wrong matrix');
+    return;
+  }
 
+  const orientired = form.get('orientiation');
+  const displayForm = form.get('display-form')
   const options = {
-    orientired: orientired === 'on' ? true : false
+    orientired: orientired === 'orientired' ? true : false,
+    form: displayForm
   };
 
   drawGraphs(matrix, options);

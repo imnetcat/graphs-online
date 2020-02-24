@@ -72,24 +72,23 @@ footer {
 
 #matrix-input {
   width: 250px;
-  height: 250px;
+  height: 50%;
 }
 
 .menu-row {
-  position: absolute;
+  display: flex;
   width: 100%;
-  height: 50%;
+  height: 100%;
 }
 .menu-row:nth-child(2) {
   margin-top: 30%;
 }
 
 table {
-  display: inline;
-  height: 100%;
-  position: absolute;
+  display: block;
+  height: 50%;
 }
 
 td {
-  display: flex;
+  
 }
