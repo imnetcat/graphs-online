@@ -152,7 +152,6 @@ const Graph = (matrix, ctx) => {
             y: offset.y + diameter + diameter*spacing*(n1-1) - diameter*spacing*n
           });
         }
-        console.log(this.config.coords);
         break;
     }
     return this;
@@ -376,17 +375,26 @@ const Graph = (matrix, ctx) => {
                 }
               }
 
+              function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+              }
+
+              const randX = getRandomInt(5, 15);
+              const randY = getRandomInt(5, 15);
+
               const newLine1 = {
                 from,
                 to: {
-                  x: newTx,
-                  y: newTy
+                  x: newTx+randX,
+                  y: newTy+randY
                 }
               }
               const newLine2 = {
                 from: {
-                  x: newTx,
-                  y: newTy
+                  x: newTx+randX,
+                  y: newTy+randY
                 },
                 to
               }
@@ -555,6 +563,10 @@ const Graph = (matrix, ctx) => {
     const ribs = () => {
       for(const m in this.matrix){
         for(const n in this.matrix[m]){
+          console.log(!this.config.orientired && (m - n) > 0);
+          if(!this.config.orientired && (m - n) > 0){
+            continue;
+          }
           if(this.matrix[m][n]){
             const fx = this.config.coords[m].x,
                 fy = this.config.coords[m].y,
@@ -576,6 +588,7 @@ const Graph = (matrix, ctx) => {
               toTheSameNode: false
             }
 
+            console.log(this.config)
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
               flags.superimposed = true;
