@@ -3,7 +3,7 @@
 const Graph = (matrix, ctx) => {
   const graph = {
     plot_x: 1000,
-    plot_y: 1000,
+    plot_y: 500,
     matrix,
     nodes: matrix.length,
     displayForm: 'default',
