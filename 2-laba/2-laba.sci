@@ -20,4 +20,6 @@ A = getMatrix(nodes, n1, n2, n3, n4);
 
 B = bool2s(A+A')
 
+A
+
 B
