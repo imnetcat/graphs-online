@@ -12,18 +12,19 @@
         <header><h1>Graph online viewer</h1></header>
         <div class="menu">
           <button class="menu-btn" onclick="showMenu()"><div></div><div></div><div></div></button>
+          <button class="menu-btn" onclick="showInfo()"><img src="info.png"></button>
           <button class="menu-btn" onclick="refreshCanvas()"><img src="refresh.png"></button>
         </div>
         <form name ="menu" id="menu-panel">
           <div class="menu-row"><textarea name="matrix" id="matrix-input">
 0 0 1 0 0 1 0 0 0 0
 0 0 0 0 0 0 0 0 0 0
-1 1 0 0 0 0 1 0 0 0
-0 1 0 0 0 0 0 0 0 0
-0 0 0 0 0 1 1 1 0 0
+1 0 0 0 0 0 1 0 0 0
 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 1 1 1 0 0
-0 1 0 0 0 0 1 1 1 0
+0 0 0 0 0 0 1 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0
+0 0 0 0 0 0 0 0 0 0
 0 1 0 0 0 0 0 0 0 0
 0 0 1 0 0 0 0 0 0 0</textarea>
             <table>
@@ -59,6 +60,28 @@
             </table>
           </div>
         </form>
+        <div id="info-box">
+          <header><h3><b>Graph properties</b></h3></header>
+          <p><b>Unified: </b><span id="unified"></span></p>
+          <header><h3><b>Nodes properties</b></h3></header>
+          <table id="nodes-props">
+            <tbody>
+              <tr>
+                <td>
+                </td>
+                <td>
+                  <b>Degrees</b>
+                </td>
+                <td>
+                  <b>Hanged</b>
+                </td>
+                <td>
+                  <b>Isolated</b>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div id="scrollable">
           <canvas id="canv"></canvas>
         </div>

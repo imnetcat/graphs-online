@@ -1,24 +1,15 @@
 'use strict';
 
 let isMenuShowed = false;
+let isInfoShowed = false;
 
-const drawGraphs = (matrix, options) => {
-  const canvId = "canv";
-  const canvas = Canvas(canvId).clear('2d');
-  const context = canvas.context('2d');
-
-  const graph1 = Graph(matrix, context);
-
-  graph1.orientired(options.orientired)
-        .context(context)
-        .displayForm(options.form)
-        .generateCoords();
-  canvas.setSize(graph1.getSize());
-  graph1.draw();
-}
-
-const showMenu = () => {
-  isMenuShowed = !isMenuShowed;
+const showMenu = (show = true) => {
+  if(show){
+    isMenuShowed = !isMenuShowed;
+    showInfo(false);
+  } else {
+    isMenuShowed = false;
+  }
   if(isMenuShowed){
     const width = document.getElementById('scrollable').offsetWidth;
     const height = document.getElementById('scrollable').offsetHeight;
@@ -28,6 +19,43 @@ const showMenu = () => {
     document.getElementById('menu-panel').style.display = "inherit";
   } else {
     document.getElementById('menu-panel').style.display = "none";
+  }
+}
+const showInfo = (show = true) => {
+  if(show){
+    isInfoShowed = !isInfoShowed;
+    showMenu(false);
+  } else {
+    isInfoShowed = false;
+  }
+  if(isInfoShowed){
+    const width = document.getElementById('scrollable').offsetWidth;
+    const height = document.getElementById('scrollable').offsetHeight;
+
+    document.getElementById('info-box').style.width = `${width-30}px`;
+    document.getElementById('info-box').style.height = `${height-30}px`;
+    document.getElementById('info-box').style.display = "inherit";
+  } else {
+    document.getElementById('info-box').style.display = "none";
+  }
+}
+
+const setInfo = (info) => {
+  document.getElementById("unified").innerHTML = (info.uni === -1) ? "no" : info.uni.toString();
+
+  const infoTable = document.getElementById("nodes-props");
+
+  for(let i = 0; i < info.degrees.length; i++){
+    const row = infoTable.insertRow(i+1);
+    row.insertCell(0).innerHTML = `<b>${(i+1).toString()}</b>`;
+    console.log(info.isOrientired, info.degrees[i])
+    if(info.isOrientired){
+      row.insertCell(1).innerHTML = `from ${info.degrees[i].from.toString()}<br>to ${info.degrees[i].to.toString()}`;
+    } else{
+      row.insertCell(1).innerHTML = info.degrees[i].sum().toString();
+    }
+    row.insertCell(2).innerHTML = (info.hangingNodes[i])? "Yes" : "";
+    row.insertCell(3).innerHTML = (info.isolatedNodes[i])? "Yes" : "";
   }
 }
 
@@ -48,7 +76,38 @@ const isMatrixCorrect = (matrix) => {
   return true;
 }
 
+const drawGraphs = (matrix, options) => {
+  const canvId = "canv";
+  const canvas = Canvas(canvId).clear('2d');
+  const context = canvas.context('2d');
+
+  const graph1 = Graph(matrix, context);
+
+  graph1.orientired(options.orientired)
+        .context(context)
+        .displayForm(options.form)
+        .generateCoords();
+  canvas.setSize(graph1.getSize());
+  graph1.draw();
+
+  const degrees = graph1.degrees();
+  const uni = graph1.isUni();
+  const hangingNodes = graph1.hangingNodes();
+  const isolatedNodes = graph1.isolatedNodes();
+  const isOrientired = graph1.isOrientired();
+  setInfo({
+    uni,
+    degrees,
+    hangingNodes,
+    isolatedNodes,
+    isOrientired
+  })
+}
+
 const refreshCanvas = () => {
+  showInfo(false);
+  showMenu(false);
+
   const form = new FormData(document.forms.menu);
   const matrixStr = document.getElementById('matrix-input').value.split('\n');
 
