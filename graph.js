@@ -44,6 +44,79 @@ const Graph = (matrix, ctx) => {
     return this;
   }
 
+  graph.degrees = function(){
+    class Deg {
+      constructor(from = 0, to = 0){
+        this.from = from;
+        this.to = to;
+      }
+      sum() {
+        return this.from + this.to;
+      }
+    };
+    const result = new Array(this.matrix.length)
+                            .fill({})
+                            .map( el => el = new Deg());
+    for(const m in this.matrix){
+      for(const n in this.matrix[m]){
+        let flag = true;
+        if((m - n) > 0){
+          flag = false;
+        }
+        if(this.matrix[m][n]){
+          if(flag){
+            result[m].from++;
+            result[n].to++;
+          } else {
+            result[m].from++;
+            result[n].to++;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  graph.isUni = function(){
+    const degrees = this.degrees();
+    const item0 = degrees[0].sum();
+    const isUni = degrees.every( item => item.sum() === item0 );
+    if(isUni){
+      return degrees[0].sum();
+    } else {
+      return -1;
+    }
+  }
+
+  graph.hangingNodes = function(){
+    const degrees = this.degrees();
+    const hangingNodes = [];
+    degrees.forEach( item => {
+      if(item.sum() === 1){
+        hangingNodes.push(item);
+      } else {
+        hangingNodes.push(null);
+      }
+    });
+    return hangingNodes;
+  }
+
+  graph.isolatedNodes = function(){
+    const degrees = this.degrees();
+    const isolatedNodes = [];
+    degrees.forEach( item => {
+      if(item.sum() === 0){
+        isolatedNodes.push(item);
+      } else {
+        isolatedNodes.push(null);
+      }
+    });
+    return isolatedNodes;
+  }
+  graph.isOrientired = function(){
+    return this.config.orientired;
+  }
+
   graph.generateCoords = function () {
     switch (this.displayForm) {
       case 'default':
@@ -563,7 +636,6 @@ const Graph = (matrix, ctx) => {
     const ribs = () => {
       for(const m in this.matrix){
         for(const n in this.matrix[m]){
-          console.log(!this.config.orientired && (m - n) > 0);
           if(!this.config.orientired && (m - n) > 0){
             continue;
           }
@@ -588,7 +660,6 @@ const Graph = (matrix, ctx) => {
               toTheSameNode: false
             }
 
-            console.log(this.config)
             //
             if(this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m){
               flags.superimposed = true;
