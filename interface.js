@@ -45,12 +45,17 @@ const setInfo = (info) => {
 
   const infoTable = document.getElementById("nodes-props");
 
+  const rows = infoTable.getElementsByTagName("tr")
+  for (let i = 1; i < rows.length; i) {
+    infoTable.deleteRow(i);
+  }
+
   for(let i = 0; i < info.degrees.length; i++){
     const row = infoTable.insertRow(i+1);
     row.insertCell(0).innerHTML = `<b>${(i+1).toString()}</b>`;
     console.log(info.isOrientired, info.degrees[i])
     if(info.isOrientired){
-      row.insertCell(1).innerHTML = `from ${info.degrees[i].from.toString()}<br>to ${info.degrees[i].to.toString()}`;
+      row.insertCell(1).innerHTML = `+ ${info.degrees[i].from.toString()}<br>- ${info.degrees[i].to.toString()}`;
     } else{
       row.insertCell(1).innerHTML = info.degrees[i].sum().toString();
     }
