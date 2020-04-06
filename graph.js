@@ -8,8 +8,8 @@ class Graph {
         this.nodes = matrix.length;
         this.display = 'default';
         this.config = {
-            plot_x_offfset: 0,
-            plot_y_offfset: 0,
+            plot_x_offfset: 100,
+            plot_y_offfset: 100,
 
             nodes_radius: 20,
             nodes_spacing: 2,
@@ -189,14 +189,17 @@ class Graph {
                 
                 plot_size_x = 2 * (this.config.coords[n1 - 1].x + diameter / 2);//+ diameter*1;
                 plot_size_y = this.config.coords[n1 - 1].y + diameter / 2 + diameter*spacing;//+ diameter * 1;
-                console.log(plot_size_x, plot_size_y);
+                console.log(this.config.plot_x_offfset + plot_size_x, this.config.plot_y_offfset + plot_size_y);
 
-                // отступы
+                // отступы сверху и слева от графа
                 for (let c of this.config.coords) {
-                    c.x += this.config.plot_x_offfset + (plot_size_x / 2);
-                    c.y += this.config.plot_x_offfset + diameter / 2;
+                    c.x += this.config.plot_x_offfset + plot_size_x / 2;
+                    c.y += this.config.plot_y_offfset + diameter / 4;
                 }
 
+                // отступы снизу и справа от графа
+                plot_size_x += this.config.plot_x_offfset + plot_size_x / 8;
+                plot_size_y += this.config.plot_y_offfset + diameter / 2;
                 break;
         }
         this.setSize(plot_size_x, plot_size_y);
