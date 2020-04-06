@@ -144,3 +144,8 @@ td {
 #info-box header h3 b {
   background: #fff;
 }
+
+.menu-btn img {
+    height: 35px;
+    width: auto;
+}
