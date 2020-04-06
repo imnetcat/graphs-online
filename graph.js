@@ -8,8 +8,8 @@ class Graph {
         this.nodes = matrix.length;
         this.display = 'default';
         this.config = {
-            plot_x_offfset: 10,
-            plot_y_offfset: 100,
+            plot_x_offfset: 0,
+            plot_y_offfset: 0,
 
             nodes_radius: 20,
             nodes_spacing: 2,
@@ -27,6 +27,11 @@ class Graph {
             x: this.plot_x,
             y: this.plot_y
         }
+    }
+
+    setSize(x, y) {
+        this.plot_x = x;
+        this.plot_y = y;
     }
 
     getRoutes(length) {
@@ -121,60 +126,14 @@ class Graph {
     }
 
     generateCoords() {
+        let plot_size_x = 0;
+        let plot_size_y = 0;
         switch (this.display) {
             case 'default':
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2),
-                    y: this.config.plot_y_offfset
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) - this.config.nodes_spacing,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 2
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) + this.config.nodes_spacing,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 2
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) - this.config.nodes_spacing * 2,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 4
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2),
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 4
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) + this.config.nodes_spacing * 2,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 4
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) - this.config.nodes_spacing * 3,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 6
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) - this.config.nodes_spacing,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 6
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) + this.config.nodes_spacing,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 6
-                });
-                this.config.coords.push({
-                    x: this.config.plot_x_offfset + (this.plot_x / 2) + this.config.nodes_spacing * 3,
-                    y: this.config.plot_y_offfset + this.config.nodes_spacing * 6
-                });
-                break;
             case 'empty-triangle':
                 const nodes = this.nodes;
-                const radius = this.config.nodes_radius;
-                const diameter = radius * 2;
+                const diameter = this.config.nodes_radius * 2;
                 const spacing = this.config.nodes_spacing;
-
-                // отступы
-                const offset = {
-                    x: this.config.plot_x_offfset + (this.plot_x / 2),
-                    y: this.config.plot_y_offfset
-                }
 
                 // количество вершин графа на каждой из сторон треугольника (минус один)
                 let n1, n2, n3;
@@ -209,27 +168,38 @@ class Graph {
                 // генерируем координаты для n1-1 вершин графа на первой стороне треугольника
                 for (let n = 0; n < n1; n++) {
                     this.config.coords.push({
-                        x: offset.x + diameter + diameter * spacing * n,
-                        y: offset.y + diameter + diameter * spacing * n
+                        x: diameter * spacing * n,
+                        y: diameter * spacing * n
                     });
                 }
                 // генерируем координаты для n2-1 вершин графа на второй стороне треугольника
                 for (let n = 0; n < n2; n++) {
                     const nodeCoords = {};
-                    nodeCoords.x = offset.x + diameter + diameter * spacing * (n1 - 1) - x * (n + 1);
-                    nodeCoords.y = offset.y + diameter + diameter * spacing * (n1 - 1);
+                    nodeCoords.x = diameter * spacing * (n1 - 1) - x * (n + 1);
+                    nodeCoords.y = diameter * spacing * (n1 - 1);
                     this.config.coords.push(nodeCoords);
                 }
-
                 // генерируем координаты для n3-1 вершин графа на третей стороне треугольника
                 for (let n = 0; n < n3; n++) {
                     this.config.coords.push({
-                        x: offset.x + diameter - diameter * spacing * (n1 - 1) + diameter * spacing * n,
-                        y: offset.y + diameter + diameter * spacing * (n1 - 1) - diameter * spacing * n
+                        x: - diameter * spacing * (n1 - 1) + diameter * spacing * n,
+                        y: + diameter * spacing * (n1 - 1) - diameter * spacing * n
                     });
                 }
+                
+                plot_size_x = 2 * (this.config.coords[n1 - 1].x + diameter / 2);//+ diameter*1;
+                plot_size_y = this.config.coords[n1 - 1].y + diameter / 2 + diameter*spacing;//+ diameter * 1;
+                console.log(plot_size_x, plot_size_y);
+
+                // отступы
+                for (let c of this.config.coords) {
+                    c.x += this.config.plot_x_offfset + (plot_size_x / 2);
+                    c.y += this.config.plot_x_offfset + diameter / 2;
+                }
+
                 break;
         }
+        this.setSize(plot_size_x, plot_size_y);
         return this;
     }
 
