@@ -217,5 +217,3 @@ Matrix.prototype.inverse = function (A) {
     for (var i = 0; i < N; i++) { for (var j = 0; j < N; j++) A[i][j] /= det; }
     return A;
 }
-
-module.exports = Matrix;
