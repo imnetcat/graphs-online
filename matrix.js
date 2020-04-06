@@ -1,16 +1,25 @@
 'use strict';
 
 class Matrix {
-    constructor(m, n) {
+    constructor(array) {
         this.matrix = [];
-        for (var i = 0; i < m; i++) {
+        for (var i = 0; i < array.length; i++) {
             this.matrix[i] = [];
-            for (var j = 0; j < n; j++) {
-                this.matrix[i][j] = 0;
+            for (var j = 0; j < array[0].length; j++) {
+                this.matrix[i][j] = array[i][j];
             }
         }
     }
-    
+
+    // итерирование по матрице
+    iterate(callback) {
+        for (const m in this.matrix) {
+            for (const n in this.matrix[m]) {
+                callback(this.matrix[m][n], this.matrix[n][m], m, n);
+            }
+        }
+    }
+
     // узнаем квадратна€ ли матрица
     isSquare() {
         const s = this.size();
@@ -20,9 +29,9 @@ class Matrix {
     // получение размера матрицы
     size() {
         const s = {m: 0, n: 0};
-        s.m = matrix.length;
-        if (!m) return s;
-        s.n = matrix[0].length;
+        s.m = this.matrix.length;
+        if (!s.m) return s;
+        s.n = this.matrix[0].length;
         return s;
     }
 
@@ -80,8 +89,7 @@ class Matrix {
 
 // “ранспонирование матрицы
 // Ќа входе двумерный массив
-Matrix.prototype.transpone = function(A)
-{
+Matrix.prototype.transpone = function(A){
     var m = A.length, n = A[0].length, AT = [];
     for (var i = 0; i < n; i++) {
     AT[i] = [];
