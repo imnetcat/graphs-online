@@ -4,11 +4,9 @@ class Graph {
     constructor(matrix, ctx) {
         this.plot_x = 1000;
         this.plot_y = 500;
-        if (matrix instanceof Matrix) {
-            this.matrix = matrix;
-        }
+        this.matrix = new Matrix(matrix);
         this.nodes = matrix.length;
-        this.displayForm = 'default';
+        this.display = 'default';
         this.config = {
             plot_x_offfset: 10,
             plot_y_offfset: 100,
@@ -45,8 +43,8 @@ class Graph {
         return this;
     }
 
-    displayForm(displayForm) {
-        this.displayForm = displayForm;
+    displayForm(display) {
+        this.display = display;
         return this;
     }
 
@@ -60,26 +58,24 @@ class Graph {
                 return this.from + this.to;
             }
         };
-        const result = new Array(this.matrix.length)
+        const result = new Array(this.matrix.size().m)
             .fill({})
             .map(el => el = new Deg());
-        for (const m in this.matrix) {
-            for (const n in this.matrix[m]) {
-                let flag = true;
-                if ((m - n) > 0) {
-                    flag = false;
-                }
-                if (this.matrix[m][n]) {
-                    if (flag) {
-                        result[m].from++;
-                        result[n].to++;
-                    } else {
-                        result[m].from++;
-                        result[n].to++;
-                    }
+        this.matrix.iterate((a, b, m, n) => {
+            let flag = true;
+            if ((m - n) > 0) {
+                flag = false;
+            }
+            if (a) {
+                if (flag) {
+                    result[m].from++;
+                    result[n].to++;
+                } else {
+                    result[m].from++;
+                    result[n].to++;
                 }
             }
-        }
+        });
         return result;
     }
 
@@ -125,7 +121,7 @@ class Graph {
     }
 
     generateCoords() {
-        switch (this.displayForm) {
+        switch (this.display) {
             case 'default':
                 this.config.coords.push({
                     x: this.config.plot_x_offfset + (this.plot_x / 2),
@@ -641,12 +637,9 @@ class Graph {
         }
 
         const ribs = () => {
-            for (const m in this.matrix) {
-                for (const n in this.matrix[m]) {
-                    if (!this.config.orientired && (m - n) > 0) {
-                        continue;
-                    }
-                    if (this.matrix[m][n]) {
+            this.matrix.iterate((a, b, m, n) => {
+                if (!(!this.config.orientired && (m - n) > 0)) {
+                    if (a) {
                         const fx = this.config.coords[m].x,
                             fy = this.config.coords[m].y,
                             tx = this.config.coords[n].x,
@@ -668,19 +661,19 @@ class Graph {
                         }
 
                         //
-                        if (this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n !== m) {
+                        if (a === b && a && b && n !== m) {
                             flags.superimposed = true;
                         }
 
                         //
-                        if (this.matrix[m][n] === this.matrix[n][m] && this.matrix[n][m] && this.matrix[m][n] && n === m) {
+                        if (a === b && a && b && n === m) {
                             flags.toTheSameNode = true;
                         }
 
                         line(from, to, flags);
                     }
                 }
-            }
+            });
         }
         ribs();
         nodes();
