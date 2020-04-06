@@ -35,7 +35,25 @@ class Graph {
     }
 
     getRoutes(length) {
-        this.matrix.pow(length);
+        const A = this.matrix.pow(length);
+        const result = [];
+        for (let m = 0; m < A.length; m++) {
+            for (let n = 0; n < A[m].length; n++) {
+                if (A[m][n]) {
+                    if (length == 1) {
+                        result.push([m, n]);
+                    } else {
+                        const res = this.getRoutes(length - 1);
+                        for (let i = 0; i < res.length; i++) {
+                            res[i].shift(m);
+                        }
+                        result.push(res);
+                    }
+                }
+            }
+        }
+        console.log(result);
+        return result;
     }
 
     context(ctx) {

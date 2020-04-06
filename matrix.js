@@ -140,7 +140,7 @@ Matrix.prototype.multiplyMatrix = function(A, B) {
 
 // Возведение матрицы в степень
 Matrix.prototype.pow = function(n, A) {
-    if (n == 1) return A;     // Функцию MultiplyMatrix см. выше
+    if (n == 1) return A;
     else return MultiplyMatrix(A, MatrixPow(n - 1, A));
 }
 
