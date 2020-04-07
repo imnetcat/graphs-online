@@ -3,6 +3,8 @@
 let isMenuShowed = false;
 let isInfoShowed = false;
 
+let graph;
+
 const showMenu = (show = true) => {
     if (show) {
         isMenuShowed = !isMenuShowed;
@@ -42,7 +44,7 @@ const showInfo = (show = true) => {
 }
 
 const setInfo = (info) => {
-    document.getElementById("unified").innerHTML = (info.uni === -1) ? "no" : info.uni.toString();
+    document.getElementById("unified").innerHTML = (info.uni === -1) ? "false" : info.uni.toString();
 
     const infoTable = document.getElementById("nodes-props");
 
@@ -81,25 +83,31 @@ const isMatrixCorrect = (matrix) => {
     return true;
 }
 
+const getRouters = () => {
+    const length = document.getElementById("routers-length").value;
+    const routers = graph.getRoutes(length);
+    console.log(routers);
+}
+
 const drawGraphs = (matrix, options) => {
     const canvId = "canv";
     const canvas = Canvas(canvId).clear('2d');
     const context = canvas.context('2d');
     
-    const graph1 = new Graph(matrix, context);
+    graph = new Graph(matrix, context);
     
-    graph1.orientired(options.orientired)
+    graph.orientired(options.orientired)
         .context(context)
         .displayForm(options.form)
         .generateCoords();
-    canvas.setSize(graph1.getSize());
-    graph1.draw();
+    canvas.setSize(graph.getSize());
+    graph.draw();
 
-    const degrees = graph1.degrees();
-    const uni = graph1.isUni();
-    const hangingNodes = graph1.hangingNodes();
-    const isolatedNodes = graph1.isolatedNodes();
-    const isOrientired = graph1.isOrientired();
+    const degrees = graph.degrees();
+    const uni = graph.isUni();
+    const hangingNodes = graph.hangingNodes();
+    const isolatedNodes = graph.isolatedNodes();
+    const isOrientired = graph.isOrientired();
     setInfo({
         uni,
         degrees,

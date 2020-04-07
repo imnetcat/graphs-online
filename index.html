@@ -62,26 +62,26 @@
           </div>
         </form>
         <div id="info-box">
-          <header><h3><b>Graph properties</b></h3></header>
-          <p><b>Unified: </b><span id="unified"></span></p>
-          <header><h3><b>Nodes properties</b></h3></header>
-          <table id="nodes-props">
-            <tbody>
-              <tr>
-                <td>
-                </td>
-                <td>
-                  <b>Degrees</b>
-                </td>
-                <td>
-                  <b>Hanged</b>
-                </td>
-                <td>
-                  <b>Isolated</b>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <header><h3><b>Graph properties</b></h3></header>
+            <p><b>Однородность: </b><span id="unified"></span></p>
+            <p><b>Маршруты длиною <input type="text" size"15" id="routers-length"><button onclick="getRouters();">get</button><span id="routers"></span></p>
+            <header><h3><b>Nodes properties</b></h3></header>
+            <table id="nodes-props">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <b>Degrees</b>
+                        </td>
+                        <td>
+                            <b>Hanged</b>
+                        </td>
+                        <td>
+                            <b>Isolated</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div id="scrollable">
           <canvas id="canv"></canvas>
