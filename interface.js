@@ -83,10 +83,32 @@ const isMatrixCorrect = (matrix) => {
     return true;
 }
 
-const getRouters = () => {
-    const length = document.getElementById("routers-length").value;
-    const routers = graph.getRoutes(length);
-    console.log(routers);
+const getRoutes = () => {
+    const length = Number(document.getElementById("routes-length").value);
+    const routes = graph.routes(length);
+    document.getElementById("routes").innerText = routes;
+}
+const getReachability = () => {
+    const reachability = graph.reachability();
+    const strMatrix = Matrix.toString(reachability);
+    document.getElementById("reachability").innerText = strMatrix;
+}
+const getStrongBindingMatrix = () => {
+    const matrix = graph.strongBindingMatrix();
+    const strMatrix = Matrix.toString(matrix);
+    document.getElementById("strongBindingM").innerText = strMatrix;
+}
+const getStrongBindingComponents = () => {
+    const components = graph.strongBindingComponents();
+
+
+    for (let i = 0; i < components.length; i++) {
+        components[i].join(", ");
+        components[i] += ' }';
+        components[i] = '{ ' + components[i];
+    }
+    const strComponents = "\n" + components.join('\n');
+    document.getElementById("strongBindingC").innerText = strComponents;
 }
 
 const drawGraphs = (matrix, options) => {

@@ -85,9 +85,31 @@ class Matrix {
     inverse() {
         return Matrix.inverse(this.matrix);
     }
+
+    // булевое отображение
+    booling() {
+        const A = this.matrix;
+        for (let m = 0; m < A.length; m++) {
+            for (let n = 0; n < A[m].length; n++) {
+                A[m][n] = Number(!!A[m][n]);
+            }
+        }
+    }
 }
 
-// Транспонирование матрицы
+// Поелементарное перемножение матриц
+Matrix.multiplyMatrixElem = function (A, B) {
+    const res = [];
+    for (let i = 0; i < A.length; i++) {
+        res.push([]);
+        for (let j = 0; j < A[i].length; j++) {
+            res[i].push(A[i][j] * B[i][j]);
+        }
+    }
+    return res;
+}
+
+// Транспонирование  матрицы
 // На входе двумерный массив
 Matrix.transpone = function(A){
     var m = A.length, n = A[0].length, AT = [];
@@ -100,12 +122,13 @@ Matrix.transpone = function(A){
 
 // Сложение  матриц
 // На входе двумерные массивы одинаковой размерности
-Matrix.matrixSum = function(A, B)
-{
-    var m = A.length, n = A[0].length, C = [];
-    for (var i = 0; i < m; i++) {
-    C[i] = [];
-        for (var j = 0; j < n; j++) C[i][j] = A[i][j] + B[i][j];
+Matrix.matrixSum = function (A, B) {
+    const m = A.length, n = A[0].length, C = [];
+    for (let i = 0; i < m; i++) {
+        C[i] = [];
+        for (let j = 0; j < n; j++) {
+            C[i][j] = A[i][j] + B[i][j];
+        }
     }
     return C;
 }
@@ -227,4 +250,32 @@ Matrix.inverse = function (A) {
     var N = A.length, A = AdjugateMatrix(A);
     for (var i = 0; i < N; i++) { for (var j = 0; j < N; j++) A[i][j] /= det; }
     return A;
+}
+
+Matrix.createUnit = function (n) {
+    return (new Array(n).fill(0)).map(
+        function (a, i) {
+            return (new Array(n)).fill(0).map((b, j)  => (i == j) ? 1 : 0);
+        }
+    )
+}
+
+Matrix.toString = function (A) {
+    let result = "\n";
+    for (let i = 0; i < A.length; i++) {
+        for (let j = 0; j < A[i].length; j++) {
+            result += String(A[i][j]);
+            result += "   ";
+        }
+        result += "\n";
+    }
+    return result;
+}
+
+Matrix.createZero = function (n) {
+    return (new Array(n).fill(0)).map(
+        function (a, i) {
+            return (new Array(n)).fill(0);
+        }
+    )
 }

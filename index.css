@@ -149,3 +149,13 @@ td {
     height: 35px;
     width: auto;
 }
+
+.matrix-box {
+    letter-spacing: 0.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.line-box {
+}

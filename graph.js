@@ -34,26 +34,99 @@ class Graph {
         this.plot_y = y;
     }
 
-    getRoutes(length) {
-        const A = this.matrix.pow(length);
-        const result = [];
-        for (let m = 0; m < A.length; m++) {
-            for (let n = 0; n < A[m].length; n++) {
-                if (A[m][n]) {
-                    if (length == 1) {
-                        result.push([m, n]);
-                    } else {
-                        const res = this.getRoutes(length - 1);
-                        for (let i = 0; i < res.length; i++) {
-                            res[i].shift(m);
-                        }
-                        result.push(res);
+    reachability() {
+        const s = this.matrix.size().m;
+        let multiplycat = Matrix.createUnit(s);
+        const pows = [];
+        for (let i = 1; i < s; i++) {
+            pows.push(this.matrix.pow(i));
+        }
+        for (let i = 0; i < pows.length; i++) {
+            multiplycat = Matrix.matrixSum(multiplycat, pows[i]);
+        }
+        this.matrix.matrix = multiplycat;
+        this.matrix.booling();
+        return this.matrix.matrix;
+    }
+
+    strongBindingMatrix() {
+        const R = this.reachability();
+        const RT = Matrix.transpone(R);
+        const S = Matrix.multiplyMatrixElem(R, RT);
+        return S;
+    }
+
+    strongBindingComponents() {
+        const S = this.strongBindingMatrix();
+        for (let i = 0; i < S.length; i++) {
+            for (let j = 0; j < S[i].length; j++) {
+                if (S[i][j]) {
+                    let ic = i+1;
+                    while (ic < S.length) {
+                        S[ic][j] = 0;
+                        ic++;
                     }
                 }
             }
         }
-        console.log(result);
-        return result;
+
+        const components = [];
+
+        for (let i = 0; i < S.length; i++) {
+            const component = [];
+            for (let j = 0; j < S[i].length; j++) {
+                if (S[i][j]) {
+                    component.push(j);
+                }
+            }
+            if (component.length) {
+                components.push(component);
+            }
+        }
+        
+        return components;
+    }
+
+    getRoutes(arr, m) {
+        let res = [];
+        for (let k = 0; k < arr.length; k++) {
+            const temp = [];
+            temp.push(m);
+            temp.push(arr[k]);
+            res.push(temp);
+        }
+        return res;
+    }
+    
+    routes(length) {
+        const A = this.matrix.pow(length);
+
+        let routesResult = [];
+        const rtrs = [];
+        for (let m = 0; m < A.length; m++) {
+            for (let n = 0; n < A[m].length; n++) {
+                if (A[m][n]) {
+                    routesResult.push([m, n])
+                } 
+            }
+        }
+        
+        console.log(routesResult)
+
+        
+        const T = Matrix.transpone(this.matrix.matrix);
+        console.log(T)
+        for (let m = 0; m < T.length; m++) {
+            for (let n = 0; n < T[m].length; n++) {
+                if (T[m][n]) {
+                    console.log(m, n)
+                    routesResult[m].splice(n, 0, m);
+                }
+            }
+        }
+        
+
+        return routesResult;
     }
 
     context(ctx) {
