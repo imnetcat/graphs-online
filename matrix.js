@@ -89,7 +89,7 @@ class Matrix {
 
 // Транспонирование матрицы
 // На входе двумерный массив
-Matrix.prototype.transpone = function(A){
+Matrix.transpone = function(A){
     var m = A.length, n = A[0].length, AT = [];
     for (var i = 0; i < n; i++) {
     AT[i] = [];
@@ -100,7 +100,7 @@ Matrix.prototype.transpone = function(A){
 
 // Сложение  матриц
 // На входе двумерные массивы одинаковой размерности
-Matrix.prototype.matrixSum = function(A, B)
+Matrix.matrixSum = function(A, B)
 {
     var m = A.length, n = A[0].length, C = [];
     for (var i = 0; i < m; i++) {
@@ -111,7 +111,7 @@ Matrix.prototype.matrixSum = function(A, B)
 }
 
 // Умножение матрицы на число
-Matrix.prototype.multiplyNumber = function(a, A)  // a - число, A - матрица (двумерный массив)
+Matrix.multiplyNumber = function(a, A)  // a - число, A - матрица (двумерный массив)
 {
     var m = A.length, n = A[0].length, B = [];
     for (var i = 0; i < m; i++) {
@@ -122,7 +122,7 @@ Matrix.prototype.multiplyNumber = function(a, A)  // a - число, A - матрица (дву
 }
 
 // Умножение матриц
-Matrix.prototype.multiplyMatrix = function(A, B) {
+Matrix.multiplyMatrix = function(A, B) {
     var rowsA = A.length, colsA = A[0].length,
         rowsB = B.length, colsB = B[0].length,
         C = [];
@@ -139,14 +139,17 @@ Matrix.prototype.multiplyMatrix = function(A, B) {
 }
 
 // Возведение матрицы в степень
-Matrix.prototype.pow = function(n, A) {
-    if (n == 1) return A;
-    else return MultiplyMatrix(A, MatrixPow(n - 1, A));
+Matrix.pow = function(n, A) {
+    if (n == 1) {
+        return A;
+    } else {
+        return Matrix.multiplyMatrix(A, Matrix.pow(n - 1, A));
+    }
 }
 
 // Определитель матрицы
 // Используется алгоритм Барейса, сложность O(n^3)
-Matrix.prototype.Determinant = function (A) {
+Matrix.Determinant = function (A) {
     var N = A.length, B = [], denom = 1, exchanges = 0;
     for (var i = 0; i < N; ++i) {
         B[i] = [];
@@ -176,7 +179,7 @@ Matrix.prototype.Determinant = function (A) {
 }
 
 // Ранг матрицы
-Matrix.prototype.rank = function(A) {
+Matrix.rank = function(A) {
     var m = A.length, n = A[0].length, k = (m < n ? m : n), r = 1, rank = 0;
     while (r <= k) {
         var B = [];
@@ -194,7 +197,7 @@ Matrix.prototype.rank = function(A) {
 
 // Союзная матрица
 // A - двумерный квадратный массив
-Matrix.prototype.adjugate = function (A) {
+Matrix.adjugate = function (A) {
     var N = A.length, adjA = [];
     for (var i = 0; i < N; i++) {
         adjA[i] = [];
@@ -218,7 +221,7 @@ Matrix.prototype.adjugate = function (A) {
 
 // Обратная матрица
 // A - двумерный квадратный массив
-Matrix.prototype.inverse = function (A) {
+Matrix.inverse = function (A) {
     var det = Determinant(A);
     if (det == 0) return false;
     var N = A.length, A = AdjugateMatrix(A);
