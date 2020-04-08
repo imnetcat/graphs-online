@@ -99,7 +99,7 @@ const getRoutes = () => {
             }
             routes[i] = routes[i].join(', ');
             routes[i] += ' } ';
-            routes[i] = 'K { ' + routes[i];
+            routes[i] = '{ ' + routes[i];
         }
         const strRouters = routes;
         for (let i = 3; i < routes.length; i += 4) {
