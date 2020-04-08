@@ -128,7 +128,7 @@ const getStrongBindingComponents = () => {
     for (let i = 0; i < components.length; i++) {
         components[i] = components[i].join(", ");
         components[i] += ' }';
-        components[i] = `K${i}: { ` + components[i];
+        components[i] = `K${i+1}: { ` + components[i];
     }
     const strComponents = "<p>" + components.join('</p><p>');
     document.getElementById("strongBindingC").innerHTML = strComponents;
@@ -191,6 +191,16 @@ const refreshCanvas = () => {
     };
 
     drawGraphs(matrix, options);
+}
+
+const buildCondensGraph = () => {
+    const condensation = graph.condensation();
+    for (let i = 0; i < condensation.length; i++) {
+        condensation[i] = condensation[i].join(' ');
+    }
+    const strMatrix = condensation.join('\n');
+    document.getElementById('matrix-input').value = strMatrix;
+    refreshCanvas();
 }
 
 document.addEventListener('DOMContentLoaded', refreshCanvas)

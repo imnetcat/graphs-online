@@ -18,11 +18,16 @@
         </div>
         <form name ="menu" id="menu-panel">
           <div class="menu-row"><textarea name="matrix" id="matrix-input">
-0 1 0 1 0
-0 0 0 0 1
-1 0 0 0 0
-0 0 1 0 1
-0 1 0 0 0</textarea>
+0 0 1 0 0 1 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+1 0 0 0 0 0 1 0 0 0
+0 1 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 1 1 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 1 1 0 0
+0 1 0 0 0 0 1 1 1 0
+0 1 0 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0 0</textarea>
             <table>
               <tr>
                 <th>
@@ -63,7 +68,7 @@
             <p><b>Матрица досягаемости <button onclick="getReachability();">get</button><span class="matrix-box" id="reachability"></span></p>
             <p><b>Матрица сильной связаности <button onclick="getStrongBindingMatrix();">get</button><span class="matrix-box" id="strongBindingM"></span></p>
             <p><b>Компоненты сильной связаности <button onclick="getStrongBindingComponents();">get</button><span id="strongBindingC"></span></p>
-            <p><b>Матрица конденсации <button onclick="getCondensation();">get</button><span class="matrix-box" id="condensation"></span></p>
+            <p><b>Матрица конденсации <button onclick="getCondensation();">get</button><button onclick="buildCondensGraph();">build</button><span class="matrix-box" id="condensation"></span></p>
             <header><h3><b>Nodes properties</b></h3></header>
             <table id="nodes-props">
                 <tbody>

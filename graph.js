@@ -87,23 +87,17 @@ class Graph {
         return components;
     }
 
-    getRoutes(length, from) {
-        if (!length) return [];
-        const T = Matrix.transpone(this.matrix.matrix);
-        const result = [];
-        const row = T[from];
-        for (let n = 0; n < row.length; n++) {
-            if (row[n]) {
-                console.log(from, n)
-                const temp = getRoutes(length-1, n);
-                if (temp.length) {
-                    result.push(m);
-                    result.push(temp);
-                    result.push(n);
+    condensation() {
+        const nodes = this.strongBindingComponents();
+        const cMatrix = Matrix.createZero(nodes.length);
+        for (let m = 0; m < cMatrix.length; m++) {
+            for (let n = 0; n < cMatrix[m].length; n++) {
+                if (n === m+1) {
+                    cMatrix[m][n] = 1;
                 }
             }
         }
-        return result;
+        return cMatrix;
     }
     
     routes(length) {
