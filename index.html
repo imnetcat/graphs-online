@@ -62,7 +62,8 @@
             <p><b>Маршруты длиною <input type="text" size="2" id="routes-length"><button onclick="getRoutes();">get</button><span class="line-box" id="routes"></span></p>
             <p><b>Матрица досягаемости <button onclick="getReachability();">get</button><span class="matrix-box" id="reachability"></span></p>
             <p><b>Матрица сильной связаности <button onclick="getStrongBindingMatrix();">get</button><span class="matrix-box" id="strongBindingM"></span></p>
-            <p><b>Компоненты сильной связаности <button onclick="getStrongBindingComponents();">get</button><span class="line-box" id="strongBindingC"></span></p>
+            <p><b>Компоненты сильной связаности <button onclick="getStrongBindingComponents();">get</button><span id="strongBindingC"></span></p>
+            <p><b>Матрица конденсации <button onclick="getCondensation();">get</button><span class="matrix-box" id="condensation"></span></p>
             <header><h3><b>Nodes properties</b></h3></header>
             <table id="nodes-props">
                 <tbody>

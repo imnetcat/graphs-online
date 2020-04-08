@@ -83,6 +83,11 @@ const isMatrixCorrect = (matrix) => {
     return true;
 }
 
+const getCondensation = () => {
+    const condensation = graph.condensation();
+    const strMatrix = Matrix.toString(condensation);
+    document.getElementById("condensation").innerText = strMatrix;
+}
 const getRoutes = () => {
     document.getElementById("routes").innerHTML = "";
     const length = Number(document.getElementById("routes-length").value);
@@ -94,7 +99,7 @@ const getRoutes = () => {
             }
             routes[i] = routes[i].join(', ');
             routes[i] += ' } ';
-            routes[i] = ' { ' + routes[i];
+            routes[i] = 'K { ' + routes[i];
         }
         const strRouters = routes;
         for (let i = 3; i < routes.length; i += 4) {
@@ -123,7 +128,7 @@ const getStrongBindingComponents = () => {
     for (let i = 0; i < components.length; i++) {
         components[i] = components[i].join(", ");
         components[i] += ' }';
-        components[i] = '{ ' + components[i];
+        components[i] = `K${i}: { ` + components[i];
     }
     const strComponents = "<p>" + components.join('</p><p>');
     document.getElementById("strongBindingC").innerHTML = strComponents;
