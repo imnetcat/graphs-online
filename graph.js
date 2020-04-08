@@ -76,7 +76,7 @@ class Graph {
             const component = [];
             for (let j = 0; j < S[i].length; j++) {
                 if (S[i][j]) {
-                    component.push(j);
+                    component.push(j+1);
                 }
             }
             if (component.length) {
@@ -87,46 +87,73 @@ class Graph {
         return components;
     }
 
-    getRoutes(arr, m) {
-        let res = [];
-        for (let k = 0; k < arr.length; k++) {
-            const temp = [];
-            temp.push(m);
-            temp.push(arr[k]);
-            res.push(temp);
-        }
-        return res;
-    }
-    
-    routes(length) {
-        const A = this.matrix.pow(length);
-
-        let routesResult = [];
-        const rtrs = [];
-        for (let m = 0; m < A.length; m++) {
-            for (let n = 0; n < A[m].length; n++) {
-                if (A[m][n]) {
-                    routesResult.push([m, n])
-                } 
-            }
-        }
-        
-        console.log(routesResult)
-
-        
+    getRoutes(length, from) {
+        if (!length) return [];
         const T = Matrix.transpone(this.matrix.matrix);
-        console.log(T)
-        for (let m = 0; m < T.length; m++) {
-            for (let n = 0; n < T[m].length; n++) {
-                if (T[m][n]) {
-                    console.log(m, n)
-                    routesResult[m].splice(n, 0, m);
+        const result = [];
+        const row = T[from];
+        for (let n = 0; n < row.length; n++) {
+            if (row[n]) {
+                console.log(from, n)
+                const temp = getRoutes(length-1, n);
+                if (temp.length) {
+                    result.push(m);
+                    result.push(temp);
+                    result.push(n);
                 }
             }
         }
-        
+        return result;
+    }
+    
+    routes(length) {
+        const getWays = matrix => {
+            let l1 = [];
+            let l2 = [];
+            let l3 = [];
+            for (let i = 0; i < matrix.length; i++) {
+                for (let j = 0; j < matrix.length; j++) {
+                    if (matrix[i][j] === 1 && i != j) l1.push([i, j]);
+                }
+            }
+            for (let i = 0; i < l1.length; i++) {
+                let chain1 = l1[i];
+                for (let j = 0; j < l1.length; j++) {
+                    const chain2 = l1[j];
+                    const c1first = chain1[0];
+                    const c1last = chain1[chain1.length - 1];
+                    const c2first = chain2[0];
+                    const c2last = chain2[chain2.length - 1];
+                    if (c1last === c2first && c1first !== c2last) {
+                        l2.push([...chain1, c2last]);
+                    }
+                }
+            }
+            for (let i = 0; i < l1.length; i++) {
+                let chain1 = l1[i];
+                for (let j = 0; j < l2.length; j++) {
+                    const chain2 = l2[j];
+                    const c1first = chain1[0];
+                    const c1last = chain1[chain1.length - 1];
+                    const c2first = chain2[0];
+                    const c2last = chain2[chain2.length - 1];
+                    if (c2last === c1first && c2first !== c1last && chain2[1] !== c1last) {
+                        l3.push([...chain2, c1last]);
+                    }
+                }
+            }
+            
+            return { l1, l2, l3 };
+        }
 
-        return routesResult;
+        if (length === 3) {
+            return getWays(this.matrix.matrix).l3;
+        } else if (length === 2){
+            return getWays(this.matrix.matrix).l2;
+        } else if (length === 1) {
+            return getWays(this.matrix.matrix).l1;
+        }
+        
     }
 
     context(ctx) {
@@ -280,7 +307,6 @@ class Graph {
                 
                 plot_size_x = 2 * (this.config.coords[n1 - 1].x + diameter / 2);//+ diameter*1;
                 plot_size_y = this.config.coords[n1 - 1].y + diameter / 2 + diameter*spacing;//+ diameter * 1;
-                console.log(this.config.plot_x_offfset + plot_size_x, this.config.plot_y_offfset + plot_size_y);
 
                 // отступы сверху и слева от графа
                 for (let c of this.config.coords) {
