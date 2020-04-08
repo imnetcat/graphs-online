@@ -157,5 +157,9 @@ td {
     align-items: center;
 }
 
-.line-box {
+.line-box p {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -18,16 +18,11 @@
         </div>
         <form name ="menu" id="menu-panel">
           <div class="menu-row"><textarea name="matrix" id="matrix-input">
-0 0 1 0 0 1 0 0 0 0
-0 0 0 0 0 0 0 0 0 0
-1 0 0 0 0 0 1 0 0 0
-0 1 0 0 0 0 0 0 0 0
-0 0 0 0 0 1 1 1 0 0
-0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 1 1 1 0 0
-0 1 0 0 0 0 1 1 1 0
-0 1 0 0 0 0 0 0 0 0
-0 0 1 0 0 0 0 0 0 0</textarea>
+0 1 0 1 0
+0 0 0 0 1
+1 0 0 0 0
+0 0 1 0 1
+0 1 0 0 0</textarea>
             <table>
               <tr>
                 <th>
@@ -64,10 +59,10 @@
         <div id="info-box">
             <header><h3><b>Graph properties</b></h3></header>
             <p><b>Однородность: </b><span id="unified"></span></p>
-            <p><b>Маршруты длиною <input type="text" size"15" id="routes-length"><button class="line-box" onclick="getRoutes();">get</button><span id="routes"></span></p>
-            <p><b>Матрица досяжности <button onclick="getReachability();">get</button><span class="matrix-box" id="reachability"></span></p>
-            <p><b>Матрица сильної зв'язності <button onclick="getStrongBindingMatrix();">get</button><span class="matrix-box" id="strongBindingM"></span></p>
-            <p><b>Компоненти сильної зв'язності <button onclick="getStrongBindingComponents();">get</button><span class="line-box" id="strongBindingC"></span></p>
+            <p><b>Маршруты длиною <input type="text" size="2" id="routes-length"><button onclick="getRoutes();">get</button><span class="line-box" id="routes"></span></p>
+            <p><b>Матрица досягаемости <button onclick="getReachability();">get</button><span class="matrix-box" id="reachability"></span></p>
+            <p><b>Матрица сильной связаности <button onclick="getStrongBindingMatrix();">get</button><span class="matrix-box" id="strongBindingM"></span></p>
+            <p><b>Компоненты сильной связаности <button onclick="getStrongBindingComponents();">get</button><span class="line-box" id="strongBindingC"></span></p>
             <header><h3><b>Nodes properties</b></h3></header>
             <table id="nodes-props">
                 <tbody>

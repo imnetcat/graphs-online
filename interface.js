@@ -84,9 +84,27 @@ const isMatrixCorrect = (matrix) => {
 }
 
 const getRoutes = () => {
+    document.getElementById("routes").innerHTML = "";
     const length = Number(document.getElementById("routes-length").value);
-    const routes = graph.routes(length);
-    document.getElementById("routes").innerText = routes;
+    if (length) {
+        const routes = graph.routes(length);
+        for (let i = 0; i < routes.length; i++) {
+            for (let j = 0; j < routes[i].length; j++) {
+                routes[i][j]++;
+            }
+            routes[i] = routes[i].join(', ');
+            routes[i] += ' } ';
+            routes[i] = ' { ' + routes[i];
+        }
+        const strRouters = routes;
+        for (let i = 3; i < routes.length; i += 4) {
+            strRouters.splice(i, 0, "</p><p>");
+        }
+        strRouters.unshift("<p>");
+        strRouters.push("</p>");
+        const strRoutes = strRouters.join('');
+        document.getElementById("routes").innerHTML = strRoutes;
+    }
 }
 const getReachability = () => {
     const reachability = graph.reachability();
@@ -103,12 +121,12 @@ const getStrongBindingComponents = () => {
 
 
     for (let i = 0; i < components.length; i++) {
-        components[i].join(", ");
+        components[i] = components[i].join(", ");
         components[i] += ' }';
         components[i] = '{ ' + components[i];
     }
-    const strComponents = "\n" + components.join('\n');
-    document.getElementById("strongBindingC").innerText = strComponents;
+    const strComponents = "<p>" + components.join('</p><p>');
+    document.getElementById("strongBindingC").innerHTML = strComponents;
 }
 
 const drawGraphs = (matrix, options) => {
