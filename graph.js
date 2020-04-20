@@ -49,6 +49,10 @@ class Graph {
         return this.matrix.matrix;
     }
 
+    bfs(a) {
+        return this.matrix.bfs(a);
+    }
+
     strongBindingMatrix() {
         const R = this.reachability();
         const RT = Matrix.transpone(R);

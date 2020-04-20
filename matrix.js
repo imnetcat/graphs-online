@@ -95,6 +95,38 @@ class Matrix {
             }
         }
     }
+
+    bfs(a) {
+        return Matrix.bfs(this.matrix, a);
+    }
+}
+
+// (breadth first search) - алгоритм обхода в ширину
+// G - 2д матрица
+// а - начальная вершина
+Matrix.bfs = function (G, a) {
+    const visited = new Array(G.length).fill(false);
+    visited[a] = true;
+    const queqe = new Array();
+    const result = new Array();
+    result.push(a);
+    queqe.push(a);
+    let k = 1;
+    while (queqe.length) {
+        const row = G[queqe[0]];
+
+        for (let u = 0; u < row.length; u++) {
+            if (row[u] && !visited[u]) {
+                console.log(u, row[u]);
+                k++;
+                visited[u] = true;
+                queqe.push(u);
+                result.push(u);
+            }
+        }
+        queqe.shift();
+    }
+    return result;
 }
 
 // Поелементарное перемножение матриц
