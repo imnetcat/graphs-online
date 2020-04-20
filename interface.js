@@ -111,6 +111,17 @@ const getRoutes = () => {
         document.getElementById("routes").innerHTML = strRoutes;
     }
 }
+const getBFS = () => {
+    document.getElementById("routes").innerHTML = "";
+    const node = Number(document.getElementById("bfs-node").value);
+    if (node) {
+        const bfs = graph.bfs(node - 1).map(el => el + 1);
+        let strbfs = bfs.join(', ');
+        strbfs = "<p>{ " + strbfs;
+        strbfs += " }</p>";
+        document.getElementById("bfs").innerHTML = strbfs;
+    }
+}
 const getReachability = () => {
     const reachability = graph.reachability();
     const strMatrix = Matrix.toString(reachability);
