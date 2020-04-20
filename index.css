@@ -1,6 +1,6 @@
 body {
-  background: #ffd8d8;
-  color: #db6905;
+    background: #e9f6cb;
+    color: #3472a1;
 }
 body, h1, h2, h3 {
   margin: 0;
@@ -36,9 +36,9 @@ footer {
 }
 
 .menu {
-  height: 100px;
-  background: #ff9898;
-  display: flex;
+    height: 100px;
+    background: #93a8ff;
+    display: flex;
 }
 
 .menu-btn {
@@ -127,7 +127,7 @@ td {
 #info-box header::after {
     content: '';
     height: 0;
-    border: 1px solid #db6905;
+    border: 1px solid;
     width: calc(100% - 30px);
     display: inline-block;
     position: absolute;
