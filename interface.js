@@ -114,6 +114,7 @@ const getRoutes = () => {
 const getBFS = () => {
     document.getElementById("routes").innerHTML = "";
     const node = Number(document.getElementById("bfs-node").value);
+    document.getElementById("bfs").innerHTML = "";
     if (node) {
         const bfs = graph.bfs(node - 1).map(el => el + 1);
         let strbfs = bfs.join(', ');

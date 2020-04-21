@@ -409,294 +409,228 @@ class Graph {
             this.config.ctx.lineTo(tx - headlen * Math.cos(angle + Math.PI / 6), ty - headlen * Math.sin(angle + Math.PI / 6));
             this.config.ctx.stroke();
         }
-        const checkCollision = (linesArray, from, to, fromNode, toNode, flags) => {
-            // находим вектор линии
-            const vector = {
-                x: to.x - from.x,
-                y: to.y - from.y
-            };
-            //
-            const distanceFromPointToLine = (point, line) => {
-                const x0 = point.x,
-                    y0 = point.y,
-                    x1 = line.from.x,
-                    y1 = line.from.y,
-                    x2 = line.to.x,
-                    y2 = line.to.y;
-                let a = y2 - y1;
-                let b = x1 - x2;
-                let c = -x1 * (y2 - y1) + y1 * (x2 - x1);
-                const t = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-                if (c > 0) {
-                    a = -a;
-                    b = -b;
-                    c = -c;
-                }
-                return (a * x0 + b * y0 + c) / t;
+        
+        //
+        const distanceFromPointToLine = (x0, y0, from, to) => {
+            const x1 = from.x,
+                y1 = from.y,
+                x2 = to.x,
+                y2 = to.y;
+            let a = y2 - y1;
+            let b = x1 - x2;
+            let c = -x1 * (y2 - y1) + y1 * (x2 - x1);
+            const t = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+            if (c > 0) {
+                a = -a;
+                b = -b;
+                c = -c;
             }
-            if (false) {
+            return (a * x0 + b * y0 + c) / t;
+        }
+        const checkCollisionNodes = (from, to, x, y) => {
+            // если центр вершины между началом и концом линии тогда продолжаем, иначе return
+            if (!((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
+                (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
+                (to.x <= x && x <= from.x && to.y <= y && y <= from.y) ||
+                (to.x >= x && x >= from.x && to.y <= y && y <= from.y)))
+                return;
+            // если линия пересекает вершины графа
+            const distance = distanceFromPointToLine(x, y, from, to);
+            if (Math.abs(distance) < this.config.nodes_radius) {
+                // исправляем коллизию
+                let newTy = 0;
+                let newTx = 0;
+                //Максимум не включается, минимум включается
+                function getRandomInt(min, max) {
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    return Math.floor(Math.random() * (max - min)) + min;
+                }
+
+                const randX = getRandomInt(3, 10);
+                const randY = getRandomInt(3, 10);
+
+                let dk = distance == 0 ? 1 : distance;
+                dk = Math.abs(dk) / (dk);
+
+                // Horizontal lines
+                if (from.x != to.x && from.y === to.y) {
+                    newTx = x + randX;
+                    newTy = y + (Math.abs(to.x - from.x) / (to.x - from.x)) * (this.config.nodes_radius * 2 + randY);
+                }
+                // Vertical lines
+                else if (from.x === to.x && from.y != to.y) {
+                    newTx = x + (Math.abs(to.y - from.y) / (to.y - from.y)) * (this.config.nodes_radius * 2 + randX);
+                    newTy = y + randY;
+                }
+                // Diagonal lines
+                else {
+                    newTx = x + dk * (Math.abs(to.x - from.x) / (to.x - from.x)) * (this.config.nodes_radius * 2 + randX);
+                    newTy = y - dk * (Math.abs(to.y - from.y) / (to.y - from.y)) * (this.config.nodes_radius * 2 + randY);
+                }
+
+                const newLine1 = {
+                    from,
+                    to: {
+                        x: newTx + randX,
+                        y: newTy + randY
+                    }
+                }
+                const newLine2 = {
+                    from: {
+                        x: newTx + randX,
+                        y: newTy + randY
+                    },
+                    to
+                }
+
+                return { first: newLine1, second: newLine2 };
+            }
+            return;
+        }
+        const checkCollisionNodesRec = (linesArray, from, to) => {
+            let fracture;
+            for (const { x, y } of this.config.coords) {
+                // пропускаем точки начала и конца линии
+                if ((x === from.x && y === from.y) ||
+                    (x === to.x && y === to.y)) {
+                    continue;
+                }
+                fracture = checkCollisionNodes(from, to, x, y);
+                if (fracture) {
+                    break;
+                }
+            }
+            if (fracture) {
+                checkCollisionNodesRec(linesArray, fracture.first.from, fracture.first.to);
+                checkCollisionNodesRec(linesArray, fracture.second.from, fracture.second.to);
             } else {
-                let collisionFound = false;
-                // и проверяем все вершины
-                for (const node in this.config.coords) {
-                    const { x, y } = this.config.coords[node];
-
-                    // пропускаем точки начала и конца линии
-                    if ((x === fromNode.x &&
-                        y === fromNode.y) ||
-                        (x === toNode.x &&
-                            y === toNode.y)) {
-                        continue;
-                    }
-                    // если центр вершины между началом и концом линии
-                    if ((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
-                        (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
-                        (to.x <= x && x <= from.x && to.y <= y && y <= from.y) ||
-                        (to.x >= x && x >= from.x && to.y <= y && y <= from.y)) {
-                        // если линия пересекает вершины графа
-                        const pointCoords = { x, y };
-                        const lineCoords = { from, to }
-                        const distance = distanceFromPointToLine(pointCoords, lineCoords);
-                        if (Math.abs(distance) < this.config.nodes_radius) {
-                            collisionFound = true;
-                            // исправляем коллизию
-                            let newTy = 0;
-                            let newTx = 0;
-                            // Horizontal lines
-                            // o < o
-                            if (from.x < to.x && from.y === to.y) {
-                                newTx = x;
-                                newTy = y - this.config.nodes_radius * 2;
-                            }
-                            // o > o
-                            if (from.x > to.x && from.y === to.y) {
-                                newTx = x;
-                                newTy = y + this.config.nodes_radius * 2;
-                            }
-                            // Vertical lines
-                            // o
-                            // ^
-                            // o
-                            if (from.x === to.x && from.y < to.y) {
-                                newTx = x + this.config.nodes_radius * 2;
-                                newTy = y;
-                            }
-                            // o
-                            // V
-                            // o
-                            if (from.x === to.x && from.y > to.y) {
-                                newTx = x - this.config.nodes_radius * 2;
-                                newTy = y;
-                            }
-
-                            // Diagonal lines
-                            //     o
-                            //   V
-                            // o
-                            if (from.x > to.x && from.y < to.y) {
-                                if (distance) {
-                                    newTx = x - (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                    newTy = y - (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                } else {
-                                    newTx = x - this.config.nodes_radius;
-                                    newTy = y - this.config.nodes_radius;
-                                }
-                            }
-                            //     o
-                            //   ^
-                            // o
-                            if (from.x < to.x && from.y > to.y) {
-                                if (distance) {
-                                    newTx = x - (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                    newTy = y - (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                } else {
-                                    newTx = x + this.config.nodes_radius;
-                                    newTy = y + this.config.nodes_radius;
-                                }
-                            }
-                            // o
-                            //  ^
-                            //    o
-                            if (from.x > to.x && from.y > to.y) {
-                                if (distance) {
-                                    newTx = x - (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                    newTy = y + (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                } else {
-                                    newTx = x - this.config.nodes_radius;
-                                    newTy = y + this.config.nodes_radius;
-                                }
-                            }
-                            // o
-                            //  V
-                            //    o
-                            if (from.x < to.x && from.y < to.y) {
-                                if (distance) {
-                                    newTx = x - (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                    newTy = y + (distance / Math.abs(distance)) * (this.config.nodes_radius);
-                                } else {
-                                    newTx = x + this.config.nodes_radius;
-                                    newTy = y - this.config.nodes_radius;
-                                }
-                            }
-
-                            function getRandomInt(min, max) {
-                                min = Math.ceil(min);
-                                max = Math.floor(max);
-                                return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
-                            }
-
-                            const randX = getRandomInt(5, 15);
-                            const randY = getRandomInt(5, 15);
-
-                            const newLine1 = {
-                                from,
-                                to: {
-                                    x: newTx + randX,
-                                    y: newTy + randY
-                                }
-                            }
-                            const newLine2 = {
-                                from: {
-                                    x: newTx + randX,
-                                    y: newTy + randY
-                                },
-                                to
-                            }
-
-                            flags.firstCollision = false;
-                            checkCollision(linesArray, newLine1.from, newLine1.to, fromNode, toNode, flags);
-
-                            checkCollision(linesArray, newLine2.from, newLine2.to, fromNode, toNode, flags);
-
-                            return false;
-                        }
-                    }
-                }
-                if (!collisionFound) {
-                    if (flags.firstCollision) {
-                        if (from.x === to.x && from.y === to.y) {
-                            let newTx = 0;
-                            let newTy = 0;
-                            // rib to the same element
-                            // o > V
-                            // ^   V
-                            // ^ < <
-                            const firstLine = {
-                                from,
-                                to: {
-                                    x: from.x + this.config.nodes_radius * 2,
-                                    y: from.y
-                                }
-                            }
-                            const secondLine = {
-                                from: firstLine.to,
-                                to: {
-                                    x: firstLine.to.x,
-                                    y: firstLine.to.y + this.config.nodes_radius * 2
-                                }
-                            }
-                            const thirdLine = {
-                                from: secondLine.to,
-                                to: {
-                                    x: secondLine.to.x - this.config.nodes_radius * 2,
-                                    y: secondLine.to.y
-                                }
-                            }
-                            const fourthLine = {
-                                from: thirdLine.to,
-                                to
-                            }
-                            linesArray.push(firstLine);
-                            linesArray.push(secondLine);
-                            linesArray.push(thirdLine);
-                            linesArray.push(fourthLine);
-
-                        } else {
-                            let newTx = 0;
-                            let newTy = 0;
-                            // Horizontal lines
-                            // o < o
-                            if (from.x < to.x && from.y === to.y) {
-                                newTx = from.x + (to.x - from.x) / 2;
-                                newTy = to.y + this.config.nodes_radius;
-                            }
-                            // o > o
-                            if (from.x > to.x && from.y === to.y) {
-                                newTx = to.x + (from.x - to.x) / 2;
-                                newTy = to.y - this.config.nodes_radius;
-                            }
-                            // Vertical lines
-                            // o
-                            // V
-                            // o
-                            if (from.x === to.x && from.y < to.y) {
-                                newTx = to.x - this.config.nodes_radius;
-                                newTy = from.y + (to.y - from.y) / 2 - this.config.nodes_radius;
-                            }
-                            // o
-                            // ^
-                            // o
-                            if (from.x === to.x && from.y > to.y) {
-                                newTx = to.x + this.config.nodes_radius;
-                                newTy = to.y + (from.y - to.y) / 2 + this.config.nodes_radius;
-                            }
-                            // Diagonal lines
-                            //     o
-                            //   V
-                            // o
-                            if (from.x > to.x && from.y < to.y) {
-                                newTx = to.x + this.config.nodes_radius / 2;
-                                newTy = to.y - this.config.nodes_radius * 2;
-                            }
-                            //     o
-                            //   ^
-                            // o
-                            if (from.x < to.x && from.y > to.y) {
-                                newTx = to.x - this.config.nodes_radius / 2;
-                                newTy = to.y + this.config.nodes_radius * 2;
-                            }
-                            // o
-                            //  ^
-                            //    o
-                            if (from.x > to.x && from.y > to.y) {
-                                newTx = to.x + this.config.nodes_radius / 2;
-                                newTy = to.y + this.config.nodes_radius * 2;
-                            }
-                            // o
-                            //  V
-                            //    o
-                            if (from.x < to.x && from.y < to.y) {
-                                newTx = to.x - this.config.nodes_radius / 2;
-                                newTy = to.y - this.config.nodes_radius * 2;
-                            }
-
-                            const firstLine = {
-                                from,
-                                to: {
-                                    x: newTx,
-                                    y: newTy
-                                }
-                            }
-                            const secondLine = {
-                                from: {
-                                    x: newTx,
-                                    y: newTy
-                                },
-                                to
-                            }
-                            linesArray.push(firstLine);
-                            linesArray.push(secondLine);
-                        }
-                    } else {
-                        linesArray.push({ from, to });
-                    }
+                // проверяем коллизии всех линий с линией
+                checkCollisionLines(linesArray, from, to);
+               // linesArray.push({ from, to });
+            }
+        }
+        const checkCollisionLines = (linesArray, from, to) => {
+            let newTx = 0;
+            let newTy = 0;
+            // Horizontal lines
+            if (from.x != to.x && from.y === to.y) {
+                if (from.x > to.x) {
+                    newTx = from.x + (to.x - from.x) / 2;
+                    newTy = from.y + this.config.nodes_radius / 2;
+                } else {
+                    newTx = from.x + (to.x - from.x) / 2;
+                    newTy = from.y - this.config.nodes_radius / 2;
                 }
             }
-            return true;
+            // Vertical lines
+            else if (from.x === to.x && from.y != to.y) {
+                if (from.y > to.y) {
+                    newTx = from.x + this.config.nodes_radius / 2;
+                    newTy = from.y + (to.y - from.y) / 2;
+                } else {
+                    newTx = from.x - this.config.nodes_radius / 2;
+                    newTy = from.y + (to.y - from.y) / 2;
+                }
+            }
+            // Diagonal lines
+            else {
+                const min = (a, b) => a < b ? a : b;
+                const max = (a, b) => a > b ? a : b;
+                const minx = min(from.x, to.x);
+                const miny = min(from.y, to.y);
+                const maxx = max(from.x, to.x);
+                const maxy = max(from.y, to.y);
+                // o
+                //   V
+                //     o
+                if (from.x < to.x && from.y < to.y) {
+                    newTx = minx + (maxx - minx) / 2 - this.config.nodes_radius / 2;
+                    newTy = miny + (maxy - miny) / 2 + this.config.nodes_radius / 2;
+                }
+                // o
+                //   ^
+                //     o
+                else if (from.x > to.x && from.y > to.y) {
+                    newTx = minx + (maxx - minx) / 2 + this.config.nodes_radius / 2;
+                    newTy = miny + (maxy - miny) / 2 - this.config.nodes_radius / 2;
+                }
+                //     o
+                //   V
+                // o
+                else if (from.x > to.x && from.y < to.y) {
+                    newTx = minx + (maxx - minx) / 2 - this.config.nodes_radius / 2;
+                    newTy = miny + (maxy - miny) / 2 - this.config.nodes_radius / 2;
+                }
+                //     o
+                //   ^
+                // o
+                else if (from.x < to.x && from.y > to.y) {
+                    newTx = minx + (maxx - minx) / 2 + this.config.nodes_radius / 2;
+                    newTy = miny + (maxy - miny) / 2 + this.config.nodes_radius / 2;
+                }
+            }
+
+            const firstLine = {
+                from,
+                to: {
+                    x: newTx,
+                    y: newTy
+                }
+            }
+            const secondLine = {
+                from: {
+                    x: newTx,
+                    y: newTy
+                },
+                to
+            }
+            linesArray.push(firstLine);
+            linesArray.push(secondLine);
         }
         const line = (from, to, flags) => {
             let linesArray = [];
-            checkCollision(linesArray, from, to, from, to, flags);
+
+            // Если линия из вершины входит в эту же вершину
+            if (from.x === to.x && from.y === to.y) {
+                // o > V
+                // ^   V
+                // ^ < <
+                const firstLine = {
+                    from,
+                    to: {
+                        x: from.x + this.config.nodes_radius * 2,
+                        y: from.y
+                    }
+                }
+                const secondLine = {
+                    from: firstLine.to,
+                    to: {
+                        x: firstLine.to.x,
+                        y: firstLine.to.y + this.config.nodes_radius * 2
+                    }
+                }
+                const thirdLine = {
+                    from: secondLine.to,
+                    to: {
+                        x: secondLine.to.x - this.config.nodes_radius * 2,
+                        y: secondLine.to.y
+                    }
+                }
+                const fourthLine = {
+                    from: thirdLine.to,
+                    to
+                }
+                linesArray.push(firstLine);
+                linesArray.push(secondLine);
+                linesArray.push(thirdLine);
+                linesArray.push(fourthLine);
+            }
+            else { // иначе имеем линию из одной вершины в другую
+                // проверяем коллизии всех вершин с линией
+                checkCollisionNodesRec(linesArray, from, to);
+            }
+            console.log(linesArray)
             for (const l of linesArray) {
                 this.config.ctx.beginPath();
                 this.config.ctx.moveTo(l.from.x, l.from.y);
