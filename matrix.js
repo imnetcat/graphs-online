@@ -105,31 +105,10 @@ class Matrix {
 // G - 2д матрица
 // а - начальная вершина
 Matrix.bfs = function (G, a) {
-
-    class Node {
-        constructor(n, bptr) {
-            this.node = n;
-            this.branchs = [];
-            this._back = bptr;
-        }
-        getBranch(n) {
-            for (const branch of this.branchs) {
-                console.log(branch.node, n);
-                if (branch.node === n) {
-                    return branch;
-                }
-            }
-        }
-        back() {
-            return this._back;
-        }
-    };
-
+    const bfs = Matrix.createZero(G.length);
     const visited = new Array(G.length).fill(false);
     visited[a] = true;
     const queqe = new Array();
-    const tree = new Node(a);
-    let currentTree = tree;
     queqe.push(a);
     while (queqe.length) {
         const row = G[queqe[0]];
@@ -137,25 +116,12 @@ Matrix.bfs = function (G, a) {
             if (row[u] && !visited[u]) {
                 visited[u] = true;
                 queqe.push(u);
-                currentTree.branchs.push(new Node(u, currentTree));
+                bfs[queqe[0]][u] = 1;
             }
         }
         queqe.shift();
-        if (currentTree.back()) {
-            for (const branch of currentTree.back().branchs) {
-                if (branch.node === queqe[0]) {
-                    currentTree = branch;
-                }
-            }
-        } else {
-            for (const branch of currentTree.branchs) {
-                if (branch.node === queqe[0]) {
-                    currentTree = branch;
-                }
-            }
-        }
     }
-    return tree;
+    return bfs;
 }
 
 // Поелементарное перемножение матриц
