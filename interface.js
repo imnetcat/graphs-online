@@ -111,38 +111,84 @@ const getRoutes = () => {
         document.getElementById("routes").innerHTML = strRoutes;
     }
 }
-let bfsstep = 0;
+
+let bsfstart = true;
+let visited = [];
+let colored = [];
+let queqe = [];
 let bfs = [];
 const getBFS = () => {
-    bfsstep = 0;
-    document.getElementById("bfs-node").innerHTML = "";
-    const node = Number(document.getElementById("bfs-node").value);
-    document.getElementById("bfs").innerHTML = "";
-    if (node) {
-        const bfs = graph.bfs(node - 1);
-        console.log(bfs);
-    }
+    bsfstart = true;
+    visited = [];
+    queqe = [];
+    bfs = [];
+    do {
+        getBFSstep();
+    } while (!bsfstart);
 }
 const getBFSstep = () => {
-    if (!bfsstep) {
+    if (bsfstart) {
         document.getElementById("bfs-node").innerHTML = "";
         const node = Number(document.getElementById("bfs-node").value);
         document.getElementById("bfs").innerHTML = "";
         if (node) {
-            bfs = graph.bfs(node - 1).map(el => el + 1);
+            bfs = graph.bfs(node - 1);
+            visited = new Array(bfs.length).fill(false);
+            visited[node - 1] = true;
+            queqe = new Array();
+            queqe.push(node - 1);
+
+            document.getElementById("bfs").innerHTML = "<p></p>";
+            document.querySelector("#bfs > p").innerHTML = `{ ${node}`;
+            bsfstart = false;
+            const condensation = [];
+            for (let i = 0; i < bfs.length; i++) {
+                condensation[i] = bfs[i].join(' ');
+            }
+            const strMatrix = condensation.join('\n');
+            document.getElementById('matrix-input').value = strMatrix;
+            const nodesColor = new Array(bfs.length).fill("#ffffff");
+            nodesColor[node - 1] = "#6cc674";
+            colored.push(node - 1);
+            refreshCanvas(nodesColor);
         }
-        document.getElementById("bfs").innerHTML = "<p></p>";
-        document.querySelector("#bfs > p").innerHTML = "{ ";
-    }
-    document.querySelector("#bfs > p").innerHTML += bfs[bfsstep];
-    bfsstep++;
-    if (bfsstep === bfs.length) {
-        bfs = [];
-        bfsstep = 0;
-        document.querySelector("#bfs > p").innerHTML += " }";
-    }
-    else {
-        document.querySelector("#bfs > p").innerHTML += ", ";
+        
+    } else if (queqe.length) {
+
+        const nodesColor = new Array(bfs.length).fill("#ffffff");
+        for (const i of colored) {
+            nodesColor[i] = "#c0c0c0";
+        }
+        let isLineZeros = true;
+        const row = bfs[queqe[0]];
+        for (let u = 0; u < row.length; u++) {
+            if (row[u] && !visited[u]) {
+                visited[u] = true;
+                queqe.push(u);
+                bfs[queqe[0]][u] = 1;
+
+                nodesColor[u] = "#6cc674";
+                colored.push(u);
+
+                document.querySelector("#bfs > p").innerHTML += `, ${u + 1}`;
+                isLineZeros = false;
+            }
+        }
+        queqe.shift();
+
+        refreshCanvas(nodesColor);
+
+        if (isLineZeros) {
+            getBFSstep();
+        }
+        if (!queqe.length) {
+            document.querySelector("#bfs > p").innerHTML += " }";
+            bsfstart = true;
+            visited = [];
+            queqe = [];
+            bfs = [];
+            return;
+        }
     }
 }
 const getReachability = () => {
@@ -157,8 +203,6 @@ const getStrongBindingMatrix = () => {
 }
 const getStrongBindingComponents = () => {
     const components = graph.strongBindingComponents();
-
-
     for (let i = 0; i < components.length; i++) {
         components[i] = components[i].join(", ");
         components[i] += ' }';
@@ -180,7 +224,7 @@ const drawGraphs = (matrix, options) => {
         .displayForm(options.form)
         .generateCoords();
     canvas.setSize(graph.getSize());
-    graph.draw();
+    graph.draw(options.nodesColor);
 
     const degrees = graph.degrees();
     const uni = graph.isUni();
@@ -196,7 +240,7 @@ const drawGraphs = (matrix, options) => {
     })
 }
 
-const refreshCanvas = () => {
+const refreshCanvas = (nodesColor) => {
     showInfo(false);
     showMenu(false);
 
@@ -216,14 +260,15 @@ const refreshCanvas = () => {
         alert('You entered the wrong matrix');
         return;
     }
-
+    nodesColor = nodesColor || new Array(matrix.length).fill("#ffffff")
     const orientired = form.get('orientiation');
-    const displayForm = form.get('display-form')
+    const displayForm = form.get('display-form');
     const options = {
         orientired: orientired === 'orientired' ? true : false,
-        form: displayForm
-    };
-
+        form: displayForm,
+        nodesColor
+    }
+    console.log(orientired, nodesColor);
     drawGraphs(matrix, options);
 }
 
@@ -237,4 +282,7 @@ const buildCondensGraph = () => {
     refreshCanvas();
 }
 
-document.addEventListener('DOMContentLoaded', refreshCanvas)
+const loadDefaultGraph = () => {
+    refreshCanvas();
+}
+document.addEventListener('DOMContentLoaded', loadDefaultGraph)

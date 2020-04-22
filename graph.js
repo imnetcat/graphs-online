@@ -321,7 +321,7 @@ class Graph {
         return this;
     }
 
-    draw() {
+    draw(nodesColor) {
 
         const begin = () => {
             this.config.ctx.beginPath();
@@ -338,9 +338,9 @@ class Graph {
             }
         }
 
-        const node = (x, y) => {
+        const node = (x, y, color) => {
             begin();
-            this.config.ctx.fillStyle = "white";
+            this.config.ctx.fillStyle = color;
             this.config.ctx.arc(x, y, this.config.nodes_radius, 0, 2 * Math.PI);
             end('fill');
 
@@ -685,9 +685,11 @@ class Graph {
         }
 
 
-        const nodes = () => {
+        const nodes = (colors) => {
+            let i = 0;
             for (const { x, y } of this.config.coords) {
-                node(x, y);
+                node(x, y, colors[i]);
+                i++;
             }
         }
 
@@ -738,7 +740,8 @@ class Graph {
             });
         }
         ribs();
-        nodes();
+        
+        nodes(nodesColor);
         numbers();
         return this;
     }
