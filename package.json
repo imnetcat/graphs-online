@@ -1,0 +1,9 @@
+﻿{
+  "name": "graphs",
+  "version": "0.0.1",
+  "dependencies": { },
+  "engines": {
+    "node": "^11.0.0"
+  },
+  "scripts": { }
+}
