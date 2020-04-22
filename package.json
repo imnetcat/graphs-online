@@ -1,11 +1,13 @@
-﻿{
+{
   "name": "graphs",
   "version": "0.0.1",
-  "dependencies": { },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "engines": {
     "node": "^11.0.0"
   },
   "scripts": {
-	"start": "main.js"
+    "start": "main.js"
   }
 }
