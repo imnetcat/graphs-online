@@ -117,11 +117,15 @@ let visited = [];
 let colored = [];
 let queqe = [];
 let bfs = [];
+let labelsInfo = [];
+let bfslevel = 0;
 const getBFS = () => {
+    bfslevel = 0;
     bsfstart = true;
     visited = [];
     queqe = [];
     bfs = [];
+    labelsInfo = [];
     do {
         getBFSstep();
     } while (!bsfstart);
@@ -132,6 +136,7 @@ const getBFSstep = () => {
         const node = Number(document.getElementById("bfs-node").value);
         document.getElementById("bfs").innerHTML = "";
         if (node) {
+            bfslevel = 2;
             bfs = graph.bfs(node - 1);
             visited = new Array(bfs.length).fill(false);
             visited[node - 1] = true;
@@ -147,10 +152,14 @@ const getBFSstep = () => {
             }
             const strMatrix = condensation.join('\n');
             document.getElementById('matrix-input').value = strMatrix;
+
             const nodesColor = new Array(bfs.length).fill("#ffffff");
             nodesColor[node - 1] = "#6cc674";
             colored.push(node - 1);
-            refreshCanvas(nodesColor);
+
+            labelsInfo.push({ i: node-1, text: 1 });
+            
+            refreshCanvas(nodesColor, labelsInfo);
         }
         
     } else if (queqe.length) {
@@ -169,14 +178,19 @@ const getBFSstep = () => {
 
                 nodesColor[u] = "#6cc674";
                 colored.push(u);
-
+                
                 document.querySelector("#bfs > p").innerHTML += `, ${u + 1}`;
+
+                labelsInfo.push({ i: u, text: bfslevel });
+
+                bfslevel++;
+
                 isLineZeros = false;
             }
         }
         queqe.shift();
 
-        refreshCanvas(nodesColor);
+        refreshCanvas(nodesColor, labelsInfo);
 
         if (isLineZeros) {
             getBFSstep();
@@ -224,7 +238,7 @@ const drawGraphs = (matrix, options) => {
         .displayForm(options.form)
         .generateCoords();
     canvas.setSize(graph.getSize());
-    graph.draw(options.nodesColor);
+    graph.draw(options.nodesColor, options.labelsInfo);
 
     const degrees = graph.degrees();
     const uni = graph.isUni();
@@ -240,7 +254,7 @@ const drawGraphs = (matrix, options) => {
     })
 }
 
-const refreshCanvas = (nodesColor) => {
+const refreshCanvas = (nodesColor, labelsInfo) => {
     showInfo(false);
     showMenu(false);
 
@@ -266,9 +280,9 @@ const refreshCanvas = (nodesColor) => {
     const options = {
         orientired: orientired === 'orientired' ? true : false,
         form: displayForm,
-        nodesColor
+        nodesColor,
+        labelsInfo
     }
-    console.log(orientired, nodesColor);
     drawGraphs(matrix, options);
 }
 

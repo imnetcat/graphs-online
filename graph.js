@@ -321,7 +321,7 @@ class Graph {
         return this;
     }
 
-    draw(nodesColor) {
+    draw(nodesColor, labelsInfo) {
 
         const begin = () => {
             this.config.ctx.beginPath();
@@ -350,12 +350,11 @@ class Graph {
             end('stroke');
         }
 
-        const number = (x, y, n) => {
+        const lable = (x, y, n) => {
             this.config.ctx.font = '12px serif';
             this.config.ctx.fillStyle = "black";
-            this.config.ctx.fillText(n.toString(), x, y);
+            this.config.ctx.fillText(n, x, y);
         }
-
         // intersection of a segment with a circle
         const lineCrossNode = (from, to, circle, radius) => {
             const a = Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2);
@@ -696,7 +695,15 @@ class Graph {
         const numbers = () => {
             const font_spacing = 4;
             for (const index in this.config.coords) {
-                number(this.config.coords[index].x - font_spacing, this.config.coords[index].y + font_spacing, Number(index) + 1);
+                lable(this.config.coords[index].x - font_spacing, this.config.coords[index].y + font_spacing, Number(index) + 1);
+            }
+        }
+
+        const labels = (labels) => {
+            console.log(labels);
+            for (const label of labels) {
+                console.log(label);
+                    lable(this.config.coords[label.i].x + this.config.nodes_radius, this.config.coords[label.i].y - this.config.nodes_radius, label.text);
             }
         }
 
@@ -743,6 +750,8 @@ class Graph {
         
         nodes(nodesColor);
         numbers();
+        if (labelsInfo)
+            labels(labelsInfo);
         return this;
     }
 };
