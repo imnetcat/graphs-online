@@ -6,6 +6,6 @@
     "node": "^11.0.0"
   },
   "scripts": {
-	start: "main.js"
+	"start": "main.js"
   }
 }
