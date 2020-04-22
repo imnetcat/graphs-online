@@ -105,28 +105,57 @@ class Matrix {
 // G - 2д матрица
 // а - начальная вершина
 Matrix.bfs = function (G, a) {
+
+    class Node {
+        constructor(n, bptr) {
+            this.node = n;
+            this.branchs = [];
+            this._back = bptr;
+        }
+        getBranch(n) {
+            for (const branch of this.branchs) {
+                console.log(branch.node, n);
+                if (branch.node === n) {
+                    return branch;
+                }
+            }
+        }
+        back() {
+            return this._back;
+        }
+    };
+
     const visited = new Array(G.length).fill(false);
     visited[a] = true;
     const queqe = new Array();
-    const result = new Array();
-    result.push(a);
+    const tree = new Node(a);
+    let currentTree = tree;
     queqe.push(a);
-    let k = 1;
     while (queqe.length) {
         const row = G[queqe[0]];
-
         for (let u = 0; u < row.length; u++) {
             if (row[u] && !visited[u]) {
-                console.log(u, row[u]);
-                k++;
                 visited[u] = true;
                 queqe.push(u);
-                result.push(u);
+                currentTree.branchs.push(new Node(u, currentTree));
             }
         }
         queqe.shift();
+        if (currentTree.back()) {
+            for (const branch of currentTree.back().branchs) {
+                if (branch.node === queqe[0]) {
+                    currentTree = branch;
+                }
+            }
+        } else {
+            for (const branch of currentTree.branchs) {
+                if (branch.node === queqe[0]) {
+                    currentTree = branch;
+                }
+            }
+        }
     }
-    return result;
+    return tree;
 }
 
 // Поелементарное перемножение матриц

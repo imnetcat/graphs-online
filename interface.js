@@ -111,16 +111,38 @@ const getRoutes = () => {
         document.getElementById("routes").innerHTML = strRoutes;
     }
 }
+let bfsstep = 0;
+let bfs = [];
 const getBFS = () => {
-    document.getElementById("routes").innerHTML = "";
+    bfsstep = 0;
+    document.getElementById("bfs-node").innerHTML = "";
     const node = Number(document.getElementById("bfs-node").value);
     document.getElementById("bfs").innerHTML = "";
     if (node) {
-        const bfs = graph.bfs(node - 1).map(el => el + 1);
-        let strbfs = bfs.join(', ');
-        strbfs = "<p>{ " + strbfs;
-        strbfs += " }</p>";
-        document.getElementById("bfs").innerHTML = strbfs;
+        const bfs = graph.bfs(node - 1);
+        console.log(bfs);
+    }
+}
+const getBFSstep = () => {
+    if (!bfsstep) {
+        document.getElementById("bfs-node").innerHTML = "";
+        const node = Number(document.getElementById("bfs-node").value);
+        document.getElementById("bfs").innerHTML = "";
+        if (node) {
+            bfs = graph.bfs(node - 1).map(el => el + 1);
+        }
+        document.getElementById("bfs").innerHTML = "<p></p>";
+        document.querySelector("#bfs > p").innerHTML = "{ ";
+    }
+    document.querySelector("#bfs > p").innerHTML += bfs[bfsstep];
+    bfsstep++;
+    if (bfsstep === bfs.length) {
+        bfs = [];
+        bfsstep = 0;
+        document.querySelector("#bfs > p").innerHTML += " }";
+    }
+    else {
+        document.querySelector("#bfs > p").innerHTML += ", ";
     }
 }
 const getReachability = () => {
