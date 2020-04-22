@@ -1,3 +1,4 @@
 *-laba/*.doc
 *-laba/*.docx
 .vs
+node_modules
