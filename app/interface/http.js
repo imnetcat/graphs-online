@@ -49,7 +49,7 @@ class HTTP {
     Core.log.info('HTTP-server startup');
     config = conf;
     ROOT = config.root;
-    HTTP_PORT = config.port;
+      HTTP_PORT = process.env.PORT || config.port;
     server = http.createServer((req, res) => {
       const { url, method } = req;
         if (method === 'post' || method === 'POST'){
