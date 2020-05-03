@@ -1,18 +1,20 @@
 'use strict';
 
-let isMenuShowed = false;
-let isInfoShowed = false;
+class Interface {};
 
-let graph;
+Interface.isMenuShowed = false;
+Interface.isInfoShowed = false;
 
-const showMenu = (show = true) => {
+Interface.graph;
+
+Interface.showMenu = function(show = true) {
     if (show) {
-        isMenuShowed = !isMenuShowed;
-        showInfo(false);
+        this.isMenuShowed = !this.isMenuShowed;
+        this.showInfo(false);
     } else {
-        isMenuShowed = false;
+        this.isMenuShowed = false;
     }
-    if (isMenuShowed) {
+    if (this.isMenuShowed) {
         const width = document.getElementById('scrollable').offsetWidth;
         const height = document.getElementById('scrollable').offsetHeight;
 
@@ -24,14 +26,14 @@ const showMenu = (show = true) => {
     }
 }
 
-const showInfo = (show = true) => {
+Interface.showInfo = function(show = true) {
     if (show) {
-        isInfoShowed = !isInfoShowed;
-        showMenu(false);
+        this.isInfoShowed = !this.isInfoShowed;
+        this.showMenu(false);
     } else {
-        isInfoShowed = false;
+        this.isInfoShowed = false;
     }
-    if (isInfoShowed) {
+    if (this.isInfoShowed) {
         const width = document.getElementById('scrollable').offsetWidth;
         const height = document.getElementById('scrollable').offsetHeight;
 
@@ -43,7 +45,7 @@ const showInfo = (show = true) => {
     }
 }
 
-const setInfo = (info) => {
+Interface.setInfo = function(info) {
     document.getElementById("unified").innerHTML = (info.uni === -1) ? "false" : info.uni.toString();
 
     const infoTable = document.getElementById("nodes-props");
@@ -66,7 +68,7 @@ const setInfo = (info) => {
     }
 }
 
-const isMatrixCorrect = (matrix) => {
+Interface.isMatrixCorrect = function(matrix) {
     if (!matrix.length) {
         return false;
     }
@@ -83,16 +85,16 @@ const isMatrixCorrect = (matrix) => {
     return true;
 }
 
-const getCondensation = () => {
-    const condensation = graph.condensation();
+Interface.getCondensation = function() {
+    const condensation = this.graph.condensation();
     const strMatrix = Matrix.toString(condensation);
     document.getElementById("condensation").innerText = strMatrix;
 }
-const getRoutes = () => {
+Interface.getRoutes = function() {
     document.getElementById("routes").innerHTML = "";
     const length = Number(document.getElementById("routes-length").value);
     if (length) {
-        const routes = graph.routes(length);
+        const routes = this.graph.routes(length);
         for (let i = 0; i < routes.length; i++) {
             for (let j = 0; j < routes[i].length; j++) {
                 routes[i][j]++;
@@ -112,111 +114,111 @@ const getRoutes = () => {
     }
 }
 
-let bsfstart = true;
-let visited = [];
-let colored = [];
-let queqe = [];
-let bfs = [];
-let labelsInfo = [];
-let bfslevel = 0;
-const getBFS = () => {
-    bfslevel = 0;
-    bsfstart = true;
-    visited = [];
-    queqe = [];
-    bfs = [];
-    labelsInfo = [];
+Interface.bsfstart = true;
+Interface.visited = [];
+Interface.colored = [];
+Interface.queqe = [];
+Interface.bfs = [];
+Interface.labelsInfo = [];
+Interface.bfslevel = 0;
+Interface.getBFS = function() {
+    this.bfslevel = 0;
+    this.bsfstart = true;
+    this.visited = [];
+    this.queqe = [];
+    this.bfs = [];
+    this.labelsInfo = [];
     do {
-        getBFSstep();
-    } while (!bsfstart);
+        this.getBFSstep();
+    } while (!this.bsfstart);
 }
-const getBFSstep = () => {
-    if (bsfstart) {
+Interface.getBFSstep = function() {
+    if (this.bsfstart) {
         document.getElementById("bfs-node").innerHTML = "";
         const node = Number(document.getElementById("bfs-node").value);
         document.getElementById("bfs").innerHTML = "";
         if (node) {
-            bfslevel = 2;
-            bfs = graph.bfs(node - 1);
-            visited = new Array(bfs.length).fill(false);
-            visited[node - 1] = true;
-            queqe = new Array();
-            queqe.push(node - 1);
+            this.bfslevel = 2;
+            this.bfs = this.graph.bfs(node - 1);
+            this.visited = new Array(this.bfs.length).fill(false);
+            this.visited[node - 1] = true;
+            this.queqe = new Array();
+            this.queqe.push(node - 1);
 
             document.getElementById("bfs").innerHTML = "<p></p>";
             document.querySelector("#bfs > p").innerHTML = `{ ${node}`;
-            bsfstart = false;
+            this.bsfstart = false;
             const condensation = [];
-            for (let i = 0; i < bfs.length; i++) {
-                condensation[i] = bfs[i].join(' ');
+            for (let i = 0; i < this.bfs.length; i++) {
+                condensation[i] = this.bfs[i].join(' ');
             }
             const strMatrix = condensation.join('\n');
             document.getElementById('matrix-input').value = strMatrix;
 
-            const nodesColor = new Array(bfs.length).fill("#ffffff");
+            const nodesColor = new Array(this.bfs.length).fill("#ffffff");
             nodesColor[node - 1] = "#6cc674";
-            colored.push(node - 1);
+            this.colored.push(node - 1);
 
-            labelsInfo.push({ i: node-1, text: 1 });
+            this.labelsInfo.push({ i: node-1, text: 1 });
             
-            refreshCanvas(nodesColor, labelsInfo);
+            this.refreshCanvas(nodesColor, this.labelsInfo);
         }
         
-    } else if (queqe.length) {
+    } else if (this.queqe.length) {
 
-        const nodesColor = new Array(bfs.length).fill("#ffffff");
-        for (const i of colored) {
+        const nodesColor = new Array(this.bfs.length).fill("#ffffff");
+        for (const i of this.colored) {
             nodesColor[i] = "#c0c0c0";
         }
         let isLineZeros = true;
-        const row = bfs[queqe[0]];
+        const row = this.bfs[this.queqe[0]];
         for (let u = 0; u < row.length; u++) {
-            if (row[u] && !visited[u]) {
-                visited[u] = true;
-                queqe.push(u);
-                bfs[queqe[0]][u] = 1;
+            if (row[u] && !this.visited[u]) {
+                this.visited[u] = true;
+                this.queqe.push(u);
+                this.bfs[this.queqe[0]][u] = 1;
 
                 nodesColor[u] = "#6cc674";
-                colored.push(u);
+                this.colored.push(u);
                 
                 document.querySelector("#bfs > p").innerHTML += `, ${u + 1}`;
 
-                labelsInfo.push({ i: u, text: bfslevel });
+                this.labelsInfo.push({ i: u, text: this.bfslevel });
 
-                bfslevel++;
+                this.bfslevel++;
 
                 isLineZeros = false;
             }
         }
-        queqe.shift();
+        this.queqe.shift();
 
-        refreshCanvas(nodesColor, labelsInfo);
+        this.refreshCanvas(nodesColor, this.labelsInfo);
 
         if (isLineZeros) {
-            getBFSstep();
+            this.getBFSstep();
         }
-        if (!queqe.length) {
+        if (!this.queqe.length) {
             document.querySelector("#bfs > p").innerHTML += " }";
-            bsfstart = true;
-            visited = [];
-            queqe = [];
-            bfs = [];
+            this.bsfstart = true;
+            this.visited = [];
+            this.queqe = [];
+            this.bfs = [];
             return;
         }
     }
 }
-const getReachability = () => {
-    const reachability = graph.reachability();
+Interface.getReachability = function() {
+    const reachability = this.graph.reachability();
     const strMatrix = Matrix.toString(reachability);
     document.getElementById("reachability").innerText = strMatrix;
 }
-const getStrongBindingMatrix = () => {
-    const matrix = graph.strongBindingMatrix();
+Interface.getStrongBindingMatrix = function() {
+    const matrix = this.graph.strongBindingMatrix();
     const strMatrix = Matrix.toString(matrix);
     document.getElementById("strongBindingM").innerText = strMatrix;
 }
-const getStrongBindingComponents = () => {
-    const components = graph.strongBindingComponents();
+Interface.getStrongBindingComponents = function() {
+    const components = this.graph.strongBindingComponents();
     for (let i = 0; i < components.length; i++) {
         components[i] = components[i].join(", ");
         components[i] += ' }';
@@ -226,37 +228,37 @@ const getStrongBindingComponents = () => {
     document.getElementById("strongBindingC").innerHTML = strComponents;
 }
 
-const drawGraphs = (matrix, options) => {
+Interface.drawGraphs = function(matrix, options) {
     const canvId = "canv";
     const canvas = Canvas(canvId).clear('2d');
     const context = canvas.context('2d');
     
-    graph = new Graph(matrix, context);
+    this.graph = new Graph(matrix, context);
     
-    graph.orientired(options.orientired)
+    this.graph.orientired(options.orientired)
         .context(context)
         .displayForm(options.form)
         .generateCoords();
-    canvas.setSize(graph.getSize());
-    graph.draw(options.nodesColor, options.labelsInfo);
+    canvas.setSize(this.graph.getSize());
+    this.graph.draw(options.nodesColor, options.labelsInfo);
 
-    const degrees = graph.degrees();
-    const uni = graph.isUni();
-    const hangingNodes = graph.hangingNodes();
-    const isolatedNodes = graph.isolatedNodes();
-    const isOrientired = graph.isOrientired();
-    setInfo({
+    const degrees = this.graph.degrees();
+    const uni = this.graph.isUni();
+    const hangingNodes = this.graph.hangingNodes();
+    const isolatedNodes = this.graph.isolatedNodes();
+    const isOrientired = this.graph.isOrientired();
+    this.setInfo({
         uni,
         degrees,
         hangingNodes,
         isolatedNodes,
         isOrientired
-    })
+    });
 }
 
-const refreshCanvas = (nodesColor, labelsInfo) => {
-    showInfo(false);
-    showMenu(false);
+Interface.refreshCanvas = function(nodesColor, labelsInfo) {
+    this.showInfo(false);
+    this.showMenu(false);
 
     const form = new FormData(document.forms.menu);
     const matrixStr = document.getElementById('matrix-input').value.split('\n');
@@ -270,7 +272,7 @@ const refreshCanvas = (nodesColor, labelsInfo) => {
         }
     }
 
-    if (!isMatrixCorrect(matrix)) {
+    if (!this.isMatrixCorrect(matrix)) {
         alert('You entered the wrong matrix');
         return;
     }
@@ -283,20 +285,21 @@ const refreshCanvas = (nodesColor, labelsInfo) => {
         nodesColor,
         labelsInfo
     }
-    drawGraphs(matrix, options);
+    this.drawGraphs(matrix, options);
 }
 
-const buildCondensGraph = () => {
-    const condensation = graph.condensation();
+Interface.buildCondensGraph = function() {
+    const condensation = this.graph.condensation();
     for (let i = 0; i < condensation.length; i++) {
         condensation[i] = condensation[i].join(' ');
     }
     const strMatrix = condensation.join('\n');
     document.getElementById('matrix-input').value = strMatrix;
-    refreshCanvas();
+    this.refreshCanvas();
 }
 
 const loadDefaultGraph = () => {
-    refreshCanvas();
+    Interface.refreshCanvas();
 }
+
 document.addEventListener('DOMContentLoaded', loadDefaultGraph)

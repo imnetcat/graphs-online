@@ -1,13 +1,24 @@
 {
-  "name": "graphs",
-  "version": "0.0.1",
+  "name": "apptemplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "dependencies": {
-    "express": "^4.17.1"
+    "ansi-256-colors": "^1.1.0",
+    "pg": "^7.18.2"
   },
-  "engines": {
-    "node": "^11.0.0"
-  },
+  "devDependencies": {},
   "scripts": {
-    "start": "main.js"
-  }
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imnetcat/AppTemplate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imnetcat/AppTemplate/issues"
+  },
+  "homepage": "https://github.com/imnetcat/AppTemplate#readme"
 }

@@ -12,9 +12,9 @@
       <div>
         <header><h1>Graph online viewer</h1></header>
         <div class="menu">
-          <button class="menu-btn" onclick="showMenu()"><div></div><div></div><div></div></button>
-          <button class="menu-btn" onclick="showInfo()"><img src="info.png"></button>
-          <button class="menu-btn" onclick="refreshCanvas()"><img src="refresh.png"></button>
+          <button class="menu-btn" onclick="Interface.showMenu()"><div></div><div></div><div></div></button>
+          <button class="menu-btn" onclick="Interface.showInfo()"><img src="info.png"></button>
+          <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="refresh.png"></button>
         </div>
         <form name ="menu" id="menu-panel">
           <div class="menu-row"><textarea name="matrix" id="matrix-input">
@@ -63,13 +63,44 @@
         </form>
         <div id="info-box">
             <header><h3><b>Graph properties</b></h3></header>
-            <p><b>Однородность: </b><span id="unified"></span></p>
-            <p><b>Маршруты длиною <input type="text" size="2" id="routes-length"><button onclick="getRoutes();">get</button><span class="line-box" id="routes"></span></p>
-            <p><b>Матрица досягаемости <button onclick="getReachability();">get</button><span class="matrix-box" id="reachability"></span></p>
-            <p><b>Матрица сильной связаности <button onclick="getStrongBindingMatrix();">get</button><span class="matrix-box" id="strongBindingM"></span></p>
-            <p><b>Компоненты сильной связаности <button onclick="getStrongBindingComponents();">get</button><span id="strongBindingC"></span></p>
-            <p><b>Матрица конденсации <button onclick="getCondensation();">get</button><button onclick="buildCondensGraph();">build</button><span class="matrix-box" id="condensation"></span></p>
-            <p><b>Обход в ширину из вершины <input type="text" size="2" id="bfs-node"><button onclick="getBFS();">get</button><button onclick="getBFSstep();">by step</button><span class="line-box" id="bfs"></span></p>
+            <p>
+                <b>Однородность: </b>
+                <span id="unified"></span>
+            </p>
+            <p>
+                <b>Маршруты длиною </b>
+                <input type="text" size="2" id="routes-length">
+                <button onclick="Interface.getRoutes();">get</button>
+                <span class="line-box" id="routes"></span>
+            </p>
+            <p>
+                <b>Матрица досягаемости </b>
+                <button onclick="Interface.getReachability();">get</button>
+                <span class="matrix-box" id="reachability"></span>
+            </p>
+            <p>
+                <b>Матрица сильной связаности </b>
+                <button onclick="Interface.getStrongBindingMatrix();">get</button>
+                <span class="matrix-box" id="strongBindingM"></span>
+            </p>
+            <p>
+                <b>Компоненты сильной связаности </b>
+                <button onclick="Interface.getStrongBindingComponents();">get</button>
+                <span id="strongBindingC"></span>
+            </p>
+            <p>
+                <b>Матрица конденсации </b>
+                <button onclick="Interface.getCondensation();">get</button>
+                <button onclick="Interface.buildCondensGraph();">build</button>
+                <span class="matrix-box" id="condensation"></span>
+            </p>
+            <p>
+                <b>Обход в ширину из вершины </b>
+                <input type="text" size="2" id="bfs-node">
+                <button onclick="Interface.getBFS();">get</button>
+                <button onclick="Interface.getBFSstep();">by step</button>
+                <span class="line-box" id="bfs"></span>
+            </p>
             <header><h3><b>Nodes properties</b></h3></header>
             <table id="nodes-props">
                 <tbody>

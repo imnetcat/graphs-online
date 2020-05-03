@@ -700,9 +700,7 @@ class Graph {
         }
 
         const labels = (labels) => {
-            console.log(labels);
             for (const label of labels) {
-                console.log(label);
                     lable(this.config.coords[label.i].x + this.config.nodes_radius, this.config.coords[label.i].y - this.config.nodes_radius, label.text);
             }
         }
