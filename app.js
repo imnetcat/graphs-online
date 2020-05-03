@@ -1,8 +1,7 @@
 'use strict';
 
 const Core = require('./app/core');
-const Interfaces = require('./app/interfaces');
-const Modules = require('./app/modules');
+const Interfaces = require('./app/interface');
 
 // конфиг
 let config = {};
@@ -14,13 +13,6 @@ class App {
     config = Core.config.create('./app/config.json');
     return this;
   }
-  // установка\переустановка модулей
-  static installMods(){
-    Modules.search()
-           .load()
-           .install();
-    return this;
-  }
   // запуск\перезапуск интерфейсов
   static interfacesUp(){
     Interfaces.start(config.interfaces);
@@ -29,7 +21,6 @@ class App {
   // старт приложения
   static start(){
     App.configure()
-       .installMods()
        .interfacesUp();
     return this;
   }

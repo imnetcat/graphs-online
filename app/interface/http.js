@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
 
@@ -51,7 +52,7 @@ class HTTP {
     HTTP_PORT = config.port;
     server = http.createServer((req, res) => {
       const { url, method } = req;
-      if(method === 'post'){
+        if (method === 'post' || method === 'POST'){
         const chunks = [];
         req.on('data', chunk => chunks.push(chunk));
         req.on('end', () => {
@@ -59,8 +60,8 @@ class HTTP {
           const result = serveApi(url, data);
           res.end(JSON.stringify(result));
         });
-      } else if(method === 'get') {
-        const { stream, mimeType } = serveFile(fileName);
+      } else if (method === 'get' || method === 'GET') {
+          const { stream, mimeType } = serveFile(url);
         if (stream) {
           res.writeHead(200, { 'Content-Type': mimeType });
           stream.pipe(res);
@@ -68,7 +69,7 @@ class HTTP {
           res.end(404);
         }
       } else {
-        res.end(500);
+        res.end();
       }
     });
     server.listen(HTTP_PORT);

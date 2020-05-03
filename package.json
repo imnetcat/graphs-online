@@ -4,22 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "ansi-256-colors": "^1.1.0",
-    "pg": "^7.18.2"
+    "ansi-256-colors": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/imnetcat/AppTemplate.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/imnetcat/AppTemplate/issues"
-  },
-  "homepage": "https://github.com/imnetcat/AppTemplate#readme"
+  }
 }

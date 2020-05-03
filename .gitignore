@@ -2,3 +2,4 @@
 *-laba/*.docx
 .vs
 node_modules
+logs

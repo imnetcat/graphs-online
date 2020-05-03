@@ -1,13 +1,13 @@
 'use strict';
 
 const CODES = {
-  0x000001: {
+  0x00000001: {
     msg: "unknown error: all fuck up"
   }
 }
 
 const errorCodeToStr = (code) => {
-  return '0x' + '0'.repeat(6 - code.toString().length) + code.toString();
+  return '0x' + '0'.repeat(8 - code.toString().length) + code.toString();
 }
 
 class CustomError {
@@ -20,7 +20,7 @@ class CustomError {
   }
   static toString(err){
     let text = '';
-    if(err.code){
+      if (err.code) {
       text += `(${errorCodeToStr(err.code)}) `;
     }
     if(err.msg){

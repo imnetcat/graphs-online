@@ -1,7 +1,6 @@
 'use strict';
 
-const CLI = require('./interfaces/cli');
-const HTTP = require('./interfaces/http');
+const HTTP = require('./interface/http');
 
 // Конфиг всех модулей
 let config = {};
@@ -10,7 +9,6 @@ let config = {};
 class Interfaces {
   static start(conf){
     config = conf;
-    CLI.start(config.cli);
     HTTP.start(config.http);
   }
   static list(){
