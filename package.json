@@ -1,13 +1,12 @@
 {
-  "name": "apptemplate",
+  "name": "graphs-online",
   "version": "1.0.0",
   "description": "",
   "dependencies": {
     "ansi-256-colors": "^1.1.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "/index.js"
+    "start": "./index.js"
   }
 }
