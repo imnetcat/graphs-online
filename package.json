@@ -2,13 +2,12 @@
   "name": "apptemplate",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "dependencies": {
     "ansi-256-colors": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "index.js"
+    "start": "/index.js"
   }
 }
