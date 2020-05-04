@@ -217,17 +217,16 @@ class Interface {
 
     static drawGraphs(matrix, options) {
         const canvId = "canv";
-        const canvas = Canvas(canvId).clear('2d');
-        const context = canvas.context('2d');
+        const canvas = new Canvas(canvId).clear('2d');
 
-        this.graph = new Graph(matrix, context);
+        this.graph = new Graph(matrix);
 
         this.graph.orientired(options.orientired)
-            .context(context)
             .displayForm(options.form)
             .generateCoords();
-        canvas.setSize(this.graph.getSize());
-        this.graph.draw(options.nodesColor, options.labelsInfo);
+
+        canvas.setSize(this.graph.getSize())
+            .draw(this.graph, options.nodesColor, options.labelsInfo);
 
         const degrees = this.graph.degrees();
         const uni = this.graph.isUni();
