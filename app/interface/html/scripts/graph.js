@@ -49,8 +49,10 @@ class Graph {
         return this.matrix.matrix;
     }
 
-    bfs(a) {
-        return this.matrix.bfs(a);
+    bfs(node) {
+        const matrix = this.matrix.bfs(node);
+        const bfs = new BFS(matrix, node);
+        return {bfs, matrix};
     }
 
     strongBindingMatrix() {

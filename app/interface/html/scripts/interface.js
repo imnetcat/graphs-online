@@ -1,212 +1,178 @@
 'use strict';
 
-class Interface {};
+class Interface {
 
-Interface.isMenuShowed = false;
-Interface.isInfoShowed = false;
+    static isMenuShowed = false;
+    static isInfoShowed = false;
 
-Interface.graph;
+    static graph;
 
-Interface.showMenu = function(show = true) {
-    if (show) {
-        this.isMenuShowed = !this.isMenuShowed;
-        this.showInfo(false);
-    } else {
-        this.isMenuShowed = false;
-    }
-    if (this.isMenuShowed) {
-        const width = document.getElementById('scrollable').offsetWidth;
-        const height = document.getElementById('scrollable').offsetHeight;
-
-        document.getElementById('menu-panel').style.width = `${width - 30}px`;
-        document.getElementById('menu-panel').style.height = `${height - 30}px`;
-        document.getElementById('menu-panel').style.display = "inherit";
-    } else {
-        document.getElementById('menu-panel').style.display = "none";
-    }
-}
-
-Interface.showInfo = function(show = true) {
-    if (show) {
-        this.isInfoShowed = !this.isInfoShowed;
-        this.showMenu(false);
-    } else {
-        this.isInfoShowed = false;
-    }
-    if (this.isInfoShowed) {
-        const width = document.getElementById('scrollable').offsetWidth;
-        const height = document.getElementById('scrollable').offsetHeight;
-
-        document.getElementById('info-box').style.width = `${width - 30}px`;
-        document.getElementById('info-box').style.height = `${height - 30}px`;
-        document.getElementById('info-box').style.display = "inherit";
-    } else {
-        document.getElementById('info-box').style.display = "none";
-    }
-}
-
-Interface.setInfo = function(info) {
-    document.getElementById("unified").innerHTML = (info.uni === -1) ? "false" : info.uni.toString();
-
-    const infoTable = document.getElementById("nodes-props");
-
-    const rows = infoTable.getElementsByTagName("tr")
-    for (let i = 1; i < rows.length; i) {
-        infoTable.deleteRow(i);
-    }
-
-    for (let i = 0; i < info.degrees.length; i++) {
-        const row = infoTable.insertRow(i + 1);
-        row.insertCell(0).innerHTML = `<b>${(i + 1).toString()}</b>`;
-        if (info.isOrientired) {
-            row.insertCell(1).innerHTML = `+ ${info.degrees[i].from.toString()}<br>- ${info.degrees[i].to.toString()}`;
+    static showMenu(show = true) {
+        if (show) {
+            this.isMenuShowed = !this.isMenuShowed;
+            this.showInfo(false);
         } else {
-            row.insertCell(1).innerHTML = info.degrees[i].sum().toString();
+            this.isMenuShowed = false;
         }
-        row.insertCell(2).innerHTML = (info.hangingNodes[i]) ? "Yes" : "";
-        row.insertCell(3).innerHTML = (info.isolatedNodes[i]) ? "Yes" : "";
-    }
-}
+        if (this.isMenuShowed) {
+            const width = document.getElementById('scrollable').offsetWidth;
+            const height = document.getElementById('scrollable').offsetHeight;
 
-Interface.isMatrixCorrect = function(matrix) {
-    if (!matrix.length) {
-        return false;
+            document.getElementById('menu-panel').style.width = `${width - 30}px`;
+            document.getElementById('menu-panel').style.height = `${height - 30}px`;
+            document.getElementById('menu-panel').style.display = "inherit";
+        } else {
+            document.getElementById('menu-panel').style.display = "none";
+        }
     }
-    if (matrix.length !== matrix[0].length) {
-        return false;
+
+    static showInfo(show = true) {
+        if (show) {
+            this.isInfoShowed = !this.isInfoShowed;
+            this.showMenu(false);
+        } else {
+            this.isInfoShowed = false;
+        }
+        if (this.isInfoShowed) {
+            const width = document.getElementById('scrollable').offsetWidth;
+            const height = document.getElementById('scrollable').offsetHeight;
+
+            document.getElementById('info-box').style.width = `${width - 30}px`;
+            document.getElementById('info-box').style.height = `${height - 30}px`;
+            document.getElementById('info-box').style.display = "inherit";
+        } else {
+            document.getElementById('info-box').style.display = "none";
+        }
     }
-    for (const i of matrix) {
-        for (const j of i) {
-            if (j === 1) continue;
-            if (j === 0) continue;
+
+    static setInfo(info) {
+        document.getElementById("unified").innerHTML = (info.uni === -1) ? "false" : info.uni.toString();
+
+        const infoTable = document.getElementById("nodes-props");
+
+        const rows = infoTable.getElementsByTagName("tr")
+        for (let i = 1; i < rows.length; i) {
+            infoTable.deleteRow(i);
+        }
+
+        for (let i = 0; i < info.degrees.length; i++) {
+            const row = infoTable.insertRow(i + 1);
+            row.insertCell(0).innerHTML = `<b>${(i + 1).toString()}</b>`;
+            if (info.isOrientired) {
+                row.insertCell(1).innerHTML = `+ ${info.degrees[i].from.toString()}<br>- ${info.degrees[i].to.toString()}`;
+            } else {
+                row.insertCell(1).innerHTML = info.degrees[i].sum().toString();
+            }
+            row.insertCell(2).innerHTML = (info.hangingNodes[i]) ? "Yes" : "";
+            row.insertCell(3).innerHTML = (info.isolatedNodes[i]) ? "Yes" : "";
+        }
+    }
+
+    static isMatrixCorrect(matrix) {
+        if (!matrix.length) {
             return false;
         }
-    }
-    return true;
-}
-
-Interface.getCondensation = function() {
-    const condensation = this.graph.condensation();
-    const strMatrix = Matrix.toString(condensation);
-    document.getElementById("condensation").innerText = strMatrix;
-}
-Interface.getRoutes = function() {
-    document.getElementById("routes").innerHTML = "";
-    const length = Number(document.getElementById("routes-length").value);
-    if (length) {
-        const routes = this.graph.routes(length);
-        for (let i = 0; i < routes.length; i++) {
-            for (let j = 0; j < routes[i].length; j++) {
-                routes[i][j]++;
+        if (matrix.length !== matrix[0].length) {
+            return false;
+        }
+        for (const i of matrix) {
+            for (const j of i) {
+                if (j === 1) continue;
+                if (j === 0) continue;
+                return false;
             }
-            routes[i] = routes[i].join(', ');
-            routes[i] += ' } ';
-            routes[i] = '{ ' + routes[i];
         }
-        const strRouters = routes;
-        for (let i = 3; i < routes.length; i += 4) {
-            strRouters.splice(i, 0, "</p><p>");
-        }
-        strRouters.unshift("<p>");
-        strRouters.push("</p>");
-        const strRoutes = strRouters.join('');
-        document.getElementById("routes").innerHTML = strRoutes;
+        return true;
     }
-}
 
-Interface.bsfstart = true;
-Interface.visited = [];
-Interface.colored = [];
-Interface.queqe = [];
-Interface.bfs = [];
-Interface.labelsInfo = [];
-Interface.bfslevel = 0;
-Interface.getBFS = function() {
-    this.bfslevel = 0;
-    this.bsfstart = true;
-    this.visited = [];
-    this.queqe = [];
-    this.bfs = [];
-    this.labelsInfo = [];
-    do {
-        this.getBFSstep();
-    } while (!this.bsfstart);
-}
-Interface.getBFSstep = function() {
-    if (this.bsfstart) {
+    static getCondensation () {
+        const condensation = this.graph.condensation();
+        const strMatrix = Matrix.toString(condensation);
+        document.getElementById("condensation").innerText = strMatrix;
+    }
+
+    static getRoutes() {
+        document.getElementById("routes").innerHTML = "";
+        const length = Number(document.getElementById("routes-length").value);
+        if (length) {
+            const routes = this.graph.routes(length);
+            for (let i = 0; i < routes.length; i++) {
+                for (let j = 0; j < routes[i].length; j++) {
+                    routes[i][j]++;
+                }
+                routes[i] = routes[i].join(', ');
+                routes[i] += ' } ';
+                routes[i] = '{ ' + routes[i];
+            }
+            const strRouters = routes;
+            for (let i = 3; i < routes.length; i += 4) {
+                strRouters.splice(i, 0, "</p><p>");
+            }
+            strRouters.unshift("<p>");
+            strRouters.push("</p>");
+            const strRoutes = strRouters.join('');
+            document.getElementById("routes").innerHTML = strRoutes;
+        }
+    }
+
+    static bfs = null;
+    static getBFS() {
         document.getElementById("bfs-node").innerHTML = "";
         const node = Number(document.getElementById("bfs-node").value);
         document.getElementById("bfs").innerHTML = "";
-        if (node) {
-            this.bfslevel = 2;
-            this.bfs = this.graph.bfs(node - 1);
-            this.visited = new Array(this.bfs.length).fill(false);
-            this.visited[node - 1] = true;
-            this.queqe = new Array();
-            this.queqe.push(node - 1);
-
-            document.getElementById("bfs").innerHTML = "<p></p>";
-            document.querySelector("#bfs > p").innerHTML = `{ ${node}`;
-            this.bsfstart = false;
-            const condensation = [];
-            for (let i = 0; i < this.bfs.length; i++) {
-                condensation[i] = this.bfs[i].join(' ');
-            }
-            const strMatrix = condensation.join('\n');
-            document.getElementById('matrix-input').value = strMatrix;
-
-            const nodesColor = new Array(this.bfs.length).fill("#ffffff");
-            nodesColor[node - 1] = "#6cc674";
-            this.colored.push(node - 1);
-
-            this.labelsInfo.push({ i: node-1, text: 1 });
-            
-            this.refreshCanvas(nodesColor, this.labelsInfo);
-        }
         
-    } else if (this.queqe.length) {
-
-        const nodesColor = new Array(this.bfs.length).fill("#ffffff");
-        for (const i of this.colored) {
-            nodesColor[i] = "#c0c0c0";
+        if (!node) {
+            this.bfs = null;
+            return false;
         }
-        let isLineZeros = true;
-        const row = this.bfs[this.queqe[0]];
-        for (let u = 0; u < row.length; u++) {
-            if (row[u] && !this.visited[u]) {
-                this.visited[u] = true;
-                this.queqe.push(u);
-                this.bfs[this.queqe[0]][u] = 1;
 
-                nodesColor[u] = "#6cc674";
-                this.colored.push(u);
-                
-                document.querySelector("#bfs > p").innerHTML += `, ${u + 1}`;
+        const { bfs, matrix } = this.graph.bfs(node - 1);
+        this.bfs = bfs;
 
-                this.labelsInfo.push({ i: u, text: this.bfslevel });
-
-                this.bfslevel++;
-
-                isLineZeros = false;
-            }
+        document.getElementById("bfs").innerHTML = "<p></p>";
+        document.querySelector("#bfs > p").innerHTML = `{ ${node}`;
+        const condensation = [];
+        for (let i = 0; i < matrix.length; i++) {
+            condensation[i] = matrix[i].join(' ');
         }
-        this.queqe.shift();
+        const strMatrix = condensation.join('\n');
+        document.getElementById('matrix-input').value = strMatrix;
 
-        this.refreshCanvas(nodesColor, this.labelsInfo);
+        return true;
+    }
 
-        if (isLineZeros) {
-            this.getBFSstep();
-        }
-        if (!this.queqe.length) {
-            document.querySelector("#bfs > p").innerHTML += " }";
-            this.bsfstart = true;
-            this.visited = [];
-            this.queqe = [];
-            this.bfs = [];
-            return;
+    static getBFSFull() {
+        while (this.getBFSstep()) {
+
         }
     }
-}
+
+    static getBFSstep() {
+        let ret = true;
+        if (!this.bfs) {
+            this.getBFS();
+        } else {
+            if (this.bfs.step()) {
+                for (const node in this.bfs.nodesColor) {
+                    if (this.bfs.nodesColor[node] === BFS.ACTIVE_NODE_COLOR) {
+                        document.querySelector("#bfs > p").innerHTML += `, ${Number(node) + 1}`;
+                    }
+                }
+            } else {
+                document.querySelector("#bfs > p").innerHTML += " }";
+                ret = false;
+            }
+        }
+
+        this.refreshCanvas(this.bfs.nodesColor, this.bfs.labelsInfo);
+        if (!ret) {
+            this.bfs = null;
+        }
+        return ret;
+    }
+
+};
+
 Interface.getReachability = function() {
     const reachability = this.graph.reachability();
     const strMatrix = Matrix.toString(reachability);
