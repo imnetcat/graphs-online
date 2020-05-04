@@ -5,19 +5,21 @@
     <title>Graphs online!</title>
     <script src="./scripts/canvas.js"></script>
     <script src="./scripts/matrix.js"></script>
+    <script src="./scripts/graph_bfs.js"></script>
     <script src="./scripts/graph.js"></script>
     <script src="./scripts/interface.js"></script>
+    <link rel="stylesheet" href="./font/font.css" type="text/css">
     <link rel="stylesheet" href="./index.css" type="text/css">
 </head>
     <body>
-      <div>
-        <header><h1>Graph online</h1></header>
         <div class="menu">
-          <button class="menu-btn" onclick="Interface.showMenu()"><div></div><div></div><div></div></button>
-          <button class="menu-btn" onclick="Interface.showInfo()"><img src=""></button>
-          <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="./refresh.png"></button>
+            <button class="menu-btn" onclick="Interface.showMenu()"><div></div><div></div><div></div></button>
+            <button class="menu-btn" onclick="Interface.showInfo()"><img src="./info.png"></button>
+            <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="./refresh.png"></button>
+            <h1>Graph online</h1>
+            <h3>github: <a href="https://github.com/imnetcat/graphs">/imnetcat/graphs</a></h3>
         </div>
-        <form name ="menu" id="menu-panel">
+        <form name ="menu" id="menu-panel" class="menu-box">
           <div class="menu-row"><textarea name="matrix" id="matrix-input">
 0 0 1 0 1 1 0 0 0 0
 0 0 0 0 0 0 1 1 0 0
@@ -62,7 +64,7 @@
             </table>
           </div>
         </form>
-        <div id="info-box">
+        <div id="info-box" class="menu-box">
             <header><h3><b>Graph properties</b></h3></header>
             <p>
                 <b>Однородность: </b>
@@ -98,7 +100,7 @@
             <p>
                 <b>Обход в ширину из вершины </b>
                 <input type="text" size="2" id="bfs-node">
-                <button onclick="Interface.getBFS();">get</button>
+                <button onclick="Interface.getBFSFull();">get</button>
                 <button onclick="Interface.getBFSstep();">by step</button>
                 <span class="line-box" id="bfs"></span>
             </p>
@@ -125,7 +127,5 @@
         <div id="scrollable">
           <canvas id="canv"></canvas>
         </div>
-        <footer><h3>github: <a href="https://github.com/imnetcat/graphs">/imnetcat/graphs</a></h3></footer>
-      </div>
     </body>
 </html>

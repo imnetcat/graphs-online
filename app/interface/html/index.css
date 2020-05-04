@@ -1,28 +1,35 @@
 body {
-    background: #e9f6cb;
-    color: #3472a1;
+    color: #ffffff;
+    font-family: 'Source Code Font';
 }
 body, h1, h2, h3 {
   margin: 0;
 }
 
 body > div {
-  position: absolute;
-  width: 50%;
-  margin-left: 25%;
-  margin-right: 25%;
+  width: 100%;
 }
 
-header {
-  width: 100%;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  line-height: 30px;
-  text-align: center;
+a {
+    color: indianred;
+}
+
+.menu h1 {
+    margin: auto;
+    margin-right: 10px;
+    letter-spacing: 0.1em;
+}
+.menu h3 {
+    margin: auto;
+    margin-left: 10px;
+}
+
+.menu-box {
+    color: #000000;
 }
 
 footer {
-  width: 100%;
+    width: 100%;
     margin-top: 30px;
     margin-bottom: 30px;
     position: relative;
@@ -31,13 +38,19 @@ footer {
 }
 
 #scrollable {
-  overflow: scroll;
-  background: #fff;
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 100px);
+    overflow: scroll;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .menu {
     height: 100px;
-    background: #93a8ff;
+    background: #000000;
     display: flex;
 }
 
@@ -53,12 +66,12 @@ footer {
     align-items: center;
 }
 
-.menu-btn div {
-  width: 2px;
-    background: #db6905;
-    height: 24px;
-    margin: 4px;
-}
+    .menu-btn div {
+        width: 2px;
+        background: #000;
+        height: 24px;
+        margin: 4px;
+    }
 
 #menu-panel {
   background: #fff;
