@@ -27,13 +27,12 @@ header h3 {
 .menu-box {
     color: #000000;
     background: #fff;
-    width: calc(100% - 100px);
-    height: calc(100% - 150px);
+    width: calc(25% - 35px);
+    height: calc(100% - 125px);
     position: absolute;
     z-index: 20;
     padding-left: 50px;
     padding-right: 50px;
-    padding-top: 25px;
     padding-bottom: 25px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -50,7 +49,8 @@ footer {
 
 #scrollable {
     position: absolute;
-    width: 100%;
+    width: calc(80% - 100px);
+    margin-left: calc(20% + 100px);
     height: calc(100% - 100px);
     overflow: scroll;
     background: #fff;
@@ -113,17 +113,15 @@ td {
 #info-box {
 }
 
-#info-box header {
-  text-align: center;
-  display: block;
-  padding-top: 30px;
-  line-height: 30px;
-}
+    #info-box header {
+        text-align:center;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        line-height: 30px;
+    }
 
 #nodes-props {
   width: 100%;
-  height: max-content;
-  border: 1px solid;
 }
 
 #nodes-props td {
@@ -133,23 +131,6 @@ td {
   text-align: center;
 }
 
-#info-box header::after {
-    content: '';
-    height: 0;
-    border: 1px solid;
-    width: calc(100% - 30px);
-    display: inline-block;
-    position: absolute;
-    left: 15px;
-    margin-top: -14px;
-}
-
-#info-box header h3 {
-  margin-top: -30px;
-  position: absolute;
-  z-index: 2;
-  width: calc(100% - 15px);
-}
 #info-box header h3 b {
   background: #fff;
 }
