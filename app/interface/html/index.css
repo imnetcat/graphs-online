@@ -1,0 +1,155 @@
+body {
+    color: #ffffff;
+    font-family: 'Source Code Font';
+}
+body, h1, h2, h3 {
+  margin: 0;
+}
+
+body > div {
+  width: 100%;
+}
+
+a {
+    color: indianred;
+}
+
+header h1 {
+    margin: auto;
+    margin-right: 10px;
+    letter-spacing: 0.1em;
+}
+header h3 {
+    margin: auto;
+    margin-left: 10px;
+}
+
+.menu-box {
+    color: #000000;
+    background: #fff;
+    width: calc(25% - 35px);
+    height: calc(100% - 150px);
+    position: absolute;
+    z-index: 20;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+footer {
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    text-align: center;
+    line-height: 30px;
+}
+
+#scrollable {
+    position: absolute;
+    width: calc(80% - 100px);
+    margin-left: calc(20% + 100px);
+    height: calc(100% - 100px);
+    overflow: scroll;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body > header {
+    height: 100px;
+    background: #000000;
+    display: flex;
+}
+
+.menu-btn {
+  width: 50px;
+    height: 50px;
+    margin-top: 25px;
+    margin-left: 25px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+    .menu-btn div {
+        width: 2px;
+        background: #000;
+        height: 24px;
+        margin: 4px;
+    }
+
+#menu-panel {
+}
+
+#matrix-input {
+    width: 100%;
+    height: 30%;
+    resize: none;
+}
+
+.menu-row {
+  width: 100%;
+  height: 100%;
+}
+.menu-row:nth-child(2) {
+  margin-top: 30%;
+}
+
+table {
+  display: block;
+}
+
+td {
+
+}
+
+#info-box {
+}
+
+    #info-box header {
+        text-align:center;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        line-height: 30px;
+    }
+
+#nodes-props {
+  width: 100%;
+}
+
+#nodes-props td {
+  width: 100px;
+  height: 50px;
+  border: 1px solid;
+  text-align: center;
+}
+
+#info-box header h3 b {
+  background: #fff;
+}
+
+.menu-btn img {
+    height: 35px;
+    width: auto;
+}
+
+.matrix-box {
+    letter-spacing: 0.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.line-box p {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

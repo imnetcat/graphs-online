@@ -1,0 +1,10 @@
+{
+  "core": {
+  },
+  "interfaces": {
+    "http": {
+      "root": "./app/interface/html",
+      "port": 8080
+    }
+  }
+}

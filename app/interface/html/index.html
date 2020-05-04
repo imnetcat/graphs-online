@@ -1,0 +1,144 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Graphs online!</title>
+    <script src="./scripts/canvas.js"></script>
+    <script src="./scripts/matrix.js"></script>
+    <script src="./scripts/graph_bfs.js"></script>
+    <script src="./scripts/graph.js"></script>
+    <script src="./scripts/interface_dom.js"></script>
+    <script src="./scripts/interface.js"></script>
+    <link rel="stylesheet" href="./font/font.css" type="text/css">
+    <link rel="stylesheet" href="./index.css" type="text/css">
+</head>
+    <body>
+        <header>
+            <button class="menu-btn" onclick="Interface.showMenu(true)"><div></div><div></div><div></div></button>
+            <button class="menu-btn" onclick="Interface.showInfo(true)"><img src="./info.png"></button>
+            <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="./refresh.png"></button>
+            <h1>Graph online</h1>
+            <h3>github: <a href="https://github.com/imnetcat/graphs">/imnetcat/graphs</a></h3>
+        </header>
+        <form name ="menu" id="menu-panel" class="menu-box" hidden>
+          <div class="menu-row"><textarea name="matrix" id="matrix-input">
+0 0 1 0 1 1 0 0 0 0
+0 0 0 0 0 0 1 1 0 0
+1 1 0 1 0 0 1 0 0 0
+0 1 0 0 0 0 1 0 1 0
+0 0 1 0 0 1 1 1 0 0
+1 0 0 1 0 0 0 0 0 0
+0 0 0 0 0 1 1 1 0 0
+1 1 0 1 0 0 1 1 1 0
+0 1 1 0 0 0 0 0 0 1
+0 0 1 0 0 0 0 0 0 0</textarea>
+            <table>
+              <tr>
+                <th>
+                  Display form
+                </th>
+                <th>
+                  Orientation
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <input type="radio" name="display-form" value="empty-triangle" id="empty-triangle" checked="checked">
+                  <label for="empty-triangle">Empty triangle</label>
+                </td>
+                <td>
+                  <input type="radio" name="orientiation" value="orientired" id="orientired" checked="checked">
+                  <label for="orientired">Orientired</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="radio" name="display-form" value="empty-square" id="empty-square">
+                  <label for="empty-square">Empty square</label>
+                </td>
+
+                  <td>
+                    <input type="radio" name="orientiation" value="non-orientired" id="non-orientired">
+                    <label for="non-orientired">Non orientired</label>
+                  </td>
+              </tr>
+            </table>
+          </div>
+        </form>
+        <div id="info-box" class="menu-box">
+            <header><h2><b>Graph properties</b></h2></header>
+            <p>
+                <b>Однородность: </b>
+                <span id="unified"></span>
+            </p>
+            <p>
+                <b>Маршруты длиною </b>
+                <select id="routes-length">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+                <button onclick="Interface.getRoutes();">get</button>
+                <button onclick="Interface.clearRoutes();">clear</button>
+                <span class="line-box" id="routes"></span>
+            </p>
+            <p>
+                <b>Матрица досягаемости </b>
+                <button onclick="Interface.getReachability();">get</button>
+                <button onclick="Interface.clearReachability();">clear</button>
+                <span class="matrix-box" id="reachability"></span>
+            </p>
+            <p>
+                <b>Матрица сильной связаности </b>
+                <button onclick="Interface.getStrongBindingMatrix();">get</button>
+                <button onclick="Interface.clearStrongBindingMatrix();">clear</button>
+                <span class="matrix-box" id="strongBindingM"></span>
+            </p>
+            <p>
+                <b>Компоненты сильной связаности </b>
+                <button onclick="Interface.getStrongBindingComponents();">get</button>
+                <button onclick="Interface.clearStrongBindingComponents();">clear</button>
+                <span id="strongBindingC"></span>
+            </p>
+            <p>
+                <b>Матрица конденсации </b>
+                <button onclick="Interface.getCondensation();">get</button>
+                <button onclick="Interface.buildCondensGraph();">build</button>
+                <button onclick="Interface.clearCondensation();">clear</button>
+                <span class="matrix-box" id="condensation"></span>
+            </p>
+            <p>
+                <b>Обход в ширину из вершины </b>
+                <input type="text" size="2" id="bfs-node">
+                <button onclick="Interface.getBFSFull();">get</button>
+                <button onclick="Interface.buildBFSFull();">build</button>
+                <button onclick="Interface.getBFSstep();">get by step</button>
+                <button onclick="Interface.buildBFSstep();">build by step</button>
+                <button onclick="Interface.clearBFS();">clear</button>
+                <span class="line-box" id="bfs"></span>
+            </p>
+            <header><h2><b>Nodes properties</b></h2></header>
+            <table id="nodes-props">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Nodes</b>
+                        </td>
+                        <td>
+                            <b>Degrees</b>
+                        </td>
+                        <td>
+                            <b>Hanged</b>
+                        </td>
+                        <td>
+                            <b>Isolated</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="scrollable">
+          <canvas id="canv"></canvas>
+        </div>
+    </body>
+</html>

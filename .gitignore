@@ -2,3 +2,5 @@
 *-laba/*.docx
 .vs
 node_modules
+logs
+*-lock.json

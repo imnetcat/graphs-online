@@ -105,7 +105,7 @@ class Matrix {
 // G - 2д матрица
 // а - начальная вершина
 Matrix.bfs = function (G, a) {
-    const bfs = Matrix.createZero(G.length);
+    const matrix = Matrix.createZero(G.length);
     const visited = new Array(G.length).fill(false);
     visited[a] = true;
     const queqe = new Array();
@@ -116,12 +116,12 @@ Matrix.bfs = function (G, a) {
             if (row[u] && !visited[u]) {
                 visited[u] = true;
                 queqe.push(u);
-                bfs[queqe[0]][u] = 1;
+                matrix[queqe[0]][u] = 1;
             }
         }
         queqe.shift();
     }
-    return bfs;
+    return matrix;
 }
 
 // Поелементарное перемножение матриц
