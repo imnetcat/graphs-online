@@ -40,8 +40,6 @@ class BFS {
                     this.nodesColor[u] = BFS.ACTIVE_NODE_COLOR;
                     this.colored.push(u);
 
-                    //document.querySelector("#bfs > p").innerHTML += `, ${u + 1}`;
-
                     this.labelsInfo.push({ i: u, text: this.bfslevel });
 
                     this.bfslevel++;
