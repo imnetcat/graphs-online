@@ -1,35 +1,22 @@
 'use strict';
 
 class Interface {
-
-    static isMenuShowed = false;
-    static isInfoShowed = false;
-
+    
     static graph;
 
-    static showMenu(show = true) {
-        if (show) {
-            this.isMenuShowed = !this.isMenuShowed;
-            this.showInfo(false);
-        } else {
-            this.isMenuShowed = false;
-        }
-        if (this.isMenuShowed) {
+    static showMenu(flag) {
+        if (flag) {
             DOM.getById('menu-panel').show();
+            Interface.showInfo(false);
         } else {
             DOM.getById('menu-panel').hide();
         }
     }
 
-    static showInfo(show = true) {
-        if (show) {
-            this.isInfoShowed = !this.isInfoShowed;
-            this.showMenu(false);
-        } else {
-            this.isInfoShowed = false;
-        }
-        if (this.isInfoShowed) {
+    static showInfo(flag) {
+        if (flag) {
             DOM.getById('info-box').show();
+            Interface.showMenu(false);
         } else {
             DOM.getById('info-box').hide();
         }
@@ -256,7 +243,7 @@ class Interface {
         });
     }
     static refreshCanvas(nodesColor, labelsInfo) {
-        this.showInfo(false);
+        this.showInfo(true);
         this.showMenu(false);
 
         const form = new FormData(document.forms.menu);
