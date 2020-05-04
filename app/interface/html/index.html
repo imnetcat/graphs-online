@@ -20,59 +20,72 @@
             <h1>Graph online</h1>
             <h3>github: <a href="https://github.com/imnetcat/graphs">/imnetcat/graphs</a></h3>
         </header>
-        <form name ="menu" id="menu-panel" class="menu-box" hidden>
-          <div class="menu-row"><textarea name="matrix" id="matrix-input">
-0 0 1 0 1 1 0 0 0 0
-0 0 0 0 0 0 1 1 0 0
+        <form name="menu" id="menu-panel" class="menu-box" hidden>
+            <header><h2><b>graph definition</b></h2></header>
+            <table>
+                <tr>
+                    <th>
+                        display shape
+                    </th>
+                    <th>
+                        orientation
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="display-form" value="empty-triangle" id="empty-triangle" checked="checked">
+                        <label for="empty-triangle">empty triangle</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="orientiation" value="orientired" id="orientired" checked="checked">
+                        <label for="orientired">orientired</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="display-form" value="empty-square" id="empty-square">
+                        <label for="empty-square">empty square</label>
+                    </td>
+
+                    <td>
+                        <input type="radio" name="orientiation" value="non-orientired" id="non-orientired">
+                        <label for="non-orientired">non orientired</label>
+                    </td>
+                </tr>
+            </table>
+            <p><b>adjacency matrix</b></p>
+            <textarea id="adj-matrix" class="matrix-input">
+1 1 1 0 1 1 0 0 0 1
+0 0 1 1 0 0 1 1 0 1
 1 1 0 1 0 0 1 0 0 0
 0 1 0 0 0 0 1 0 1 0
-0 0 1 0 0 1 1 1 0 0
-1 0 0 1 0 0 0 0 0 0
+1 0 1 0 0 1 1 1 0 1
+1 1 0 1 0 0 0 0 0 0
 0 0 0 0 0 1 1 1 0 0
-1 1 0 1 0 0 1 1 1 0
-0 1 1 0 0 0 0 0 0 1
-0 0 1 0 0 0 0 0 0 0</textarea>
-            <table>
-              <tr>
-                <th>
-                  Display form
-                </th>
-                <th>
-                  Orientation
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <input type="radio" name="display-form" value="empty-triangle" id="empty-triangle" checked="checked">
-                  <label for="empty-triangle">Empty triangle</label>
-                </td>
-                <td>
-                  <input type="radio" name="orientiation" value="orientired" id="orientired" checked="checked">
-                  <label for="orientired">Orientired</label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input type="radio" name="display-form" value="empty-square" id="empty-square">
-                  <label for="empty-square">Empty square</label>
-                </td>
-
-                  <td>
-                    <input type="radio" name="orientiation" value="non-orientired" id="non-orientired">
-                    <label for="non-orientired">Non orientired</label>
-                  </td>
-              </tr>
-            </table>
-          </div>
+1 1 0 1 0 1 1 1 1 1
+0 1 1 0 0 0 0 1 0 1
+0 0 1 0 0 1 0 0 0 0</textarea>
+            <p><b>weight matrix</b></p>
+            <textarea name="weight-matrix" class="matrix-input">
+0 71 87 0 90 69 0 88 0 94
+71 0 17 46 0 39 61 18 24 64
+87 17 0 65 45 0 28 0 48 58
+0 46 65 0 0 96 76 46 6 0
+90 0 45 0 0 85 34 100 0 71
+69 39 0 96 85 0 42 23 0 10
+0 61 28 76 34 42 0 69 0 0
+88 18 0 46 100 23 69 0 63 22
+0 24 48 6 0 0 0 63 0 44
+94 64 58 0 71 10 0 22 44 0</textarea>
         </form>
         <div id="info-box" class="menu-box">
-            <header><h2><b>Graph properties</b></h2></header>
+            <header><h2><b>graph properties</b></h2></header>
             <p>
-                <b>Однородность: </b>
+                <b>uniformity: </b>
                 <span id="unified"></span>
             </p>
             <p>
-                <b>Маршруты длиною </b>
+                <b>routes with length </b>
                 <select id="routes-length">
                     <option>1</option>
                     <option>2</option>
@@ -83,32 +96,32 @@
                 <span class="line-box" id="routes"></span>
             </p>
             <p>
-                <b>Матрица досягаемости </b>
+                <b>distance matrix</b>
                 <button onclick="Interface.getReachability();">get</button>
                 <button onclick="Interface.clearReachability();">clear</button>
                 <span class="matrix-box" id="reachability"></span>
             </p>
             <p>
-                <b>Матрица сильной связаности </b>
+                <b>strong binding matrix</b>
                 <button onclick="Interface.getStrongBindingMatrix();">get</button>
                 <button onclick="Interface.clearStrongBindingMatrix();">clear</button>
                 <span class="matrix-box" id="strongBindingM"></span>
             </p>
             <p>
-                <b>Компоненты сильной связаности </b>
+                <b>strong binding components</b>
                 <button onclick="Interface.getStrongBindingComponents();">get</button>
                 <button onclick="Interface.clearStrongBindingComponents();">clear</button>
                 <span id="strongBindingC"></span>
             </p>
             <p>
-                <b>Матрица конденсации </b>
+                <b>condensation matrix</b>
                 <button onclick="Interface.getCondensation();">get</button>
                 <button onclick="Interface.buildCondensGraph();">build</button>
                 <button onclick="Interface.clearCondensation();">clear</button>
                 <span class="matrix-box" id="condensation"></span>
             </p>
             <p>
-                <b>Обход в ширину из вершины </b>
+                <b>breadth-first search from </b>
                 <input type="text" size="2" id="bfs-node">
                 <button onclick="Interface.getBFSFull();">get</button>
                 <button onclick="Interface.buildBFSFull();">build</button>
@@ -117,21 +130,21 @@
                 <button onclick="Interface.clearBFS();">clear</button>
                 <span class="line-box" id="bfs"></span>
             </p>
-            <header><h2><b>Nodes properties</b></h2></header>
+            <header><h2><b>vertex properties</b></h2></header>
             <table id="nodes-props">
                 <tbody>
                     <tr>
                         <td>
-                            <b>Nodes</b>
+                            <b>vertex</b>
                         </td>
                         <td>
-                            <b>Degrees</b>
+                            <b>degrees</b>
                         </td>
                         <td>
-                            <b>Hanged</b>
+                            <b>hanged</b>
                         </td>
                         <td>
-                            <b>Isolated</b>
+                            <b>isolated</b>
                         </td>
                     </tr>
                 </tbody>

@@ -88,18 +88,10 @@ body > header {
 #menu-panel {
 }
 
-#matrix-input {
+.matrix-input {
     width: 100%;
     height: 30%;
     resize: none;
-}
-
-.menu-row {
-  width: 100%;
-  height: 100%;
-}
-.menu-row:nth-child(2) {
-  margin-top: 30%;
 }
 
 table {
@@ -113,12 +105,12 @@ td {
 #info-box {
 }
 
-    #info-box header {
-        text-align:center;
-        padding-bottom: 10px;
-        padding-top: 10px;
-        line-height: 30px;
-    }
+.menu-box header {
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    line-height: 30px;
+}
 
 #nodes-props {
   width: 100%;

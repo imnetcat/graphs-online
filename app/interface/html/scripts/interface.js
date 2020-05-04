@@ -122,7 +122,7 @@ class Interface {
             condensation[i] = matrix[i].join(' ');
         }
         const strMatrix = condensation.join('\n');
-        DOM.getById('matrix-input').value = strMatrix;
+        DOM.getById('adj-matrix').value = strMatrix;
 
         return true;
     }
@@ -211,7 +211,7 @@ class Interface {
             condensation[i] = condensation[i].join(' ');
         }
         const strMatrix = condensation.join('\n');
-        DOM.getById('matrix-input').value = strMatrix;
+        DOM.getById('adj-matrix').value = strMatrix;
         this.refreshCanvas();
     }
 
@@ -247,7 +247,7 @@ class Interface {
         this.showMenu(false);
 
         const form = new FormData(document.forms.menu);
-        const matrixStr = DOM.getById('matrix-input').value.split('\n');
+        const matrixStr = DOM.getById('adj-matrix').value.split('\n');
 
         const matrix = [];
         for (const row of matrixStr) {
