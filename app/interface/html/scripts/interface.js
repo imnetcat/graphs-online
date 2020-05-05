@@ -63,7 +63,7 @@ class Interface {
         DOM.getById("condensation").setText("");
     }
     static getCondensation () {
-        const condensation = this.graph.condensation();
+        const condensation = Graph.condensation(this.graph);
         const strMatrix = Matrix.toString(condensation);
         DOM.getById("condensation").setText(strMatrix);
     }
@@ -76,7 +76,7 @@ class Interface {
         DOM.getById("routes").setHTML("");
         const length = Number(DOM.getById("routes-length").value);
         if (length) {
-            const routes = this.graph.routes(length);
+            const routes = Graph.routes(this.graph, length);
             if (!routes) return;
             for (let i = 0; i < routes.length; i++) {
                 for (let j = 0; j < routes[i].length; j++) {
@@ -112,7 +112,7 @@ class Interface {
             return false;
         }
         
-        const { bfs, matrix } = this.graph.bfs(node - 1);
+        const { bfs, matrix } = Graph.bfs(this.graph, node - 1);
         this.bfs = bfs;
 
         DOM.getById("bfs").setHTML("<p></p>");
@@ -177,7 +177,7 @@ class Interface {
         DOM.getById("reachability").setText("");
     }
     static getReachability() {
-        const reachability = this.graph.reachability();
+        const reachability = Graph.reachability(this.graph);
         const strMatrix = Matrix.toString(reachability);
         DOM.getById("reachability").setText(strMatrix);
     }
@@ -186,7 +186,7 @@ class Interface {
         DOM.getById("strongBindingM").setText("");
     }
     static getStrongBindingMatrix() {
-        const matrix = this.graph.strongBindingMatrix();
+        const matrix = Graph.strongBindingMatrix(this.graph);
         const strMatrix = Matrix.toString(matrix);
         DOM.getById("strongBindingM").setText(strMatrix);
     }
@@ -195,7 +195,7 @@ class Interface {
         DOM.getById("strongBindingC").setHTML("");
     }
     static getStrongBindingComponents() {
-        const components = this.graph.strongBindingComponents();
+        const components = Graph.strongBindingComponents(this.graph);
         for (let i = 0; i < components.length; i++) {
             components[i] = components[i].join(", ");
             components[i] += ' }';
@@ -206,7 +206,7 @@ class Interface {
     }
 
     static buildCondensGraph() {
-        const condensation = this.graph.condensation();
+        const condensation = Graph.condensation(this.graph);
         for (let i = 0; i < condensation.length; i++) {
             condensation[i] = condensation[i].join(' ');
         }
@@ -215,18 +215,16 @@ class Interface {
         this.refreshCanvas();
     }
 
-    static drawGraphs(matrix, options) {
+    static drawGraphs(aj_matrix, options) {
         const canvId = "canv";
-        const canvas = new Canvas(canvId).clear('2d');
 
-        this.graph = new Graph(matrix);
+        this.graph = new Graph(canvId, aj_matrix);
 
-        this.graph.orientired(options.orientired)
-            .displayForm(options.form)
-            .generateCoords();
-
-        canvas.setSize(this.graph.getSize())
-            .draw(this.graph, options.nodesColor, options.labelsInfo);
+        this.graph.orientired = options.orientired;
+        this.graph.shape = options.form;
+        this.graph.generate();
+        
+        this.graph.draw(options.nodesColor, options.labelsInfo);
 
         const degrees = this.graph.degrees();
         const uni = this.graph.isUni();
