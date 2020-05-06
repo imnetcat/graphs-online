@@ -386,10 +386,25 @@ class Canvas {
             }
             return linesArray;
         }
+        const complete_ribs = [];
         const ribs = () => {
-            graph.adj_matrix.iterate((a, b, m, n) => {
-                if (!(!graph.config.orientired && (m - n) > 0)) {
+            for (const m in graph.adj_matrix.matrix) {
+                for (const n in graph.adj_matrix.matrix[m]) {
+                    const a = graph.adj_matrix.matrix[m][n];
+                    const b = graph.adj_matrix.matrix[n][m];
+                    
+                    if (!graph.config.orientired) {
+                        let flag = false;
+                        for (const r of complete_ribs) {
+                            if (r.m === n && r.n === m)
+                                flag = true;
+                        }
+                        if(flag)
+                            continue;
+                    }
+
                     if (a) {
+                        complete_ribs.push({ m, n });
                         const fx = graph.config.coords[m].x,
                             fy = graph.config.coords[m].y,
                             tx = graph.config.coords[n].x,
@@ -421,7 +436,7 @@ class Canvas {
                         }
 
                         const linesArray = line(from, to);
-                        
+
                         let labelIndex = Math.floor(linesArray.length / 2);
                         let index = 0;
                         for (const l of linesArray) {
@@ -443,7 +458,7 @@ class Canvas {
                         }
                     }
                 }
-            });
+            }
         }
 
         const nodes = (colors) => {

@@ -239,10 +239,8 @@ class Interface {
     static mst_visited = null;
     static mstmatrix = null;
     static mststep = 0;
-    static mstColored = null;
     static minSpanTree() {
         const mst = this.graph.minSpanningTree();
-        
         Interface.mstmatrix = [];
         for (let i = 0; i <= mst.length; i++) {
             Interface.mstmatrix.push(new Array(mst.length + 1));
@@ -268,8 +266,7 @@ class Interface {
         Interface.mstweight = 0;
         Interface.mstmatrix = null;
         Interface.mst_m = 0;
-        Interface.mst_visited = null;;
-        Interface.mstColored = null;
+        Interface.mst_visited = null;
     }
     static stepMST() {
 
@@ -279,8 +276,8 @@ class Interface {
             Interface.mstColored.push(Interface.mst_m);
             Interface.mst_visited.push(Interface.mst_m);
         }
-        
-        
+
+
         let isRowEnds = true;
         for (let i = 0; i < Interface.mstmatrix[Interface.mst_m].length; i++) {
             if (Interface.mstmatrix[Interface.mst_m][i]) {
@@ -301,13 +298,13 @@ class Interface {
     }
     static getMSTstep() {
         if (Interface.stepMST()) {
-            Interface.mst_m = Interface.mst_visited[Interface.mst_visited.indexOf(Interface.mst_m) - 1];
-            return Interface.getMSTstep()
+            let index = Interface.mst_visited.indexOf(Interface.mst_m) - 1;
+            Interface.mst_m = Interface.mst_visited[index];
+            return Interface.getMSTstep();
         } else {
             DOM.getBySelector('#mst > p').addText(` ${Interface.mst_m + 1}`);
-            Interface.mstColored.push(Interface.mst_m);
             Interface.mst_visited.push(Interface.mst_m);
-
+             
             if (Interface.mst_visited.length === Interface.mstmatrix.length) {
                 DOM.getBySelector('#mst > p').addText(` } (weight: ${Interface.mstweight})`);
                 return false;

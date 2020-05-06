@@ -270,17 +270,19 @@ class Graph {
             }
             ans += min_dist;
             used[u] = true;
-            
             for (let v = 0; v < N; ++v) {
                 if (dist[v] > weight[u][v]) {
+                    const dist_temp_copy = dist[v];
                     dist[v] = weight[u][v];
                     let isWayToVExist = false;
-                    if (result.length) {
-                        for (let t = 0; t < result.length; ++t) {
-                            if (result[t].v === v) {
-                                isWayToVExist = true;
+                    for (let t = 0; t < result.length; ++t) {
+                        if (result[t].v === v) {
+                            if (used[v]) {
+                                dist[v] = dist_temp_copy;
+                            } else {
                                 result[t].u = u;
                             }
+                            isWayToVExist = true;
                         }
                     }
                     if (!isWayToVExist) {
