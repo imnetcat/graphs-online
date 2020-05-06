@@ -265,6 +265,7 @@ class Collision {
     }
 };
 
+
 class Canvas {
     constructor(canvasId) {
         this.domElem = document.getElementById(canvasId);
@@ -341,7 +342,7 @@ class Canvas {
 
         Collision.coords = graph.config.coords;
         
-        const line = (from, to, flags) => {
+        const line = (from, to) => {
             let linesArray = [];
 
             // ≈сли лини€ из вершины входит в эту же вершину
@@ -383,19 +384,10 @@ class Canvas {
                 // провер€ем коллизии всех вершин с линией
                 Collision.checkCollisionNodesRec(nodes_radius, linesArray, from, to);
             }
-
-            for (const l of linesArray) {
-                this.line(l.from, l.to);
-            }
-            if (flags) {
-                if (flags.arrow) {
-                    const cross = Collision.lineCrossNode(linesArray[linesArray.length - 1].from, to, to, nodes_radius);
-                    this.arrow(linesArray[linesArray.length - 1].from, cross);
-                }
-            }
+            return linesArray;
         }
         const ribs = () => {
-            graph.matrix.iterate((a, b, m, n) => {
+            graph.adj_matrix.iterate((a, b, m, n) => {
                 if (!(!graph.config.orientired && (m - n) > 0)) {
                     if (a) {
                         const fx = graph.config.coords[m].x,
@@ -428,7 +420,27 @@ class Canvas {
                             flags.toTheSameNode = true;
                         }
 
-                        line(from, to, flags);
+                        const linesArray = line(from, to);
+                        
+                        let labelIndex = Math.floor(linesArray.length / 2);
+                        let index = 0;
+                        for (const l of linesArray) {
+                            this.line(l.from, l.to);
+                            if (index === labelIndex) {
+                                if (linesArray.length % 2 === 0) {
+                                    this.lable(l.from.x, l.from.y, graph.w_matrix[m][n]);
+                                } else {
+                                    this.lable(l.to.x, l.to.y, graph.w_matrix[m][n]);
+                                }
+                            }
+                            index++;
+                        }
+                        if (flags) {
+                            if (flags.arrow) {
+                                const cross = Collision.lineCrossNode(linesArray[linesArray.length - 1].from, to, to, nodes_radius);
+                                this.arrow(linesArray[linesArray.length - 1].from, cross);
+                            }
+                        }
                     }
                 }
             });

@@ -306,3 +306,11 @@ Matrix.createZero = function (n) {
         }
     )
 }
+
+Matrix.createInfinity = function (n) {
+    return (new Array(n).fill(0)).map(
+        function (a, i) {
+            return (new Array(n)).fill(0).map((b, j) => (i == j) ? Infinity : 0);
+        }
+    )
+}

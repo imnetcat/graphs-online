@@ -1,11 +1,12 @@
 'use strict';
 
 class Graph {
-    constructor(matrix) {
+    constructor(adj_matrix) {
         this.plot_x = 1000;
         this.plot_y = 500;
-        this.matrix = new Matrix(matrix);
-        this.nodes = matrix.length;
+        this.adj_matrix = new Matrix(adj_matrix);
+        this.w_matrix = null;
+        this.nodes = adj_matrix.length;
         this.display = 'default';
         this.config = {
             plot_x_offfset: 100,
@@ -33,22 +34,22 @@ class Graph {
     }
 
     reachability() {
-        const s = this.matrix.size().m;
+        const s = this.adj_matrix.size().m;
         let multiplycat = Matrix.createUnit(s);
         const pows = [];
         for (let i = 1; i < s; i++) {
-            pows.push(this.matrix.pow(i));
+            pows.push(this.adj_matrix.pow(i));
         }
         for (let i = 0; i < pows.length; i++) {
             multiplycat = Matrix.matrixSum(multiplycat, pows[i]);
         }
-        this.matrix.matrix = multiplycat;
-        this.matrix.booling();
-        return this.matrix.matrix;
+        this.adj_matrix.matrix = multiplycat;
+        this.adj_matrix.booling();
+        return this.adj_matrix.matrix;
     }
 
     bfs(node) {
-        const matrix = this.matrix.bfs(node);
+        const matrix = this.adj_matrix.bfs(node);
         const bfs = new BFS(matrix, node);
         return {bfs, matrix};
     }
@@ -145,11 +146,11 @@ class Graph {
         }
 
         if (length === 3) {
-            return getWays(this.matrix.matrix).l3;
+            return getWays(this.adj_matrix.matrix).l3;
         } else if (length === 2){
-            return getWays(this.matrix.matrix).l2;
+            return getWays(this.adj_matrix.matrix).l2;
         } else if (length === 1) {
-            return getWays(this.matrix.matrix).l1;
+            return getWays(this.adj_matrix.matrix).l1;
         }
         
     }
@@ -174,10 +175,10 @@ class Graph {
                 return this.from + this.to;
             }
         };
-        const result = new Array(this.matrix.size().m)
+        const result = new Array(this.adj_matrix.size().m)
             .fill({})
             .map(el => el = new Deg());
-        this.matrix.iterate((a, b, m, n) => {
+        this.adj_matrix.iterate((a, b, m, n) => {
             let flag = true;
             if ((m - n) > 0) {
                 flag = false;
@@ -232,8 +233,63 @@ class Graph {
         return isolatedNodes;
     }
 
+    weight(w_matrix) {
+        this.w_matrix = w_matrix;
+        return this;
+    }
+
     isOrientired() {
         return this.config.orientired;
+    }
+
+    minSpanningTree() {
+        let result = [];
+        const weight = Matrix.matrixSum(this.w_matrix, Matrix.createInfinity(this.w_matrix.length));
+        for (let i = 0; i < this.adj_matrix.matrix.length; i++) {
+            for (let j = 0; j < this.adj_matrix.matrix[i].length; j++) {
+                if (!this.adj_matrix.matrix[i][j]) {
+                    weight[i][j] = Infinity;
+                }
+            }
+        }
+
+        // Используем алгоритм Прима
+        const N = this.nodes;
+        const INF = Infinity;
+        const dist = new Array(N).fill(INF);
+        dist[0] = 0;
+        const used = new Array(N).fill(false);
+        let ans = 0;
+        for (let i = 0; i < N; ++i) {
+            let u, min_dist = INF;
+            for (let j = 0; j < N; ++j) {
+                if (!used[j] && dist[j] < min_dist) {
+                    min_dist = dist[j];
+                    u = j;
+                }
+            }
+            ans += min_dist;
+            used[u] = true;
+            
+            for (let v = 0; v < N; ++v) {
+                if (dist[v] > weight[u][v]) {
+                    dist[v] = weight[u][v];
+                    let isWayToVExist = false;
+                    if (result.length) {
+                        for (let t = 0; t < result.length; ++t) {
+                            if (result[t].v === v) {
+                                isWayToVExist = true;
+                                result[t].u = u;
+                            }
+                        }
+                    }
+                    if (!isWayToVExist) {
+                        result.push({ u, v });
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     generateCoords() {

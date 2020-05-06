@@ -10,6 +10,9 @@ class DOM {
                 this.deleteRow(from);
             }
         }
+        tableElement.row = function (index) {
+            return DOM.wrap(this.getElementsByTagName('tr')[index]);
+        }
         tableElement.delRows = function(from, count) {
             for (let i = 0; i < count; i++) {
                 this.delRow(from);

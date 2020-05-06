@@ -40,6 +40,25 @@ class Interface {
             row.addCell(2).setHTML((info.hangingNodes[i]) ? "Yes" : "");
             row.addCell(3).setHTML((info.isolatedNodes[i]) ? "Yes" : "");
         }
+
+        const weightTable = DOM.getById("ribs-weight");
+        weightTable.setHTML('');
+        let row = weightTable.addRow(0);
+        for (let i = 0; i < info.weight.length; i++) {
+            row.addCell(i).setText(i+1);
+        }
+        row.addCell(0).setText('');
+        for (let i = 1; i <= info.weight.length; i++) {
+           row = weightTable.addRow(i);
+           row.addCell(0).setText(i);
+        }
+
+        for (let i = 0; i < info.weight.length; i++) {
+            row = weightTable.row(i+1);
+            for (let j = 0; j < info.weight[i].length; j++) {
+                row.addCell(j+1).setText(info.weight[i][j]);
+            }
+        }
     }
 
     static isMatrixCorrect(matrix) {
@@ -215,11 +234,130 @@ class Interface {
         this.refreshCanvas();
     }
 
-    static drawGraphs(matrix, options) {
+    static mstweight = 0;
+    static mst_m = 0;
+    static mst_visited = null;
+    static mstmatrix = null;
+    static mststep = 0;
+    static mstColored = null;
+    static minSpanTree() {
+        const mst = this.graph.minSpanningTree();
+        
+        Interface.mstmatrix = [];
+        for (let i = 0; i <= mst.length; i++) {
+            Interface.mstmatrix.push(new Array(mst.length + 1));
+            Interface.mstmatrix[i].fill(0);
+        }
+
+        for (let i = 0; i < mst.length; i++) {
+            Interface.mstmatrix[mst[i].u][mst[i].v] = 1;
+        }
+                
+        Interface.mstColored = [];
+        Interface.mst_visited = [];
+        DOM.getById('mst').setHTML('<p></p>');
+        DOM.getBySelector('#mst > p').setText('{');
+    }
+    static clearMST() {
+        if (Interface.mst) {
+        }
+        Interface.clearMinSpanTree();
+        DOM.getBySelector('#mst > p').setText('');
+    }
+    static clearMinSpanTree() {
+        Interface.mstweight = 0;
+        Interface.mstmatrix = null;
+        Interface.mst_m = 0;
+        Interface.mst_visited = null;;
+        Interface.mstColored = null;
+    }
+    static stepMST() {
+
+        if (!Interface.mstmatrix) {
+            Interface.minSpanTree();
+            DOM.getBySelector('#mst > p').addText(` ${Interface.mst_m + 1},`);
+            Interface.mstColored.push(Interface.mst_m);
+            Interface.mst_visited.push(Interface.mst_m);
+        }
+        
+        
+        let isRowEnds = true;
+        for (let i = 0; i < Interface.mstmatrix[Interface.mst_m].length; i++) {
+            if (Interface.mstmatrix[Interface.mst_m][i]) {
+                let isVisited = false;
+                for (const visited_i of Interface.mst_visited) {
+                    if (i === visited_i)
+                        isVisited = true;
+                }
+                if (isVisited) continue;
+                Interface.mstweight += this.graph.w_matrix[Interface.mst_m][i];
+                Interface.mst_m = i;
+                isRowEnds = false;
+                break;
+            }
+        }
+        
+        return isRowEnds;
+    }
+    static getMSTstep() {
+        if (Interface.stepMST()) {
+            Interface.mst_m = Interface.mst_visited[Interface.mst_visited.indexOf(Interface.mst_m) - 1];
+            return Interface.getMSTstep()
+        } else {
+            DOM.getBySelector('#mst > p').addText(` ${Interface.mst_m + 1}`);
+            Interface.mstColored.push(Interface.mst_m);
+            Interface.mst_visited.push(Interface.mst_m);
+
+            if (Interface.mst_visited.length === Interface.mstmatrix.length) {
+                DOM.getBySelector('#mst > p').addText(` } (weight: ${Interface.mstweight})`);
+                return false;
+            } else {
+                DOM.getBySelector('#mst > p').addText(',');
+            }
+        }
+        return true;
+    }
+    static buildMSTstep() {
+        const ret = Interface.getMSTstep();
+
+        let strMatrix = [];
+        for (let i = 0; i < Interface.mstmatrix.length; i++) {
+            strMatrix.push([]);
+            for (let j = 0; j < Interface.mstmatrix.length; j++) {
+                strMatrix[i].push(Interface.mstmatrix[i][j] && Interface.mst_visited.indexOf(j) != -1 ? 1 : 0);
+            }
+        }
+        for (let i = 0; i < Interface.mstmatrix.length; i++) {
+            strMatrix[i] = strMatrix[i].join(' ');
+        }
+
+        strMatrix = strMatrix.join('\n');
+        DOM.getById('adj-matrix').value = strMatrix;
+        this.refreshCanvas();
+        if(!ret)
+            Interface.clearMinSpanTree();
+
+        return ret;
+    }
+    static getMSTFull() {
+        while (Interface.getMSTstep()) {
+        }
+    }
+    static buildMSTFull() {
+        while (Interface.buildMSTstep()) {
+        }
+        Interface.clearMinSpanTree();
+    }
+    
+    static drawGraphs(adj_matrix, w_matrix, options) {
         const canvId = "canv";
         const canvas = new Canvas(canvId).clear('2d');
 
-        this.graph = new Graph(matrix);
+        this.graph = new Graph(adj_matrix);
+
+        if (w_matrix) {
+            this.graph.weight(w_matrix)
+        }
 
         this.graph.orientired(options.orientired)
             .displayForm(options.form)
@@ -233,10 +371,12 @@ class Interface {
         const hangingNodes = this.graph.hangingNodes();
         const isolatedNodes = this.graph.isolatedNodes();
         const isOrientired = this.graph.isOrientired();
+        const weight = this.graph.w_matrix;
         this.setInfo({
             uni,
             degrees,
             hangingNodes,
+            weight,
             isolatedNodes,
             isOrientired
         });
@@ -246,22 +386,40 @@ class Interface {
         this.showMenu(false);
 
         const form = new FormData(document.forms.menu);
-        const matrixStr = DOM.getById('adj-matrix').value.split('\n');
-
-        const matrix = [];
-        for (const row of matrixStr) {
-            matrix.push([]);
+        const adj_matrixStr = DOM.getById('adj-matrix').value.split('\n');
+        let w_matrixStr = DOM.getById('weight-matrix').value;
+        const w_matrix = [];
+        
+        const adj_matrix = [];
+        for (const row of adj_matrixStr) {
+            adj_matrix.push([]);
             const elems = row.split(' ');
             for (const elem of elems) {
-                matrix[matrix.length - 1].push(Number(elem));
+                adj_matrix[adj_matrix.length - 1].push(Number(elem));
             }
         }
 
-        if (!this.isMatrixCorrect(matrix)) {
-            alert('You entered the wrong matrix');
+        if (!this.isMatrixCorrect(adj_matrix)) {
+            alert('You entered the wrong adjacency matrix');
             return;
         }
-        nodesColor = nodesColor || new Array(matrix.length).fill("#ffffff")
+
+        if (w_matrixStr) {
+            w_matrixStr = w_matrixStr.split('\n');
+            for (const row of w_matrixStr) {
+                w_matrix.push([]);
+                const elems = row.split(' ');
+                for (const elem of elems) {
+                    w_matrix[w_matrix.length - 1].push(Number(elem));
+                }
+            }
+            if (adj_matrix.length != w_matrix.length || adj_matrix[0].length != w_matrix[0].length) {
+                alert('You entered the wrong weight matrix');
+                return;
+            }
+        }
+
+        nodesColor = nodesColor || new Array(adj_matrix.length).fill("#ffffff")
         const orientired = form.get('orientiation');
         const displayForm = form.get('display-form');
         const options = {
@@ -270,7 +428,8 @@ class Interface {
             nodesColor,
             labelsInfo
         }
-        this.drawGraphs(matrix, options);
+
+        this.drawGraphs(adj_matrix, w_matrix, options);
     }
 };
 

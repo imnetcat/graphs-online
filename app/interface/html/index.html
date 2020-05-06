@@ -57,18 +57,18 @@
             </table>
             <p><b>adjacency matrix</b></p>
             <textarea id="adj-matrix" class="matrix-input">
-1 1 1 0 1 1 0 0 0 1
-0 0 1 1 0 0 1 1 0 1
-1 1 0 1 0 0 1 0 0 0
-0 1 0 0 0 0 1 0 1 0
-1 0 1 0 0 1 1 1 0 1
-1 1 0 1 0 0 0 0 0 0
-0 0 0 0 0 1 1 1 0 0
-1 1 0 1 0 1 1 1 1 1
-0 1 1 0 0 0 0 1 0 1
+0 1 0 0 1 1 0 0 0 1
+0 0 0 0 0 0 0 0 0 1
+1 0 0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 1
+0 0 0 1 0 0 1 0 0 0
+0 0 0 0 0 0 0 1 1 0
+1 0 0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0
 0 0 1 0 0 1 0 0 0 0</textarea>
             <p><b>weight matrix</b></p>
-            <textarea name="weight-matrix" class="matrix-input">
+            <textarea id="weight-matrix" class="matrix-input">
 0 71 87 0 90 69 0 88 0 94
 71 0 17 46 0 39 61 18 24 64
 87 17 0 65 45 0 28 0 48 58
@@ -132,8 +132,25 @@
                 <button onclick="Interface.clearBFS();">clear</button>
                 <span class="line-box" id="bfs"></span>
             </p>
+            <p>
+                <b>minimal spanning tree (Prime algorithm)</b>
+                <button onclick="Interface.getMSTFull();">get</button>
+                <button onclick="Interface.getMSTstep();">get by step</button>
+                <button onclick="Interface.buildMSTFull();">build</button>
+                <button onclick="Interface.buildMSTstep();">build by step</button>
+                <button onclick="Interface.clearMST();">clear</button>
+                <span class="line-box" id="mst"></span>
+            </p>
+            <header><h2><b>ribs properties</b></h2></header>
+            <header><h2>weight</h2></header>
+            <table id="ribs-weight" class="props">
+                <tbody>
+                    <tr>
+                    </tr>
+                </tbody>
+            </table>
             <header><h2><b>vertex properties</b></h2></header>
-            <table id="nodes-props">
+            <table id="nodes-props" class="props">
                 <tbody>
                     <tr>
                         <td>

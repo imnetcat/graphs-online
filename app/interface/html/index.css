@@ -112,11 +112,11 @@ td {
     line-height: 30px;
 }
 
-#nodes-props {
-  width: 100%;
+.props {
+    width: 100%;
+    border-spacing: 1px;
 }
-
-#nodes-props td {
+.props td {
   width: 100px;
   height: 50px;
   border: 1px solid;
