@@ -296,6 +296,7 @@ class Graph {
 
     // Dijkstra's algorithm
     findShortestPaths(startNode, destNode) {
+        console.dir({startNode, destNode})
         let weight = 0;
         const resultPath = [];
         const visited = new Array(this.adj_matrix.matrix.length).fill(false);
@@ -306,28 +307,80 @@ class Graph {
 
             resultPath.push(active);
 
-            console.log(active, resultPath)
-
+            let minNodeFromActiv;
             let isPathExist = false;
+            let currRibWeight = Infinity;
             for (let i = 0; i < visited.length; i++) {
                 if (!this.adj_matrix.matrix[active][i])
                     continue;
 
                 const currNodeWeight = this.w_matrix[active][i];
+                console.log(weight, currNodeWeight, i, !visited[i])
                 if (i === destNode ||
                     (!visited[i] &&
-                        weight > (weight + currNodeWeight))) {
-                    weight += currNodeWeight;
-                    active = i;
+                    currRibWeight > currNodeWeight)) {
+                    currRibWeight = currNodeWeight;
+                    minNodeFromActiv = i;
                     isPathExist = true;
                 }
             }
+
+            weight += currRibWeight;
+
             if (!isPathExist)
                 break;
+
+            active = minNodeFromActiv;
         }
 
         return {
             path: resultPath,
+            weight
+        }
+    }
+    // Dijkstra's algorithm
+    FindShordestWay(start, end) {
+        // number of nodes
+        const n = this.adj_matrix.matrix.length;
+        const INF = Infinity;
+        const dist = new Array(n).fill(INF);
+        dist[start] = 0;
+        const prev = new Array(n).fill(-1);
+        const used = new Array(n);
+        let min_dist = 0;
+        let min_vertex = start;
+        while (min_dist < INF) {
+            let i = min_vertex;
+            used[i] = true;
+            for (let j = 0; j < n; j++) {
+                const edge = this.adj_matrix.matrix[i][j];
+                const wt = this.w_matrix[i][j];
+                if (edge && (dist[i] + wt < dist[j])) {
+                    dist[j] = dist[i] + wt;
+                    prev[j] = i;
+                }
+            }
+            min_dist = INF;
+            for (let j = 0; j < n; ++j) {
+                if (!used[j] && dist[j] < min_dist) {
+                    min_dist = dist[j];
+                    min_vertex = j;
+                }
+            }
+        }
+
+        console.log(prev, used, dist);
+
+        const path = [];
+        const weight = dist[end];
+        while (end != -1) {
+            path.push(end);
+            end = prev[end];
+        }
+        path.reverse();
+
+        return {
+            path,
             weight
         }
     }
