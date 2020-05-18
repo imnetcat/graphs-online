@@ -295,8 +295,41 @@ class Graph {
     }
 
     // Dijkstra's algorithm
-    findShortestPath() {
+    findShortestPaths(startNode, destNode) {
+        let weight = 0;
+        const resultPath = [];
+        const visited = new Array(this.adj_matrix.matrix.length).fill(false);
+        let active = startNode;
 
+        while (active !== destNode) {
+            visited[active] = true;
+
+            resultPath.push(active);
+
+            console.log(active, resultPath)
+
+            let isPathExist = false;
+            for (let i = 0; i < visited.length; i++) {
+                if (!this.adj_matrix.matrix[active][i])
+                    continue;
+
+                const currNodeWeight = this.w_matrix[active][i];
+                if (i === destNode ||
+                    (!visited[i] &&
+                        weight > (weight + currNodeWeight))) {
+                    weight += currNodeWeight;
+                    active = i;
+                    isPathExist = true;
+                }
+            }
+            if (!isPathExist)
+                break;
+        }
+
+        return {
+            path: resultPath,
+            weight
+        }
     }
 
     generateCoords() {
