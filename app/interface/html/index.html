@@ -141,12 +141,21 @@
                 <button onclick="Interface.clearMST();">clear</button>
                 <span class="line-box" id="mst"></span>
             </p>
+            <p>
+                <b>shortest path (Dijkstra's algorithm)</b>
+                <span> from: </span>
+                <input type="text" size="2" id="dij-start">
+                <span> to: </span>
+                <input type="text" size="2" id="dij-end">
+                <button onclick="Interface.getDijkstraFull();">get</button>
+                <button onclick="Interface.clearDijkstra();">clear</button>
+                <span class="line-box" id="dij"></span>
+            </p>
             <header><h2><b>ribs properties</b></h2></header>
             <header><h2>weight</h2></header>
             <table id="ribs-weight" class="props">
                 <tbody>
-                    <tr>
-                    </tr>
+                    <tr></tr>
                 </tbody>
             </table>
             <header><h2><b>vertex properties</b></h2></header>

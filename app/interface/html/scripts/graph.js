@@ -294,6 +294,11 @@ class Graph {
         return result;
     }
 
+    // Dijkstra's algorithm
+    findShortestPath() {
+
+    }
+
     generateCoords() {
         let plot_size_x = 0;
         let plot_size_y = 0;

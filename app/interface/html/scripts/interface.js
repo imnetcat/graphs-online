@@ -345,6 +345,20 @@ class Interface {
         }
         Interface.clearMinSpanTree();
     }
+
+    static getDijkstraFull() {
+        const startNode = DOM.getById('dij-start').value;
+        const destNode = DOM.getById('dij-end').value;
+        if (!startNode || !destNode)
+            return;
+
+        const dij = this.graph.findShortestPaths(startNode, destNode);
+        DOM.getById('dij').setHTML(dij);
+    }
+    static clearDijkstra() {
+        DOM.getById('dij').setHTML('');
+    }
+
     
     static drawGraphs(adj_matrix, w_matrix, options) {
         const canvId = "canv";
