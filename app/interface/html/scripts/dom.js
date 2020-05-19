@@ -63,13 +63,13 @@ class DOM {
         return domElements;
     }
 
-    static getById(id) {
+    static GetById(id) {
         return DOM.wrap(document.getElementById(id));
     }
-    static getBySelector(query) {
+    static GetBySelector(query) {
         return DOM.wrap(document.querySelector(query));
     }
-    static getByTag(tag) {
+    static GetByTag(tag) {
         return DOM.wrapCollection(document.getElementsByTagName(tag));
     }
 };
