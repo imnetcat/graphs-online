@@ -14,19 +14,20 @@
     <script src="./scripts/interface.js"></script>
     <link rel="stylesheet" href="./font/font.css" type="text/css">
     <link rel="stylesheet" href="./index.css" type="text/css">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
 </head>
 <body>
     <header>
-        <button class="menu-btn" onclick="Interface.Show('settings')"><img src="./settings.png"></button>
-        <button class="menu-btn" onclick="Interface.Show('algorithms')"><img src="./algorithms.png"></button>
-        <button class="menu-btn" onclick="Interface.Show('properties')"><img src="./properties.png"></button>
-        <button class="menu-btn" onclick="Interface.Show('info')"><img src="./info.png"></button>
-        <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="./refresh.png"></button>
+        <button class="menu-btn" onclick="Interface.Show('settings')"><img src="./settings.png" alt="settings"></button>
+        <button class="menu-btn" onclick="Interface.Show('definition')"><img src="./definition.png" alt="definition"></button>
+        <button class="menu-btn" onclick="Interface.Show('algorithms')"><img src="./algorithms.png" alt="algorithms"></button>
+        <button class="menu-btn" onclick="Interface.Show('properties')"><img src="./properties.png" alt="properties"></button>
+        <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="./refresh.png" alt="refresh"></button>
         <h1>Graph online</h1>
         <h3>github: <a href="https://github.com/imnetcat/graphs">/imnetcat/graphs</a></h3>
     </header>
-    <form name="menu" id="menu-panel" class="menu-box" hidden>
-        <header><h2><b>graph definition</b></h2></header>
+    <form name="menu" id="definition" class="menu-box" hidden>
+        <header><h2><b>Definition</b></h2> ~define your graph there~</header>
         <table>
             <tr>
                 <th>
@@ -70,7 +71,7 @@
 1 1 0 1 1 1 1 1 1 1
 0 1 1 1 0 0 0 1 0 1
 1 1 1 0 1 1 0 1 1 0</textarea>
-        <p><b>weight matrix</b></p>
+        <p><b>weight matrix</b> (optional)</p>
         <textarea id="weight-matrix" class="matrix-input">
 0 71 87 0 90 69 0 88 0 94
 71 0 17 46 0 39 61 18 24 64
@@ -84,9 +85,15 @@
 94 64 58 0 71 10 0 22 44 0</textarea>
     </form>
     <div id="settings" class="menu-box">
+        <header><h2><b>Settings</b></h2> ~customize for yourself~</header>
     </div>
     <div id="properties" class="menu-box">
-        <header><h2><b>Properties</b></h2></header>
+        <header><h2><b>Properties</b></h2>~properties information~</header>
+        <header><h2>graph properties</h2></header>
+        <p>
+            <b>uniformity: </b>
+            <span id="unified"></span>
+        </p>
         <header><h2>ribs properties</h2></header>
         <header><h3>weight</h3></header>
         <table id="ribs-weight" class="props">
@@ -115,11 +122,7 @@
         </table>
     </div>
     <div id="algorithms" class="menu-box">
-        <header><h2><b>graph properties</b></h2></header>
-        <p>
-            <b>uniformity: </b>
-            <span id="unified"></span>
-        </p>
+        <header><h2><b>Algorithms</b></h2>~use the algorithms~</header>
         <p>
             <b>routes with length </b>
             <select id="routes-length">

@@ -3,14 +3,17 @@
 class Menu {
     constructor(id) {
         this.id = id;
-        this.menu = DOM.getById(id);
+        this.menu = DOM.GetById(id);
     }
 
     Show() {
-        this.element.show();
+        this.menu.show();
     }
     Hide() {
-        this.element.hide();
+        this.menu.hide();
     }
+
+
+
 };
 

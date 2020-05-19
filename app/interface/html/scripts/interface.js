@@ -7,7 +7,7 @@ class Interface {
     static menus = [];
 
     static Show(id) {
-        for (const menu of menus) {
+        for (const menu of Interface.menus) {
             if (menu.id === id) {
                 menu.Show();
             } else {
@@ -17,9 +17,9 @@ class Interface {
     }
     
     static setInfo(info) {
-        DOM.getById("unified").setHTML((info.uni === -1) ? "false" : info.uni.toString());
+        DOM.GetById("unified").setHTML((info.uni === -1) ? "false" : info.uni.toString());
 
-        const infoTable = DOM.getById("nodes-props");
+        const infoTable = DOM.GetById("nodes-props");
 
         infoTable.delAllRows(1);
 
@@ -35,7 +35,7 @@ class Interface {
             row.addCell(3).setHTML((info.isolatedNodes[i]) ? "Yes" : "");
         }
 
-        const weightTable = DOM.getById("ribs-weight");
+        const weightTable = DOM.GetById("ribs-weight");
         weightTable.setHTML('');
         let row = weightTable.addRow(0);
         for (let i = 0; i < info.weight.length; i++) {
@@ -73,21 +73,21 @@ class Interface {
     }
 
     static clearCondensation() {
-        DOM.getById("condensation").setText("");
+        DOM.GetById("condensation").setText("");
     }
     static getCondensation () {
         const condensation = this.graph.condensation();
         const strMatrix = Matrix.toString(condensation);
-        DOM.getById("condensation").setText(strMatrix);
+        DOM.GetById("condensation").setText(strMatrix);
     }
 
     static clearRoutes() {
-        DOM.getById("routes").setHTML("");
+        DOM.GetById("routes").setHTML("");
     }
 
     static getRoutes() {
-        DOM.getById("routes").setHTML("");
-        const length = Number(DOM.getById("routes-length").value);
+        DOM.GetById("routes").setHTML("");
+        const length = Number(DOM.GetById("routes-length").value);
         if (length) {
             const routes = this.graph.routes(length);
             if (!routes) return;
@@ -106,19 +106,19 @@ class Interface {
             strRouters.unshift("<p>");
             strRouters.push("</p>");
             const strRoutes = strRouters.join('');
-            DOM.getById("routes").setHTML(strRoutes);
+            DOM.GetById("routes").setHTML(strRoutes);
         }
     }
 
     static bfs = null;
     static clearBFS() {
-        DOM.getById("bfs-node").setHTML("");
-        DOM.getById("bfs").setHTML("");
+        DOM.GetById("bfs-node").setHTML("");
+        DOM.GetById("bfs").setHTML("");
     }
     static getBFS() {
-        const node = Number(DOM.getById("bfs-node").value);
-        DOM.getById("bfs-node").setHTML("");
-        DOM.getById("bfs").setHTML("");
+        const node = Number(DOM.GetById("bfs-node").value);
+        DOM.GetById("bfs-node").setHTML("");
+        DOM.GetById("bfs").setHTML("");
         
         if (!node && !isNaN(node)) {
             this.bfs = null;
@@ -128,14 +128,14 @@ class Interface {
         const { bfs, matrix } = this.graph.bfs(node - 1);
         this.bfs = bfs;
 
-        DOM.getById("bfs").setHTML("<p></p>");
-        DOM.getBySelector("#bfs > p").setHTML(`{ ${node}`);
+        DOM.GetById("bfs").setHTML("<p></p>");
+        DOM.GetBySelector("#bfs > p").setHTML(`{ ${node}`);
         const condensation = [];
         for (let i = 0; i < matrix.length; i++) {
             condensation[i] = matrix[i].join(' ');
         }
         const strMatrix = condensation.join('\n');
-        DOM.getById('adj-matrix').value = strMatrix;
+        DOM.GetById('adj-matrix').value = strMatrix;
 
         return true;
     }
@@ -147,11 +147,11 @@ class Interface {
             if (this.bfs.step()) {
                 for (const node in this.bfs.nodesColor) {
                     if (this.bfs.nodesColor[node] === BFS.ACTIVE_NODE_COLOR) {
-                        DOM.getBySelector("#bfs > p").addHTML(`, ${Number(node) + 1}`);
+                        DOM.GetBySelector("#bfs > p").addHTML(`, ${Number(node) + 1}`);
                     }
                 }
             } else {
-                DOM.getBySelector("#bfs > p").addHTML(" }");
+                DOM.GetBySelector("#bfs > p").addHTML(" }");
                 ret = false;
             }
         }
@@ -187,25 +187,25 @@ class Interface {
     }
 
     static clearReachability() {
-        DOM.getById("reachability").setText("");
+        DOM.GetById("reachability").setText("");
     }
     static getReachability() {
         const reachability = this.graph.reachability();
         const strMatrix = Matrix.toString(reachability);
-        DOM.getById("reachability").setText(strMatrix);
+        DOM.GetById("reachability").setText(strMatrix);
     }
 
     static clearStrongBindingMatrix() {
-        DOM.getById("strongBindingM").setText("");
+        DOM.GetById("strongBindingM").setText("");
     }
     static getStrongBindingMatrix() {
         const matrix = this.graph.strongBindingMatrix();
         const strMatrix = Matrix.toString(matrix);
-        DOM.getById("strongBindingM").setText(strMatrix);
+        DOM.GetById("strongBindingM").setText(strMatrix);
     }
 
     static clearStrongBindingComponents() {
-        DOM.getById("strongBindingC").setHTML("");
+        DOM.GetById("strongBindingC").setHTML("");
     }
     static getStrongBindingComponents() {
         const components = this.graph.strongBindingComponents();
@@ -215,7 +215,7 @@ class Interface {
             components[i] = `K${i + 1}: { ` + components[i];
         }
         const strComponents = "<p>" + components.join('</p><p>');
-        DOM.getById("strongBindingC").setHTML(strComponents);
+        DOM.GetById("strongBindingC").setHTML(strComponents);
     }
 
     static buildCondensGraph() {
@@ -224,7 +224,7 @@ class Interface {
             condensation[i] = condensation[i].join(' ');
         }
         const strMatrix = condensation.join('\n');
-        DOM.getById('adj-matrix').value = strMatrix;
+        DOM.GetById('adj-matrix').value = strMatrix;
         this.refreshCanvas();
     }
 
@@ -247,14 +247,14 @@ class Interface {
                 
         Interface.mstColored = [];
         Interface.mst_visited = [];
-        DOM.getById('mst').setHTML('<p></p>');
-        DOM.getBySelector('#mst > p').setText('{');
+        DOM.GetById('mst').setHTML('<p></p>');
+        DOM.GetBySelector('#mst > p').setText('{');
     }
     static clearMST() {
         if (Interface.mst) {
         }
         Interface.clearMinSpanTree();
-        DOM.getBySelector('#mst > p').setText('');
+        DOM.GetBySelector('#mst > p').setText('');
     }
     static clearMinSpanTree() {
         Interface.mstweight = 0;
@@ -266,7 +266,7 @@ class Interface {
 
         if (!Interface.mstmatrix) {
             Interface.minSpanTree();
-            DOM.getBySelector('#mst > p').addText(` ${Interface.mst_m + 1},`);
+            DOM.GetBySelector('#mst > p').addText(` ${Interface.mst_m + 1},`);
             Interface.mstColored.push(Interface.mst_m);
             Interface.mst_visited.push(Interface.mst_m);
         }
@@ -296,14 +296,14 @@ class Interface {
             Interface.mst_m = Interface.mst_visited[index];
             return Interface.getMSTstep();
         } else {
-            DOM.getBySelector('#mst > p').addText(` ${Interface.mst_m + 1}`);
+            DOM.GetBySelector('#mst > p').addText(` ${Interface.mst_m + 1}`);
             Interface.mst_visited.push(Interface.mst_m);
              
             if (Interface.mst_visited.length === Interface.mstmatrix.length) {
-                DOM.getBySelector('#mst > p').addText(` } (weight: ${Interface.mstweight})`);
+                DOM.GetBySelector('#mst > p').addText(` } (weight: ${Interface.mstweight})`);
                 return false;
             } else {
-                DOM.getBySelector('#mst > p').addText(',');
+                DOM.GetBySelector('#mst > p').addText(',');
             }
         }
         return true;
@@ -323,7 +323,7 @@ class Interface {
         }
 
         strMatrix = strMatrix.join('\n');
-        DOM.getById('adj-matrix').value = strMatrix;
+        DOM.GetById('adj-matrix').value = strMatrix;
         this.refreshCanvas();
         if(!ret)
             Interface.clearMinSpanTree();
@@ -345,7 +345,7 @@ class Interface {
     static dij_bystep = null;
     static getDijkstra() {
         Interface.clearDijkstra();
-        const startNode = DOM.getById('dij-start').value;
+        const startNode = DOM.GetById('dij-start').value;
         if (!startNode)
             return;
         const { result, bystep } = this.graph.FindShordestWay(startNode - 1);
@@ -354,12 +354,12 @@ class Interface {
     }
     static getDijkstraFull() {
         Interface.getDijkstra();
-        DOM.getById('dij').setHTML('');
+        DOM.GetById('dij').setHTML('');
         for (const path of Interface.dij_result) {
             const tabulation = String(path.weight).length < 5 ?
                 ' '.repeat(5 - String(path.weight).length) :
                 ' '
-            DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
+            DOM.GetById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
         }
     }
     static buildDijkstraStep() {
@@ -395,7 +395,7 @@ class Interface {
         Interface.dij_bystep = null;
         Interface.dij_result = null;
         Interface.dij_step = 0;
-        DOM.getById('dij').setHTML('');
+        DOM.GetById('dij').setHTML('');
     }
 
     
@@ -434,8 +434,8 @@ class Interface {
     static refreshCanvas(nodesColor, labelsInfo) {
 
         const form = new FormData(document.forms.menu);
-        const adj_matrixStr = DOM.getById('adj-matrix').value.split('\n');
-        let w_matrixStr = DOM.getById('weight-matrix').value;
+        const adj_matrixStr = DOM.GetById('adj-matrix').value.split('\n');
+        let w_matrixStr = DOM.GetById('weight-matrix').value;
         const w_matrix = [];
         
         const adj_matrix = [];
@@ -481,16 +481,17 @@ class Interface {
     }
 };
 
-// добавляем все меню
-Interface.menus.push(new Menu('settings'));
-Interface.menus.push(new Menu('properties'));
-Interface.menus.push(new Menu('algorithms'));
-Interface.menus.push(new Menu('info'));
-
-// по умолчанию будет видно меню свойств графа
-Interface.Show('properties');
-
-// загружаем дефолтный граф после загрузки страницы
+// настраиваем интерфейс по дефолтным значиниям после загрузки страницы
 document.addEventListener('DOMContentLoaded', () => {
+    // добавляем все меню
+    Interface.menus.push(new Menu('settings'));
+    Interface.menus.push(new Menu('properties'));
+    Interface.menus.push(new Menu('algorithms'));
+    Interface.menus.push(new Menu('definition'));
+
+    // устанавливаем меню видимое по умолчанию
+    Interface.Show('definition');
+
+    // загружаем пример графа
     Interface.refreshCanvas();
 })
