@@ -339,7 +339,7 @@ class Graph {
         }
     }
     // Dijkstra's algorithm
-    FindShordestWay(start, end) {
+    FindShordestWay(start) {
         // number of nodes
         const n = this.adj_matrix.matrix.length;
         const INF = Infinity;
@@ -371,18 +371,29 @@ class Graph {
 
         console.log(prev, used, dist);
 
-        const path = [];
-        const weight = dist[end];
-        while (end != -1) {
-            path.push(end);
-            end = prev[end];
-        }
-        path.reverse();
+        class Path {
+            constructor(p, w) {
+                this.way = p;
+                this.weight = w;
+            }
+        };
 
-        return {
-            path,
-            weight
+        const paths = [];
+        for (let i = 0; i < n; i++) {
+            let end = i;
+            if (end === start)
+                continue;
+            const path = [];
+            const weight = dist[end];
+            while (end != -1) {
+                path.push(end);
+                end = prev[end];
+            }
+            path.reverse();
+            paths.push(new Path(path, weight));
         }
+
+        return paths;
     }
 
     generateCoords() {
