@@ -67,15 +67,11 @@ body > header {
 }
 
 .menu-btn {
-  width: 50px;
+    width: 50px;
     height: 50px;
     margin-top: 25px;
     margin-left: 25px;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+    padding: 3px;
 }
 
     .menu-btn div {
@@ -84,9 +80,6 @@ body > header {
         height: 24px;
         margin: 4px;
     }
-
-#menu-panel {
-}
 
 .matrix-input {
     width: 100%;
@@ -121,8 +114,7 @@ td {
 }
 
 .menu-btn img {
-    height: 35px;
-    width: auto;
+    height: 100%;
 }
 
 .matrix-box {
