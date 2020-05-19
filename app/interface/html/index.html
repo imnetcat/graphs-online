@@ -17,10 +17,10 @@
 </head>
 <body>
     <header>
-        <button class="menu-btn" onclick="Interface.Show(MENU.SETTINGS)"><img src="./settings.png"></button>
-        <button class="menu-btn" onclick="Interface.Show(MENU.ALGORITHMS)"><img src="./algorithms.png"></button>
-        <button class="menu-btn" onclick="Interface.Show(MENU.PROPERTIES)"><img src="./properties.png"></button>
-        <button class="menu-btn" onclick="Interface.Show(MENU.INFO)"><img src="./info.png"></button>
+        <button class="menu-btn" onclick="Interface.Show(SETTINGS)"><img src="./settings.png"></button>
+        <button class="menu-btn" onclick="Interface.Show(ALGORITHMS)"><img src="./algorithms.png"></button>
+        <button class="menu-btn" onclick="Interface.Show(PROPERTIES)"><img src="./properties.png"></button>
+        <button class="menu-btn" onclick="Interface.Show(INFO)"><img src="./info.png"></button>
         <button class="menu-btn" onclick="Interface.refreshCanvas()"><img src="./refresh.png"></button>
         <h1>Graph online</h1>
         <h3>github: <a href="https://github.com/imnetcat/graphs">/imnetcat/graphs</a></h3>
@@ -85,7 +85,36 @@
     </form>
     <div id="settings" class="menu-box">
     </div>
-    <div id="settings" class="menu-box">
+    <div id="properties" class="menu-box">
+        <header><h2><b>Properties</b></h2></header>
+        <header><h2>ribs properties</h2></header>
+        <header><h3>weight</h3></header>
+        <table id="ribs-weight" class="props">
+            <tbody>
+                <tr></tr>
+            </tbody>
+        </table>
+        <header><h2>vertex properties</h2></header>
+        <table id="nodes-props" class="props">
+            <tbody>
+                <tr>
+                    <td>
+                        <b>vertex</b>
+                    </td>
+                    <td>
+                        <b>degrees</b>
+                    </td>
+                    <td>
+                        <b>hanged</b>
+                    </td>
+                    <td>
+                        <b>isolated</b>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="algorithms" class="menu-box">
         <header><h2><b>graph properties</b></h2></header>
         <p>
             <b>uniformity: </b>
@@ -154,32 +183,6 @@
             <button onclick="Interface.clearDijkstra();">clear</button>
             <span id="dij"></span>
         </p>
-        <header><h2><b>ribs properties</b></h2></header>
-        <header><h2>weight</h2></header>
-        <table id="ribs-weight" class="props">
-            <tbody>
-                <tr></tr>
-            </tbody>
-        </table>
-        <header><h2><b>vertex properties</b></h2></header>
-        <table id="nodes-props" class="props">
-            <tbody>
-                <tr>
-                    <td>
-                        <b>vertex</b>
-                    </td>
-                    <td>
-                        <b>degrees</b>
-                    </td>
-                    <td>
-                        <b>hanged</b>
-                    </td>
-                    <td>
-                        <b>isolated</b>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
     <div id="scrollable">
         <canvas id="canv"></canvas>
