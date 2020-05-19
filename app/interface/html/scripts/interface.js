@@ -346,16 +346,56 @@ class Interface {
         Interface.clearMinSpanTree();
     }
 
-    static getDijkstraFull() {
+    static dij_step = 0;
+    static dij = null;
+    static getDijkstra() {
+        Interface.clearDijkstra();
         const startNode = DOM.getById('dij-start').value;
-        const destNode = DOM.getById('dij-end').value;
-        if (!startNode || !destNode)
+        if (!startNode)
+            return;
+        Interface.dij = this.graph.FindShordestWay(startNode - 1);
+        console.log(Interface.dij)
+    }
+    static getDijkstraStep() {
+        if (!Interface.dij) {
+            Interface.getDijkstra();
+        }
+
+        const path = Interface.dij[Interface.dij_step];
+        const tabulation = String(path.weight).length < 5 ?
+            ' '.repeat(5 - String(path.weight).length) :
+            ' ';
+        DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
+        Interface.dij_step++;
+    }
+    static getDijkstraFull() {
+        Interface.getDijkstra();
+        DOM.getById('dij').setHTML('');
+        for (const path of Interface.dij) {
+            const tabulation = String(path.weight).length < 5 ?
+                ' '.repeat(5 - String(path.weight).length) :
+                ' '
+            DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
+        }
+    }
+    static buildDijkstrastep() {
+        const startNode = DOM.getById('dij-start').value;
+        if (!startNode)
             return;
 
-        const dij = this.graph.findShortestPaths(startNode, destNode);
-        DOM.getById('dij').setHTML(dij);
+        Interface.dij = this.graph.FindShordestWay(startNode - 1);
+        console.log(Interface.dij)
+        DOM.getById('dij').setHTML('');
+        for (const path of Interface.dij) {
+            const tabulation = String(path.weight).length < 5 ?
+                ' '.repeat(5 - String(path.weight).length) :
+                ' '
+            DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
+        }
     }
     static clearDijkstra() {
+        Interface.dij = null;
+        Interface.dij_step = 0;
         DOM.getById('dij').setHTML('');
     }
 
