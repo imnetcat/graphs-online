@@ -4,24 +4,18 @@ class Interface {
     
     static graph;
 
-    static showMenu(flag) {
-        if (flag) {
-            DOM.getById('menu-panel').show();
-            Interface.showInfo(false);
-        } else {
-            DOM.getById('menu-panel').hide();
+    static menus = [];
+
+    static Show(id) {
+        for (const menu of menus) {
+            if (menu.id === id) {
+                menu.Show();
+            } else {
+                menu.Hide();
+            }
         }
     }
-
-    static showInfo(flag) {
-        if (flag) {
-            DOM.getById('info-box').show();
-            Interface.showMenu(false);
-        } else {
-            DOM.getById('info-box').hide();
-        }
-    }
-
+    
     static setInfo(info) {
         DOM.getById("unified").setHTML((info.uni === -1) ? "false" : info.uni.toString());
 
@@ -438,8 +432,6 @@ class Interface {
         });
     }
     static refreshCanvas(nodesColor, labelsInfo) {
-        this.showInfo(true);
-        this.showMenu(false);
 
         const form = new FormData(document.forms.menu);
         const adj_matrixStr = DOM.getById('adj-matrix').value.split('\n');
@@ -489,8 +481,16 @@ class Interface {
     }
 };
 
-const loadDefaultGraph = () => {
-    Interface.refreshCanvas();
-}
+// добавляем все меню
+Interface.menus.push(new Menu('settings'));
+Interface.menus.push(new Menu('properties'));
+Interface.menus.push(new Menu('algorithms'));
+Interface.menus.push(new Menu('info'));
 
-document.addEventListener('DOMContentLoaded', loadDefaultGraph)
+// по умолчанию будет видно меню свойств графа
+Interface.Show('properties');
+
+// загружаем дефолтный граф после загрузки страницы
+document.addEventListener('DOMContentLoaded', () => {
+    Interface.refreshCanvas();
+})
