@@ -11,8 +11,8 @@
     <script src="./scripts/graph.js"></script>
     <script src="./scripts/dom.js"></script>
     <script src="./scripts/menu.js"></script>
-    <script src="./scripts/algorithms.js"></script>
     <script src="./scripts/interface.js"></script>
+    <script src="./scripts/algorithms.js"></script>
     <link rel="stylesheet" href="./font/font.css" type="text/css">
     <link rel="stylesheet" href="./index.css" type="text/css">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
@@ -131,60 +131,60 @@
                 <option>2</option>
                 <option>3</option>
             </select>
-            <button onclick="Interface.getRoutes();">get</button>
-            <button onclick="Interface.clearRoutes();">clear</button>
+            <button onclick="Algorithms.getRoutes();">get</button>
+            <button onclick="Algorithms.clearRoutes();">clear</button>
             <span class="line-box" id="routes"></span>
         </p>
         <p>
             <b>distance matrix</b>
-            <button onclick="Interface.getReachability();">get</button>
-            <button onclick="Interface.clearReachability();">clear</button>
+            <button onclick="Algorithms.getReachability();">get</button>
+            <button onclick="Algorithms.clearReachability();">clear</button>
             <span class="matrix-box" id="reachability"></span>
         </p>
         <p>
             <b>strong binding matrix</b>
-            <button onclick="Interface.getStrongBindingMatrix();">get</button>
-            <button onclick="Interface.clearStrongBindingMatrix();">clear</button>
+            <button onclick="Algorithms.getStrongBindingMatrix();">get</button>
+            <button onclick="Algorithms.clearStrongBindingMatrix();">clear</button>
             <span class="matrix-box" id="strongBindingM"></span>
         </p>
         <p>
             <b>strong binding components</b>
-            <button onclick="Interface.getStrongBindingComponents();">get</button>
-            <button onclick="Interface.clearStrongBindingComponents();">clear</button>
+            <button onclick="Algorithms.getStrongBindingComponents();">get</button>
+            <button onclick="Algorithms.clearStrongBindingComponents();">clear</button>
             <span id="strongBindingC"></span>
         </p>
         <p>
             <b>condensation matrix</b>
-            <button onclick="Interface.getCondensation();">get</button>
-            <button onclick="Interface.buildCondensGraph();">build</button>
-            <button onclick="Interface.clearCondensation();">clear</button>
+            <button onclick="Algorithms.getCondensation();">get</button>
+            <button onclick="Algorithms.buildCondensGraph();">build</button>
+            <button onclick="Algorithms.clearCondensation();">clear</button>
             <span class="matrix-box" id="condensation"></span>
         </p>
         <p>
             <b>breadth-first search from </b>
             <input type="text" size="2" id="bfs-node">
-            <button onclick="Interface.getBFSFull();">get</button>
-            <button onclick="Interface.buildBFSFull();">build</button>
-            <button onclick="Interface.getBFSstep();">get by step</button>
-            <button onclick="Interface.buildBFSstep();">build by step</button>
-            <button onclick="Interface.clearBFS();">clear</button>
+            <button onclick="Algorithms.getBFSFull();">get</button>
+            <button onclick="Algorithms.buildBFSFull();">build</button>
+            <button onclick="Algorithms.getBFSstep();">get by step</button>
+            <button onclick="Algorithms.buildBFSstep();">build by step</button>
+            <button onclick="Algorithms.clearBFS();">clear</button>
             <span class="line-box" id="bfs"></span>
         </p>
         <p>
             <b>minimal spanning tree (Prime algorithm)</b>
-            <button onclick="Interface.getMSTFull();">get</button>
-            <button onclick="Interface.getMSTstep();">get by step</button>
-            <button onclick="Interface.buildMSTFull();">build</button>
-            <button onclick="Interface.buildMSTstep();">build by step</button>
-            <button onclick="Interface.clearMST();">clear</button>
+            <button onclick="Algorithms.getMSTFull();">get</button>
+            <button onclick="Algorithms.getMSTstep();">get by step</button>
+            <button onclick="Algorithms.buildMSTFull();">build</button>
+            <button onclick="Algorithms.buildMSTstep();">build by step</button>
+            <button onclick="Algorithms.clearMST();">clear</button>
             <span class="line-box" id="mst"></span>
         </p>
         <p>
             <b>shortest paths (Dijkstra's algorithm)</b>
             <input type="text" size="2" id="dij-start">
-            <button onclick="Interface.getDijkstraFull();">get</button>
-            <button onclick="Interface.buildDijkstraStep();">build by step</button>
-            <button onclick="Interface.clearDijkstra();">clear</button>
+            <button onclick="Algorithms.getDijkstraFull();">get</button>
+            <button onclick="Algorithms.buildDijkstraStep();">build by step</button>
+            <button onclick="Algorithms.clearDijkstra();">clear</button>
             <span id="dij"></span>
         </p>
     </div>

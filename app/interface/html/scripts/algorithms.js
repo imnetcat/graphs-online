@@ -1,6 +1,44 @@
 'use strict';
 
-class Algorithms {
+class Algorithms extends Interface {
+
+    static clearCondensation() {
+        DOM.GetById("condensation").setText("");
+    }
+    static getCondensation() {
+        const condensation = this.graph.condensation();
+        const strMatrix = Matrix.toString(condensation);
+        DOM.GetById("condensation").setText(strMatrix);
+    }
+
+    static clearRoutes() {
+        DOM.GetById("routes").setHTML("");
+    }
+
+    static getRoutes() {
+        DOM.GetById("routes").setHTML("");
+        const length = Number(DOM.GetById("routes-length").value);
+        if (length) {
+            const routes = this.graph.routes(length);
+            if (!routes) return;
+            for (let i = 0; i < routes.length; i++) {
+                for (let j = 0; j < routes[i].length; j++) {
+                    routes[i][j]++;
+                }
+                routes[i] = routes[i].join(', ');
+                routes[i] += ' } ';
+                routes[i] = '{ ' + routes[i];
+            }
+            const strRouters = routes;
+            for (let i = 3; i < routes.length; i += 4) {
+                strRouters.splice(i, 0, "</p><p>");
+            }
+            strRouters.unshift("<p>");
+            strRouters.push("</p>");
+            const strRoutes = strRouters.join('');
+            DOM.GetById("routes").setHTML(strRoutes);
+        }
+    }
 
     static bfs = null;
     static clearBFS() {
@@ -127,54 +165,54 @@ class Algorithms {
     static mststep = 0;
     static minSpanTree() {
         const mst = this.graph.minSpanningTree();
-        Interface.mstmatrix = [];
+        Algorithms.mstmatrix = [];
         for (let i = 0; i <= mst.length; i++) {
-            Interface.mstmatrix.push(new Array(mst.length + 1));
-            Interface.mstmatrix[i].fill(0);
+            Algorithms.mstmatrix.push(new Array(mst.length + 1));
+            Algorithms.mstmatrix[i].fill(0);
         }
 
         for (let i = 0; i < mst.length; i++) {
-            Interface.mstmatrix[mst[i].u][mst[i].v] = 1;
+            Algorithms.mstmatrix[mst[i].u][mst[i].v] = 1;
         }
 
-        Interface.mstColored = [];
-        Interface.mst_visited = [];
+        Algorithms.mstColored = [];
+        Algorithms.mst_visited = [];
         DOM.GetById('mst').setHTML('<p></p>');
         DOM.GetBySelector('#mst > p').setText('{');
     }
     static clearMST() {
-        if (Interface.mst) {
+        if (Algorithms.mst) {
         }
-        Interface.clearMinSpanTree();
+        Algorithms.clearMinSpanTree();
         DOM.GetBySelector('#mst > p').setText('');
     }
     static clearMinSpanTree() {
-        Interface.mstweight = 0;
-        Interface.mstmatrix = null;
-        Interface.mst_m = 0;
-        Interface.mst_visited = null;
+        Algorithms.mstweight = 0;
+        Algorithms.mstmatrix = null;
+        Algorithms.mst_m = 0;
+        Algorithms.mst_visited = null;
     }
     static stepMST() {
 
-        if (!Interface.mstmatrix) {
-            Interface.minSpanTree();
-            DOM.GetBySelector('#mst > p').addText(` ${Interface.mst_m + 1},`);
-            Interface.mstColored.push(Interface.mst_m);
-            Interface.mst_visited.push(Interface.mst_m);
+        if (!Algorithms.mstmatrix) {
+            Algorithms.minSpanTree();
+            DOM.GetBySelector('#mst > p').addText(` ${Algorithms.mst_m + 1},`);
+            Algorithms.mstColored.push(Algorithms.mst_m);
+            Algorithms.mst_visited.push(Algorithms.mst_m);
         }
 
 
         let isRowEnds = true;
-        for (let i = 0; i < Interface.mstmatrix[Interface.mst_m].length; i++) {
-            if (Interface.mstmatrix[Interface.mst_m][i]) {
+        for (let i = 0; i < Algorithms.mstmatrix[Algorithms.mst_m].length; i++) {
+            if (Algorithms.mstmatrix[Algorithms.mst_m][i]) {
                 let isVisited = false;
-                for (const visited_i of Interface.mst_visited) {
+                for (const visited_i of Algorithms.mst_visited) {
                     if (i === visited_i)
                         isVisited = true;
                 }
                 if (isVisited) continue;
-                Interface.mstweight += this.graph.w_matrix[Interface.mst_m][i];
-                Interface.mst_m = i;
+                Algorithms.mstweight += this.graph.w_matrix[Algorithms.mst_m][i];
+                Algorithms.mst_m = i;
                 isRowEnds = false;
                 break;
             }
@@ -183,16 +221,16 @@ class Algorithms {
         return isRowEnds;
     }
     static getMSTstep() {
-        if (Interface.stepMST()) {
-            let index = Interface.mst_visited.indexOf(Interface.mst_m) - 1;
-            Interface.mst_m = Interface.mst_visited[index];
-            return Interface.getMSTstep();
+        if (Algorithms.stepMST()) {
+            let index = Algorithms.mst_visited.indexOf(Algorithms.mst_m) - 1;
+            Algorithms.mst_m = Algorithms.mst_visited[index];
+            return Algorithms.getMSTstep();
         } else {
-            DOM.GetBySelector('#mst > p').addText(` ${Interface.mst_m + 1}`);
-            Interface.mst_visited.push(Interface.mst_m);
+            DOM.GetBySelector('#mst > p').addText(` ${Algorithms.mst_m + 1}`);
+            Algorithms.mst_visited.push(Algorithms.mst_m);
 
-            if (Interface.mst_visited.length === Interface.mstmatrix.length) {
-                DOM.GetBySelector('#mst > p').addText(` } (weight: ${Interface.mstweight})`);
+            if (Algorithms.mst_visited.length === Algorithms.mstmatrix.length) {
+                DOM.GetBySelector('#mst > p').addText(` } (weight: ${Algorithms.mstweight})`);
                 return false;
             } else {
                 DOM.GetBySelector('#mst > p').addText(',');
@@ -201,16 +239,16 @@ class Algorithms {
         return true;
     }
     static buildMSTstep() {
-        const ret = Interface.getMSTstep();
+        const ret = Algorithms.getMSTstep();
 
         let strMatrix = [];
-        for (let i = 0; i < Interface.mstmatrix.length; i++) {
+        for (let i = 0; i < Algorithms.mstmatrix.length; i++) {
             strMatrix.push([]);
-            for (let j = 0; j < Interface.mstmatrix.length; j++) {
-                strMatrix[i].push(Interface.mstmatrix[i][j] && Interface.mst_visited.indexOf(j) != -1 ? 1 : 0);
+            for (let j = 0; j < Algorithms.mstmatrix.length; j++) {
+                strMatrix[i].push(Algorithms.mstmatrix[i][j] && Algorithms.mst_visited.indexOf(j) != -1 ? 1 : 0);
             }
         }
-        for (let i = 0; i < Interface.mstmatrix.length; i++) {
+        for (let i = 0; i < Algorithms.mstmatrix.length; i++) {
             strMatrix[i] = strMatrix[i].join(' ');
         }
 
@@ -218,36 +256,36 @@ class Algorithms {
         DOM.GetById('adj-matrix').value = strMatrix;
         this.refreshCanvas();
         if (!ret)
-            Interface.clearMinSpanTree();
+            Algorithms.clearMinSpanTree();
 
         return ret;
     }
     static getMSTFull() {
-        while (Interface.getMSTstep()) {
+        while (Algorithms.getMSTstep()) {
         }
     }
     static buildMSTFull() {
-        while (Interface.buildMSTstep()) {
+        while (Algorithms.buildMSTstep()) {
         }
-        Interface.clearMinSpanTree();
+        Algorithms.clearMinSpanTree();
     }
 
     static dij_step = 0;
     static dij_result = null;
     static dij_bystep = null;
     static getDijkstra() {
-        Interface.clearDijkstra();
+        Algorithms.clearDijkstra();
         const startNode = DOM.GetById('dij-start').value;
         if (!startNode)
             return;
         const { result, bystep } = this.graph.FindShordestWay(startNode - 1);
-        Interface.dij_result = result;
-        Interface.dij_bystep = bystep;
+        Algorithms.dij_result = result;
+        Algorithms.dij_bystep = bystep;
     }
     static getDijkstraFull() {
-        Interface.getDijkstra();
+        Algorithms.getDijkstra();
         DOM.GetById('dij').setHTML('');
-        for (const path of Interface.dij_result) {
+        for (const path of Algorithms.dij_result) {
             const tabulation = String(path.weight).length < 5 ?
                 ' '.repeat(5 - String(path.weight).length) :
                 ' '
@@ -258,12 +296,12 @@ class Algorithms {
         const DEFAULT_NODE_COLOR = "#ffffff";
         const ACTIVE_NODE_COLOR = "#6cc674";
         const VISITED_NODE_COLOR = "#c0c0c0";
-        if (!Interface.dij_result) {
-            Interface.getDijkstraFull();
+        if (!Algorithms.dij_result) {
+            Algorithms.getDijkstraFull();
         }
-        if (Interface.dij_step === Interface.dij_result.length) {
-            const nodesColor = new Array(Interface.dij_result.length + 1).fill(DEFAULT_NODE_COLOR);
-            const step = Interface.dij_bystep[Interface.dij_step];
+        if (Algorithms.dij_step === Algorithms.dij_result.length) {
+            const nodesColor = new Array(Algorithms.dij_result.length + 1).fill(DEFAULT_NODE_COLOR);
+            const step = Algorithms.dij_bystep[Algorithms.dij_step];
             nodesColor[step.active] = VISITED_NODE_COLOR;
             for (const v of step.visited) {
                 nodesColor[v] = VISITED_NODE_COLOR;
@@ -272,21 +310,21 @@ class Algorithms {
             return;
         }
 
-        const nodesColor = new Array(Interface.dij_result.length + 1).fill(DEFAULT_NODE_COLOR);
+        const nodesColor = new Array(Algorithms.dij_result.length + 1).fill(DEFAULT_NODE_COLOR);
 
-        const step = Interface.dij_bystep[Interface.dij_step];
+        const step = Algorithms.dij_bystep[Algorithms.dij_step];
         nodesColor[step.active] = ACTIVE_NODE_COLOR;
         for (const v of step.visited) {
             nodesColor[v] = VISITED_NODE_COLOR;
         }
-        console.log(nodesColor, Interface.dij_result.length)
-        Interface.dij_step++;
+        console.log(nodesColor, Algorithms.dij_result.length)
+        Algorithms.dij_step++;
         this.refreshCanvas(nodesColor);
     }
     static clearDijkstra() {
-        Interface.dij_bystep = null;
-        Interface.dij_result = null;
-        Interface.dij_step = 0;
+        Algorithms.dij_bystep = null;
+        Algorithms.dij_result = null;
+        Algorithms.dij_step = 0;
         DOM.GetById('dij').setHTML('');
     }
 };
