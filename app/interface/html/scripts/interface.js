@@ -347,54 +347,59 @@ class Interface {
     }
 
     static dij_step = 0;
-    static dij = null;
+    static dij_result = null;
+    static dij_bystep = null;
     static getDijkstra() {
         Interface.clearDijkstra();
         const startNode = DOM.getById('dij-start').value;
         if (!startNode)
             return;
-        Interface.dij = this.graph.FindShordestWay(startNode - 1);
-        console.log(Interface.dij)
-    }
-    static getDijkstraStep() {
-        if (!Interface.dij) {
-            Interface.getDijkstra();
-        }
-
-        const path = Interface.dij[Interface.dij_step];
-        const tabulation = String(path.weight).length < 5 ?
-            ' '.repeat(5 - String(path.weight).length) :
-            ' ';
-        DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
-        Interface.dij_step++;
+        const { result, bystep } = this.graph.FindShordestWay(startNode - 1);
+        Interface.dij_result = result;
+        Interface.dij_bystep = bystep;
     }
     static getDijkstraFull() {
         Interface.getDijkstra();
         DOM.getById('dij').setHTML('');
-        for (const path of Interface.dij) {
+        for (const path of Interface.dij_result) {
             const tabulation = String(path.weight).length < 5 ?
                 ' '.repeat(5 - String(path.weight).length) :
                 ' '
             DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
         }
     }
-    static buildDijkstrastep() {
-        const startNode = DOM.getById('dij-start').value;
-        if (!startNode)
-            return;
-
-        Interface.dij = this.graph.FindShordestWay(startNode - 1);
-        console.log(Interface.dij)
-        DOM.getById('dij').setHTML('');
-        for (const path of Interface.dij) {
-            const tabulation = String(path.weight).length < 5 ?
-                ' '.repeat(5 - String(path.weight).length) :
-                ' '
-            DOM.getById('dij').addHTML(`<big><pre>weight: ${path.weight}${tabulation}way: ${path.way.map(el => ++el).join(' -> ')}</pre></big>`);
+    static buildDijkstraStep() {
+        const DEFAULT_NODE_COLOR = "#ffffff";
+        const ACTIVE_NODE_COLOR = "#6cc674";
+        const VISITED_NODE_COLOR = "#c0c0c0";
+        if (!Interface.dij_result) {
+            Interface.getDijkstraFull();
         }
+        if (Interface.dij_step === Interface.dij_result.length) {
+            const nodesColor = new Array(Interface.dij_result.length + 1).fill(DEFAULT_NODE_COLOR);
+            const step = Interface.dij_bystep[Interface.dij_step];
+            nodesColor[step.active] = VISITED_NODE_COLOR;
+            for (const v of step.visited) {
+                nodesColor[v] = VISITED_NODE_COLOR;
+            }
+            this.refreshCanvas(nodesColor);
+            return;
+        }
+
+        const nodesColor = new Array(Interface.dij_result.length+1).fill(DEFAULT_NODE_COLOR);
+
+        const step = Interface.dij_bystep[Interface.dij_step];
+        nodesColor[step.active] = ACTIVE_NODE_COLOR;
+        for (const v of step.visited) {
+            nodesColor[v] = VISITED_NODE_COLOR;
+        }
+        console.log(nodesColor, Interface.dij_result.length)
+        Interface.dij_step++;
+        this.refreshCanvas(nodesColor);
     }
     static clearDijkstra() {
-        Interface.dij = null;
+        Interface.dij_bystep = null;
+        Interface.dij_result = null;
         Interface.dij_step = 0;
         DOM.getById('dij').setHTML('');
     }

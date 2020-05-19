@@ -338,8 +338,18 @@ class Graph {
             weight
         }
     }
+
     // Dijkstra's algorithm
     FindShordestWay(start) {
+        // step class for by-step trace
+        class Step {
+            constructor(visited, active) {
+                this.visited = visited;
+                this.active = active;
+            }
+        }
+        // result by-step trace
+        const bystep = [];
         // number of nodes
         const n = this.adj_matrix.matrix.length;
         const INF = Infinity;
@@ -367,10 +377,15 @@ class Graph {
                     min_vertex = j;
                 }
             }
+            const visited = [];
+            for (const i in used) {
+                if (used[i]) {
+                    visited.push(Number(i));
+                }
+            }
+            bystep.push(new Step(visited, min_vertex));
         }
-
-        console.log(prev, used, dist);
-
+        
         class Path {
             constructor(p, w) {
                 this.way = p;
@@ -378,7 +393,7 @@ class Graph {
             }
         };
 
-        const paths = [];
+        const result = [];
         for (let i = 0; i < n; i++) {
             let end = i;
             if (end === start)
@@ -390,10 +405,10 @@ class Graph {
                 end = prev[end];
             }
             path.reverse();
-            paths.push(new Path(path, weight));
+            result.push(new Path(path, weight));
         }
 
-        return paths;
+        return { result, bystep };
     }
 
     generateCoords() {
