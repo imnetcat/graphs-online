@@ -102,9 +102,6 @@ td {
 
 }
 
-#info-box {
-}
-
 .menu-box header {
     text-align: center;
     padding-bottom: 10px;
@@ -121,10 +118,6 @@ td {
   height: 50px;
   border: 1px solid;
   text-align: center;
-}
-
-#info-box header h3 b {
-  background: #fff;
 }
 
 .menu-btn img {
