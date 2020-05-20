@@ -95,9 +95,7 @@ class Canvas {
         const vertexLabelSize = Settings.vertex.label.size;
         const nodes_radius = Settings.vertex.radius;
         Collision.coords = graph.config.coords;
-
-        console.log(ribsLabelSize)
-
+        
         const line = (from, to) => {
             let linesArray = [];
 
@@ -138,7 +136,7 @@ class Canvas {
             }
             else { // иначе имеем линию из одной вершины в другую
                 // проверяем коллизии всех вершин с линией
-                Collision.checkCollisionNodesRec(nodes_radius, linesArray, from, to);
+                Collision.checkCollisionNodesRec(nodes_radius, linesArray, from, to, graph.config.orientired);
             }
             return linesArray;
         }
