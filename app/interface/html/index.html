@@ -132,6 +132,18 @@
             <button onclick="Settings.SetRibsLabelSize(DOM.GetById('ribs_label_size').value)">Submit</button>
         </p>
         <p>
+            <b>vertex num size</b>
+            <select id="vertex_label_size">
+                <option>12</option>
+                <option>14</option>
+                <option>18</option>
+                <option>20</option>
+                <option>24</option>
+                <option>28</option>
+            </select>
+            <button onclick="Settings.SetVertexNumSize(DOM.GetById('vertex_label_size').value)">Submit</button>
+        </p>
+        <p>
             <b>vertex label size</b>
             <select id="vertex_label_size">
                 <option>12</option>
@@ -144,6 +156,28 @@
             <button onclick="Settings.SetVertexLabelSize(DOM.GetById('vertex_label_size').value)">Submit</button>
         </p>
 
+        <b>vertex num color</b>
+        <form name="vertex_num" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
         <b>vertex label color</b>
         <form name="vertex_label" class="color-picker cp-default">
             <div class="pick-lable color-values"></div>

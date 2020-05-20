@@ -299,6 +299,7 @@ class Algorithms extends Interface {
         if (!Algorithms.dij_result) {
             Algorithms.getDijkstraFull();
         }
+        const { widths } = this.graph.FindShordestWay(Algorithms.dij_bystep[Algorithms.dij_step].lastVisited);
         if (Algorithms.dij_step === Algorithms.dij_result.length) {
             const nodesColor = new Array(Algorithms.dij_result.length + 1).fill(DEFAULT_NODE_COLOR);
             const step = Algorithms.dij_bystep[Algorithms.dij_step];
@@ -306,7 +307,7 @@ class Algorithms extends Interface {
             for (const v of step.visited) {
                 nodesColor[v] = VISITED_NODE_COLOR;
             }
-            this.refreshCanvas(nodesColor);
+            this.refreshCanvas(nodesColor, widths);
             return;
         }
 
@@ -317,9 +318,8 @@ class Algorithms extends Interface {
         for (const v of step.visited) {
             nodesColor[v] = VISITED_NODE_COLOR;
         }
-        console.log(nodesColor, Algorithms.dij_result.length)
         Algorithms.dij_step++;
-        this.refreshCanvas(nodesColor);
+        this.refreshCanvas(nodesColor, widths);
     }
     static clearDijkstra() {
         Algorithms.dij_bystep = null;

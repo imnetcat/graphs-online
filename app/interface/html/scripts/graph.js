@@ -340,9 +340,10 @@ class Graph {
     FindShordestWay(start) {
         // step class for by-step trace
         class Step {
-            constructor(visited, active) {
+            constructor(visited, active, last) {
                 this.visited = visited;
                 this.active = active;
+                this.lastVisited = last;
             }
         }
         // result by-step trace
@@ -380,7 +381,7 @@ class Graph {
                     visited.push(Number(i));
                 }
             }
-            bystep.push(new Step(visited, min_vertex));
+            bystep.push(new Step(visited, min_vertex, i));
         }
         
         class Path {
@@ -405,7 +406,7 @@ class Graph {
             result.push(new Path(path, weight));
         }
 
-        return { result, bystep };
+        return { widths: dist, result, bystep };
     }
 
     generateCoords() {

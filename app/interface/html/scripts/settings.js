@@ -7,11 +7,15 @@ class Settings {
         color: {
             default: "#ffffff",
             active: "#e43434",
-            visited: "#beaefc"
+            visited: "#8598df"
         },
         radius: 25,
         spacing: 4,
         label: {
+            size: 20,
+            color: "#ffa300"
+        },
+        num: {
             size: 20,
             color: "#000000"
         }
@@ -25,6 +29,12 @@ class Settings {
     }
     static SetVertexActiveColor(newColor) {
         Settings.vertex.color.active = newColor;
+    }
+    static SetVertexNumSize(newSize) {
+        Settings.vertex.num.size = newSize;
+    }
+    static SetVertexNumColor(newColor) {
+        Settings.vertex.num.color = newColor;
     }
     static SetVertexVisitedColor(newColor) {
         Settings.vertex.color.visited = newColor;

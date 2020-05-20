@@ -93,6 +93,8 @@ class Canvas {
         const ribsLabelSize = Settings.ribs.label.size;
         const vertexLabelColor = Settings.vertex.label.color;
         const vertexLabelSize = Settings.vertex.label.size;
+        const vertexNumColor = Settings.vertex.num.color;
+        const vertexNumSize = Settings.vertex.num.size;
         const nodes_radius = Settings.vertex.radius;
         Collision.coords = graph.config.coords;
         
@@ -233,11 +235,17 @@ class Canvas {
             }
         }
 
-        const vertexLables = () => {
+        const vertexNumbers = () => {
             const font_spacing = 4;
             for (const index in graph.config.coords) {
-                const label = labelsInfo ? labelsInfo[index] : Number(index) + 1;
-                this.lable(graph.config.coords[index].x - font_spacing, graph.config.coords[index].y + font_spacing, label, vertexLabelSize, vertexLabelColor);
+                const label = Number(index) + 1;
+                this.lable(graph.config.coords[index].x - font_spacing, graph.config.coords[index].y + font_spacing, label, vertexNumSize, vertexNumColor);
+            }
+        }
+        const vertexLables = () => {
+            for (const index in graph.config.coords) {
+                const label = labelsInfo[index];
+                this.lable(graph.config.coords[index].x + nodes_radius, graph.config.coords[index].y - nodes_radius, label, vertexLabelSize, vertexLabelColor);
             }
         }
         
@@ -252,7 +260,9 @@ class Canvas {
         background();
         ribs();
         nodes(nodesColor);
-        vertexLables();
+        vertexNumbers();
+        if (labelsInfo)
+            vertexLables();
         return this;
     }
 }
