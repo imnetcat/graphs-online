@@ -11,10 +11,7 @@ class Graph {
         this.config = {
             plot_x_offfset: 100,
             plot_y_offfset: 100,
-
-            nodes_radius: 20,
-            nodes_spacing: 2,
-
+                    
             orientired: true,
 
             coords: []
@@ -418,8 +415,8 @@ class Graph {
             case 'default':
             case 'empty-triangle':
                 const nodes = this.nodes;
-                const diameter = this.config.nodes_radius * 2;
-                const spacing = this.config.nodes_spacing;
+                const diameter = Settings.vertex.radius * 2;
+                const spacing = Settings.vertex.spacing;
 
                 // количество вершин графа на каждой из сторон треугольника (минус один)
                 let n1, n2, n3;

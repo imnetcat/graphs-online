@@ -15,7 +15,7 @@ class Interface {
             }
         }
     }
-    
+
     static setInfo(info) {
         DOM.GetById("unified").setHTML((info.uni === -1) ? "false" : info.uni.toString());
 
@@ -105,6 +105,7 @@ class Interface {
         });
     }
     static refreshCanvas(nodesColor, labelsInfo) {
+        const vertexColor = Settings.vertex.color;
 
         const form = new FormData(document.forms.menu);
         const adj_matrixStr = DOM.GetById('adj-matrix').value.split('\n');
@@ -140,7 +141,7 @@ class Interface {
             }
         }
 
-        nodesColor = nodesColor || new Array(adj_matrix.length).fill("#ffffff")
+        nodesColor = nodesColor || new Array(adj_matrix.length).fill(vertexColor)
         const orientired = form.get('orientiation');
         const displayForm = form.get('display-form');
         const options = {
@@ -153,18 +154,3 @@ class Interface {
         this.drawGraphs(adj_matrix, w_matrix, options);
     }
 };
-
-// настраиваем интерфейс по дефолтным значиниям после загрузки страницы
-document.addEventListener('DOMContentLoaded', () => {
-    // добавляем все меню
-    Interface.menus.push(new Menu('settings'));
-    Interface.menus.push(new Menu('properties'));
-    Interface.menus.push(new Menu('algorithms'));
-    Interface.menus.push(new Menu('definition'));
-
-    // устанавливаем меню видимое по умолчанию
-    Interface.Show('definition');
-
-    // загружаем пример графа
-    Interface.refreshCanvas();
-})

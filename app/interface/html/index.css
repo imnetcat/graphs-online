@@ -27,7 +27,7 @@ header h3 {
 .menu-box {
     color: #000000;
     background: #fff;
-    width: calc(25% - 35px);
+    width: calc(25% - 100px);
     height: calc(100% - 150px);
     position: absolute;
     z-index: 20;
@@ -55,9 +55,6 @@ footer {
     height: calc(100% - 100px);
     overflow: scroll;
     background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 body > header {

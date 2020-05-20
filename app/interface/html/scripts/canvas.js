@@ -6,6 +6,11 @@ class Canvas {
         this.ctx = this.domElem.getContext('2d');
     }
 
+    getSize() {
+        const y = Number(this.domElem.getAttribute("height").replace('px', ''));
+        const x = Number(this.domElem.getAttribute("width").replace('px', ''));
+        return { x, y };
+    }
     setSize(size) {
         this.domElem.setAttribute("width", `${size.x}px`);
         this.domElem.setAttribute("height", `${size.y}px`);
@@ -53,6 +58,16 @@ class Canvas {
         this.ctx.lineTo(to.x, to.y);
         this.ctx.stroke();
     }
+    rect(from, to, color) {
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(from.x, from.y, to.x, to.y);
+    }
+    setLineWidth(w) {
+        this.ctx.lineWidth = w;
+    }
+    setLineColor(c) {
+        this.ctx.strokeStyle = c;
+    }
     arrow(from, to) {
         const fx = from.x,
             fy = from.y,
@@ -71,9 +86,10 @@ class Canvas {
     }
 
     draw(graph, nodesColor, labelsInfo) {
-
-        const nodes_radius = graph.config.nodes_radius;
-
+        const backgroundColor = Settings.background.color;
+        const ribsColor = Settings.ribs.color;
+        const ribsWidth = Settings.ribs.width;
+        const nodes_radius = Settings.vertex.radius;
         Collision.coords = graph.config.coords;
         
         const line = (from, to) => {
@@ -216,8 +232,15 @@ class Canvas {
             }
         }
 
-        
+        const background = () =>{
+            const s = this.getSize();
+            this.rect({ x: 0, y: 0 }, s, backgroundColor)
+        }
 
+        this.setLineWidth(ribsWidth);
+        this.setLineColor(ribsColor);
+
+        background();
         ribs();
         nodes(nodesColor);
         numbers();

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Graphs online!</title>
     <script src="./scripts/collision.js"></script>
-    <script src="./scripts/draw.js"></script>
+    <script src="./scripts/settings.js"></script>
     <script src="./scripts/canvas.js"></script>
     <script src="./scripts/matrix.js"></script>
     <script src="./scripts/vertex.js"></script>
@@ -14,7 +14,11 @@
     <script src="./scripts/menu.js"></script>
     <script src="./scripts/interface.js"></script>
     <script src="./scripts/algorithms.js"></script>
+    <script src="./scripts/color_picker_engine.js"></script>
+    <script src="./scripts/color_picker.js"></script>
+    <script src="./scripts/onload.js"></script>
     <link rel="stylesheet" href="./font/font.css" type="text/css">
+    <link rel="stylesheet" href="./color_picker.css" type="text/css">
     <link rel="stylesheet" href="./index.css" type="text/css">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
 </head>
@@ -88,6 +92,101 @@
     </form>
     <div id="settings" class="menu-box">
         <header><h2><b>Settings</b></h2> ~customize for yourself~</header>
+        <p>
+            <b>vertex radius</b>
+            <select id="vertex_radius">
+                <option>20</option>
+                <option>30</option>
+                <option>40</option>
+            </select>
+            <button onclick="Settings.SetVertexRadius(DOM.GetById('vertex_radius').value)">Submit</button>
+        </p>
+        <p>
+            <b>vertex spacing</b>
+            <select id="vertex_spacing">
+                <option>2</option>
+                <option>4</option>
+                <option>8</option>
+            </select>
+            <button onclick="Settings.SetVertexSpacing(DOM.GetById('vertex_spacing').value)">Submit</button>
+        </p>
+        <p>
+            <b>ribs width</b>
+            <select id="ribs_width">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+            </select>
+            <button onclick="Settings.SetRibsWidth(DOM.GetById('ribs_width').value)">Submit</button>
+        </p>
+
+        <b>vertex color</b>
+        <form name="vertex" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <b>lines color</b>
+        <form name="lines_color" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <b>background color</b>
+        <form name="background" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
     </div>
     <div id="properties" class="menu-box">
         <header><h2><b>Properties</b></h2>~properties information~</header>

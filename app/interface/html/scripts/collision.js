@@ -83,29 +83,30 @@ class Collision {
             let newTy = 0;
             let newTx = 0;
 
-            const randX = Collision.getRandomInt(3, 10);
-            const randY = Collision.getRandomInt(3, 10);
+            const randX = 0;//Collision.getRandomInt(3, 10);
+            const randY = 0;//Collision.getRandomInt(3, 10);
 
             let dk = distance == 0 ? 1 : distance;
+
             dk = Math.abs(dk) / (dk);
 
             // Horizontal lines
             if (from.x != to.x && from.y === to.y) {
                 if (from.x > to.x) {
                     newTx = x + randX;
-                    newTy = y - (nodes_radius + Math.abs(distance) + randY);
+                    newTy = y - (nodes_radius + nodes_radius * Math.abs(dk) + randY);
                 } else {
                     newTx = x + randX;
-                    newTy = y + (nodes_radius + Math.abs(distance) + randY);
+                    newTy = y + (nodes_radius + nodes_radius * Math.abs(dk) + randY);
                 }
             }
             // Vertical lines
             else if (from.x === to.x && from.y != to.y) {
                 if (from.y > to.y) {
-                    newTx = x + (nodes_radius + Math.abs(distance) + randX);
+                    newTx = x + (nodes_radius + nodes_radius * Math.abs(dk) + randX);
                     newTy = y + randY;
                 } else {
-                    newTx = x - (nodes_radius + Math.abs(distance) + randX);
+                    newTx = x - (nodes_radius + nodes_radius * Math.abs(dk) + randX);
                     newTy = y + randY;
                 }
             }
@@ -115,29 +116,29 @@ class Collision {
                 //   V
                 //     o
                 if (from.x < to.x && from.y < to.y) {
-                    newTx = x - (nodes_radius + Math.abs(distance));
-                    newTy = y + (nodes_radius + Math.abs(distance));
+                    newTx = x - (nodes_radius + nodes_radius * Math.abs(dk));
+                    newTy = y + (nodes_radius + nodes_radius * Math.abs(dk));
                 }
                 // o
                 //   ^
                 //     o
                 else if (from.x > to.x && from.y > to.y) {
-                    newTx = x + (nodes_radius + Math.abs(distance));
-                    newTy = y - (nodes_radius + Math.abs(distance));
+                    newTx = x + (nodes_radius + nodes_radius *Math.abs(dk));
+                    newTy = y - (nodes_radius + nodes_radius *Math.abs(dk));
                 }
                 //     o
                 //   V
                 // o
                 else if (from.x > to.x && from.y < to.y) {
-                    newTx = x - (nodes_radius + Math.abs(distance));
-                    newTy = y - (nodes_radius + Math.abs(distance));
+                    newTx = x - (nodes_radius + nodes_radius*Math.abs(dk));
+                    newTy = y - (nodes_radius + nodes_radius*Math.abs(dk));
                 }
                 //     o
                 //   ^
                 // o
                 else if (from.x < to.x && from.y > to.y) {
-                    newTx = x + (nodes_radius + Math.abs(distance));
-                    newTy = y + (nodes_radius + Math.abs(distance));
+                    newTx = x + (nodes_radius + nodes_radius *Math.abs(dk));
+                    newTy = y + (nodes_radius + nodes_radius *Math.abs(dk));
                 }
             }
 
@@ -186,8 +187,8 @@ class Collision {
         let newTx = 0;
         let newTy = 0;
 
-        const randX = Collision.getRandomInt(3, 10);
-        const randY = Collision.getRandomInt(3, 10);
+        const randX = 0;//Collision.getRandomInt(3, 10);
+        const randY = 0;//Collision.getRandomInt(3, 10);
 
         const minx = Collision.min(from.x, to.x);
         const miny = Collision.min(from.y, to.y);
