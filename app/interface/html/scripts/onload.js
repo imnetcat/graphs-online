@@ -3,19 +3,23 @@
 const SetUpPaletes = () => {
     const paletes = [];
     paletes.push(new Palete('background', Settings.background.color, Settings.SetBackgroundColor));
-    paletes.push(new Palete('vertex', Settings.vertex.color, Settings.SetVertexColor));
     paletes.push(new Palete('lines_color', Settings.ribs.color, Settings.SetRibsColor));
     paletes.push(new Palete('vertex_label', Settings.vertex.label.color, Settings.SetVertexLabelColor));
     paletes.push(new Palete('ribs_label', Settings.ribs.label.color, Settings.SetRibsLabelColor));
+    paletes.push(new Palete('vertex_default', Settings.vertex.color.default, Settings.SetVertexDefaultColor));
+    paletes.push(new Palete('vertex_active', Settings.vertex.color.active, Settings.SetVertexActiveColor));
+    paletes.push(new Palete('vertex_visited', Settings.vertex.color.visited, Settings.SetVertexVisitedColor));
 
     // инициализируем все палитры
     ColorPalete.Init(paletes);
     // по умолчанию закрываем первую палитру
     ColorPalete.Close('background');
-    ColorPalete.Close('vertex');
     ColorPalete.Close('lines_color');
     ColorPalete.Close('vertex_label');
     ColorPalete.Close('ribs_label');
+    ColorPalete.Close('vertex_default');
+    ColorPalete.Close('vertex_active');
+    ColorPalete.Close('vertex_visited');
 }
 
 // настраиваем интерфейс по дефолтным значениям после загрузки страницы

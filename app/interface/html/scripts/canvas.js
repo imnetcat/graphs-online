@@ -136,7 +136,7 @@ class Canvas {
             }
             else { // иначе имеем линию из одной вершины в другую
                 // проверяем коллизии всех вершин с линией
-                Collision.checkCollisionNodesRec(nodes_radius, linesArray, from, to, graph.config.orientired);
+                Collision.checkCollisionNodesRec(nodes_radius, linesArray, from, to);
             }
             return linesArray;
         }
@@ -196,10 +196,20 @@ class Canvas {
                         for (const l of linesArray) {
                             this.line(l.from, l.to);
                             if (index === labelIndex) {
-                                if (linesArray.length % 2 === 0) {
+                                if (linesArray.length === 1) {
+                                    const minx = Math.min(l.from.x, l.to.x);
+                                    const miny = Math.min(l.from.y, l.to.y);
+                                    const x = minx + (Math.max(l.from.x, l.to.x) - minx) / 2;
+                                    const y = miny + (Math.max(l.from.y, l.to.y) - miny) / 2;
+                                    this.lable(x, y, graph.w_matrix[m][n], ribsLabelSize, ribsLabelColor);
+                                } else if (linesArray.length % 2 === 0) {
                                     this.lable(l.from.x, l.from.y, graph.w_matrix[m][n], ribsLabelSize, ribsLabelColor);
                                 } else {
-                                    this.lable(l.to.x, l.to.y, graph.w_matrix[m][n], ribsLabelSize, ribsLabelColor);
+                                    const minx = Math.min(l.from.x, l.to.x);
+                                    const miny = Math.min(l.from.y, l.to.y);
+                                    const x = minx + (Math.max(l.from.x, l.to.x) - minx) / 2;
+                                    const y = miny + (Math.max(l.from.y, l.to.y) - miny) / 2;
+                                    this.lable(x, y, graph.w_matrix[m][n], ribsLabelSize, ribsLabelColor);
                                 }
                             }
                             index++;

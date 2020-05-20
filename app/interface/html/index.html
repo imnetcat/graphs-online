@@ -67,16 +67,16 @@
         </table>
         <p><b>adjacency matrix</b></p>
         <textarea id="adj-matrix" class="matrix-input">
-0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 1 1 1 0 0
-0 0 0 0 0 1 1 1 0 0
-0 0 0 1 1 0 1 1 0 0
-0 0 0 1 1 1 1 1 0 0
-0 0 0 1 1 1 1 1 0 0
-0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0</textarea>
+1 1 1 0 1 1 0 1 0 1
+1 0 1 1 0 1 1 1 1 1
+1 1 0 1 1 0 1 0 1 1
+0 1 1 0 0 0 0 0 1 0
+1 0 1 0 0 1 0 1 0 1
+1 1 0 0 1 0 1 1 0 1
+0 1 1 0 0 1 1 1 0 0
+1 1 0 0 1 1 1 1 1 1
+0 1 1 1 0 0 0 1 0 1
+1 1 1 0 1 1 0 1 1 0</textarea>
         <p><b>weight matrix</b> (optional)</p>
         <textarea id="weight-matrix" class="matrix-input">
 0 71 87 0 90 69 0 88 0 94
@@ -144,28 +144,6 @@
             <button onclick="Settings.SetVertexLabelSize(DOM.GetById('vertex_label_size').value)">Submit</button>
         </p>
 
-        <b>vertex color</b>
-        <form name="vertex" class="color-picker cp-default">
-            <div class="pick-lable color-values"></div>
-            <div class="kat">
-                <div class="pcr-wrapper">
-                    <div class="pcr"></div>
-                    <div class="pcr-indicator"></div>
-                </div>
-                <div class="picker-wrapper">
-                    <div class="picker"></div>
-                    <div class="picker-indicator"></div>
-                </div>
-                <div class="pic-res">
-                    <div class="color-values"></div>
-                    <span class="hex"></span>
-                    <div>
-                        <button class="submit-btn">Submit</button>
-                        <button class="cancel-btn">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </form>
         <b>vertex label color</b>
         <form name="vertex_label" class="color-picker cp-default">
             <div class="pick-lable color-values"></div>
@@ -255,6 +233,74 @@
             </div>
         </form>
 
+        <b>vertex default color</b>
+        <form name="vertex_default" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <b>vertex active color</b>
+        <form name="vertex_active" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <b>vertex visited color</b>
+        <form name="vertex_visited" class="color-picker cp-default">
+            <div class="pick-lable color-values"></div>
+            <div class="kat">
+                <div class="pcr-wrapper">
+                    <div class="pcr"></div>
+                    <div class="pcr-indicator"></div>
+                </div>
+                <div class="picker-wrapper">
+                    <div class="picker"></div>
+                    <div class="picker-indicator"></div>
+                </div>
+                <div class="pic-res">
+                    <div class="color-values"></div>
+                    <span class="hex"></span>
+                    <div>
+                        <button class="submit-btn">Submit</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
     <div id="properties" class="menu-box">
         <header><h2><b>Properties</b></h2>~properties information~</header>

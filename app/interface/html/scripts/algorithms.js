@@ -293,9 +293,9 @@ class Algorithms extends Interface {
         }
     }
     static buildDijkstraStep() {
-        const DEFAULT_NODE_COLOR = "#ffffff";
-        const ACTIVE_NODE_COLOR = "#6cc674";
-        const VISITED_NODE_COLOR = "#c0c0c0";
+        const DEFAULT_NODE_COLOR = Settings.vertex.color.default;
+        const ACTIVE_NODE_COLOR = Settings.vertex.color.active;
+        const VISITED_NODE_COLOR = Settings.vertex.color.visited;
         if (!Algorithms.dij_result) {
             Algorithms.getDijkstraFull();
         }

@@ -18,9 +18,9 @@ class BFS {
         this.labelsInfo.push({ i: node, text: 1 });
     }
 
-    static DEFAULT_NODE_COLOR = "#ffffff";
-    static ACTIVE_NODE_COLOR  = "#6cc674";
-    static VISITED_NODE_COLOR = "#c0c0c0";
+    static DEFAULT_NODE_COLOR = Settings.vertex.color.default;
+    static ACTIVE_NODE_COLOR = Settings.vertex.color.active;
+    static VISITED_NODE_COLOR = Settings.vertex.color.visited;
 
     step() {
         this.nodesColor = new Array(this.bfs.length).fill(BFS.DEFAULT_NODE_COLOR);

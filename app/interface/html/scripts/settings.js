@@ -3,11 +3,16 @@
 class Settings {
 
     static vertex = {
-        color: "#ffffff",
-        radius: 20,
-        spacing: 2,
+
+        color: {
+            default: "#ffffff",
+            active: "#e43434",
+            visited: "#beaefc"
+        },
+        radius: 25,
+        spacing: 4,
         label: {
-            size: 12,
+            size: 20,
             color: "#000000"
         }
     }
@@ -15,8 +20,14 @@ class Settings {
     static SetVertexBorderColor(newColor) {
         Settings.vertex.border.color = newColor;
     }
-    static SetVertexColor(newColor) {
-        Settings.vertex.color = newColor;
+    static SetVertexDefaultColor(newColor) {
+        Settings.vertex.color.default = newColor;
+    }
+    static SetVertexActiveColor(newColor) {
+        Settings.vertex.color.active = newColor;
+    }
+    static SetVertexVisitedColor(newColor) {
+        Settings.vertex.color.visited = newColor;
     }
     static SetVertexRadius(r) {
         Settings.vertex.radius = r;
@@ -33,10 +44,10 @@ class Settings {
 
     static ribs = {
         color: "#000000",
-        width: 1,
+        width: 2,
         label: {
-            size: 12,
-            color: "#000000"
+            size: 20,
+            color: "#ffffff"
         }
     }
     static SetRibsColor(newColor) {
@@ -54,7 +65,7 @@ class Settings {
 
 
     static background = {
-        color: "#ffffff"
+        color: "#78777a"
     }
     
     static SetBackgroundColor(newColor) {

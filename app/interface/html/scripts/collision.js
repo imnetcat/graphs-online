@@ -69,7 +69,7 @@ class Collision {
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    static checkCollisionNodes(nodes_radius, from, to, x, y, randomForNonOrientired) {
+    static checkCollisionNodes(nodes_radius, from, to, x, y) {
         // если центр вершины между началом и концом линии тогда продолжаем, иначе return
         if (!((to.x >= x && x >= from.x && to.y >= y && y >= from.y) ||
             (to.x <= x && x <= from.x && to.y >= y && y >= from.y) ||
@@ -85,7 +85,6 @@ class Collision {
 
             const randX = Collision.getRandomInt(3, 10);
             const randY = Collision.getRandomInt(3, 10);
-            const rfno = randomForNonOrientired;
 
             let dk = distance == 0 ? 1 : distance;
 
@@ -95,19 +94,19 @@ class Collision {
             if (from.x != to.x && from.y === to.y) {
                 if (from.x > to.x) {
                     newTx = x + randX;
-                    newTy = y - rfno * (nodes_radius + nodes_radius * Math.abs(dk) + randY);
+                    newTy = y - (nodes_radius + nodes_radius * dk + randY);
                 } else {
                     newTx = x + randX;
-                    newTy = y + rfno * (nodes_radius + nodes_radius * Math.abs(dk) + randY);
+                    newTy = y + (nodes_radius + nodes_radius * dk + randY);
                 }
             }
             // Vertical lines
             else if (from.x === to.x && from.y != to.y) {
                 if (from.y > to.y) {
-                    newTx = x - rfno * (nodes_radius + nodes_radius * Math.abs(dk) + randX);
+                    newTx = x - (nodes_radius + nodes_radius * dk + randX);
                     newTy = y + randY;
                 } else {
-                    newTx = x + rfno * (nodes_radius + nodes_radius * Math.abs(dk) + randX);
+                    newTx = x + (nodes_radius + nodes_radius * dk + randX);
                     newTy = y + randY;
                 }
             }
@@ -117,29 +116,29 @@ class Collision {
                 //   V
                 //     o
                 if (from.x < to.x && from.y < to.y) {
-                    newTx = x - rfno * (nodes_radius + nodes_radius * Math.abs(dk));
-                    newTy = y + rfno * (nodes_radius + nodes_radius * Math.abs(dk));
+                    newTx = x - (nodes_radius + nodes_radius * dk);
+                    newTy = y + (nodes_radius + nodes_radius * dk);
                 }
                 // o
                 //   ^
                 //     o
                 else if (from.x > to.x && from.y > to.y) {
-                    newTx = x + rfno * (nodes_radius + nodes_radius *Math.abs(dk));
-                    newTy = y - rfno * (nodes_radius + nodes_radius *Math.abs(dk));
+                    newTx = x + (nodes_radius + nodes_radius *dk);
+                    newTy = y - (nodes_radius + nodes_radius *dk);
                 }
                 //     o
                 //   V
                 // o
                 else if (from.x > to.x && from.y < to.y) {
-                    newTx = x - rfno * (nodes_radius + nodes_radius*Math.abs(dk));
-                    newTy = y - rfno * (nodes_radius + nodes_radius*Math.abs(dk));
+                    newTx = x - (nodes_radius + nodes_radius*dk);
+                    newTy = y - (nodes_radius + nodes_radius*dk);
                 }
                 //     o
                 //   ^
                 // o
                 else if (from.x < to.x && from.y > to.y) {
-                    newTx = x + rfno * (nodes_radius + nodes_radius *Math.abs(dk));
-                    newTy = y + rfno * (nodes_radius + nodes_radius *Math.abs(dk));
+                    newTx = x + (nodes_radius + nodes_radius *dk);
+                    newTy = y + (nodes_radius + nodes_radius *dk);
                 }
             }
 
@@ -162,7 +161,7 @@ class Collision {
         }
         return;
     }
-    static checkCollisionNodesRec(nodes_radius, linesArray, from, to, orientired) {
+    static checkCollisionNodesRec(nodes_radius, linesArray, from, to) {
         let fracture;
         for (const i in Collision.coords) {
             const { x, y } = Collision.coords[i];
@@ -171,19 +170,17 @@ class Collision {
                 (x === to.x && y === to.y)) {
                 continue;
             }
-            const addRandomForNonOrientired = orientired ? 1 : (Number(i) % 2 ? 1 : -1);
-            fracture = Collision.checkCollisionNodes(nodes_radius, from, to, x, y, addRandomForNonOrientired);
+            fracture = Collision.checkCollisionNodes(nodes_radius, from, to, x, y);
             if (fracture) {
                 break;
             }
         }
         if (fracture) {
-            Collision.checkCollisionNodesRec(nodes_radius, linesArray, fracture.first.from, fracture.first.to, orientired);
-            Collision.checkCollisionNodesRec(nodes_radius, linesArray, fracture.second.from, fracture.second.to, orientired);
+            Collision.checkCollisionNodesRec(nodes_radius, linesArray, fracture.first.from, fracture.first.to);
+            Collision.checkCollisionNodesRec(nodes_radius, linesArray, fracture.second.from, fracture.second.to);
         } else {
             // проверяем коллизии всех линий с линией
-            Collision.checkCollisionLines(nodes_radius, linesArray, from, to, randomForNonOrientired);
-            // linesArray.push({ from, to });
+            Collision.checkCollisionLines(nodes_radius, linesArray, from, to);
         }
     }
     static checkCollisionLines(nodes_radius, linesArray, from, to) {
