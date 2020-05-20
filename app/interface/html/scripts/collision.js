@@ -83,8 +83,8 @@ class Collision {
             let newTy = 0;
             let newTx = 0;
 
-            const randX = 0;//Collision.getRandomInt(3, 10);
-            const randY = 0;//Collision.getRandomInt(3, 10);
+            const randX = Collision.getRandomInt(3, 10);
+            const randY = Collision.getRandomInt(3, 10);
 
             let dk = distance == 0 ? 1 : distance;
 
@@ -187,8 +187,8 @@ class Collision {
         let newTx = 0;
         let newTy = 0;
 
-        const randX = 0;//Collision.getRandomInt(3, 10);
-        const randY = 0;//Collision.getRandomInt(3, 10);
+        const randX = Collision.getRandomInt(3, 10);
+        const randY = Collision.getRandomInt(3, 10);
 
         const minx = Collision.min(from.x, to.x);
         const miny = Collision.min(from.y, to.y);

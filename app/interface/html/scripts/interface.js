@@ -75,6 +75,7 @@ class Interface {
     static drawGraphs(adj_matrix, w_matrix, options) {
         const canvId = "canv";
         const canvas = new Canvas(canvId).clear('2d');
+        canvas.clear('2d');
 
         this.graph = new Graph(adj_matrix);
 

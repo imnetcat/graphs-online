@@ -47,9 +47,9 @@ class Canvas {
         this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
         this.end('stroke');
     }
-    lable(x, y, n) {
-        this.ctx.font = '12px serif';
-        this.ctx.fillStyle = "black";
+    lable(x, y, n, size, color) {
+        this.ctx.font = String(size) + 'px serif';
+        this.ctx.fillStyle = color;
         this.ctx.fillText(n, x, y);
     }
     line(from, to) {
@@ -89,9 +89,15 @@ class Canvas {
         const backgroundColor = Settings.background.color;
         const ribsColor = Settings.ribs.color;
         const ribsWidth = Settings.ribs.width;
+        const ribsLabelColor = Settings.ribs.label.color;
+        const ribsLabelSize = Settings.ribs.label.size;
+        const vertexLabelColor = Settings.vertex.label.color;
+        const vertexLabelSize = Settings.vertex.label.size;
         const nodes_radius = Settings.vertex.radius;
         Collision.coords = graph.config.coords;
-        
+
+        console.log(ribsLabelSize)
+
         const line = (from, to) => {
             let linesArray = [];
 
@@ -193,9 +199,9 @@ class Canvas {
                             this.line(l.from, l.to);
                             if (index === labelIndex) {
                                 if (linesArray.length % 2 === 0) {
-                                    this.lable(l.from.x, l.from.y, graph.w_matrix[m][n]);
+                                    this.lable(l.from.x, l.from.y, graph.w_matrix[m][n], ribsLabelSize, ribsLabelColor);
                                 } else {
-                                    this.lable(l.to.x, l.to.y, graph.w_matrix[m][n]);
+                                    this.lable(l.to.x, l.to.y, graph.w_matrix[m][n], ribsLabelSize, ribsLabelColor);
                                 }
                             }
                             index++;
@@ -219,19 +225,14 @@ class Canvas {
             }
         }
 
-        const numbers = () => {
+        const vertexLables = () => {
             const font_spacing = 4;
             for (const index in graph.config.coords) {
-                this.lable(graph.config.coords[index].x - font_spacing, graph.config.coords[index].y + font_spacing, Number(index) + 1);
+                const label = labelsInfo ? labelsInfo[index] : Number(index) + 1;
+                this.lable(graph.config.coords[index].x - font_spacing, graph.config.coords[index].y + font_spacing, label, vertexLabelSize, vertexLabelColor);
             }
         }
-
-        const labels = (labels) => {
-            for (const label of labels) {
-                this.lable(graph.config.coords[label.i].x + nodes_radius, graph.config.coords[label.i].y - nodes_radius, label.text);
-            }
-        }
-
+        
         const background = () =>{
             const s = this.getSize();
             this.rect({ x: 0, y: 0 }, s, backgroundColor)
@@ -243,9 +244,7 @@ class Canvas {
         background();
         ribs();
         nodes(nodesColor);
-        numbers();
-        if (labelsInfo)
-            labels(labelsInfo);
+        vertexLables();
         return this;
     }
 }
